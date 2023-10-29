@@ -42,7 +42,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.url }}
     steps:
-      - uses: action/deploy-pages@v2
+      - uses: actions/deploy-pages@v2
         with:
           token: ${{ github.token }}
           artifact-name: github-pages

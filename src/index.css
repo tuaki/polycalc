@@ -3,12 +3,6 @@ body, #root {
     min-height: 100vh;
 }
 
-.content {
-    margin: 0 auto;
-    min-width: 320px;
-    max-width: 640px;
-}
-
 /*
     Remove arrows in the number inputs.
 */

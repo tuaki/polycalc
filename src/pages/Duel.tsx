@@ -1,35 +1,38 @@
 import { useState } from 'react';
 import { UNITS } from '../types/core/UnitClass';
 import { type AttackerSettings, Unit, type DefenderSettings } from '../types/core/Unit';
-import { createConditionMap } from '../types/core/Condition';
 import { type FightResult, fight } from '../types/core/combat';
 import { AttackerForm, DefenderForm } from '../components/unitForm';
 import { Button, Card, CardBody } from '@nextui-org/react';
 
 export function Duel() {
-    const [ attacker, setAttacker ] = useState(defaultAttacker);
-    const [ defender, setDefender ] = useState(defaultDefender);
+    const [ attackerSettings, setAttackerSettings ] = useState(defaultAttacker);
+    const [ defenderSettings, setDefenderSettings ] = useState(defaultDefender);
 
     const [ result, setResult ] = useState<FightResult>();
 
     function combat() {
-        const attackerUnit = new Unit(attacker.unitClass, undefined, attacker.health, createConditionMap([]));
-        const defenderUnit = new Unit(defender.unitClass, undefined, defender.health ?? 0, createConditionMap([]));
-        setResult(fight(attackerUnit, defenderUnit));
+        const attacker = Unit.createAttacker(attackerSettings);
+        const defender = Unit.createDefender(defenderSettings);
+        setResult(fight(attacker, defender));
     }
 
     return (
-        <div className='content flex flex-col gap-3'>
-            <h1>Duel</h1>
+        <div className='flex flex-col gap-3'>
             <Card>
                 <CardBody>
-                    <AttackerForm input={attacker} onChange={setAttacker} />
+                    <h1>Duel</h1>
+                </CardBody>
+            </Card>
+            <Card>
+                <CardBody>
+                    <AttackerForm input={attackerSettings} onChange={setAttackerSettings} />
                 </CardBody>
             </Card>
 
             <Card>
                 <CardBody>
-                    <DefenderForm input={defender} onChange={setDefender} />
+                    <DefenderForm input={defenderSettings} onChange={setDefenderSettings} />
                 </CardBody>
             </Card>
             <div className='flex justify-center'>

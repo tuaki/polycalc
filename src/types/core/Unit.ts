@@ -1,4 +1,4 @@
-import { type ConditionMap } from './Condition';
+import { createConditionMap, type ConditionMap, ConditionType } from './Condition';
 import { type UnitVariant, type UnitClass } from './UnitClass';
 
 export const VETERAN_HEALTH_BONUS = 5;
@@ -14,6 +14,19 @@ export class Unit {
         readonly health: number,
         readonly conditions: ConditionMap,
     ) {}
+
+    static createAttacker(init: AttackerSettings) {
+        return new Unit(init.unitClass, undefined, init.health, createConditionMap({
+            [ConditionType.Boosted]: init.isBoosted,
+        }));
+    }
+
+    static createDefender(init: DefenderSettings) {
+        return new Unit(init.unitClass, undefined, init.health, createConditionMap({
+            [ConditionType.DefenseBonus]: init.bonus === 'defense',
+            [ConditionType.WallBonus]: init.bonus === 'wall',
+        }));
+    }
 
     update(health: number, conditions: ConditionMap): Unit {
         return new Unit(this.unitClass, this.unitVariant, health, conditions);
@@ -57,6 +70,7 @@ export type AttackerSettings = CommonSettings & {
     isBoosted: boolean;
 }
 
+export type BonusType = 'none' | 'defense' | 'wall';
 export type DefenderSettings = CommonSettings & {
-    bonus: 'none' | 'defense' | 'wall';
+    bonus: BonusType;
 }

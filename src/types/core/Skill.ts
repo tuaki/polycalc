@@ -13,7 +13,7 @@ export enum SkillType {
     Splash = 'splash',
     Surprise = 'surprise',
     /** Custom skill - the unit can become veteran */
-    Promotable = 'promotable',
+    Promote = 'promote',
 }
 
 export class Skill {
@@ -69,7 +69,7 @@ const SKILL_DEFINITIONS: Record<SkillType, SkillDefinition> = {
         label: 'Surprise',
         description: 'TODO',
     },
-    [SkillType.Promotable]: {
+    [SkillType.Promote]: {
         label: 'Promotable',
         description: 'TODO',
     },

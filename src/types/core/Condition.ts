@@ -22,12 +22,14 @@ export class Condition {
 
 export type ConditionMap = Record<ConditionType, boolean>;
 
-export function createConditionMap(array: readonly ConditionType[]): ConditionMap {
-    const map: ConditionMap = {} as ConditionMap;
-    getStringEnumValues(ConditionType).forEach(condition => map[condition] = false);
-    array.forEach(condition => map[condition] = true);
+export function createConditionMap(map: Partial<ConditionMap> = {}): ConditionMap {
+    const defaultMap: ConditionMap = {} as ConditionMap;
+    getStringEnumValues(ConditionType).forEach(condition => defaultMap[condition] = false);
 
-    return map;
+    return {
+        ...defaultMap,
+        ...map,
+    };
 }
 
 type ConditionDefinition = Omit<Condition, 'id'>;

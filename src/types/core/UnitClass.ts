@@ -31,7 +31,7 @@ export class UnitClass {
         readonly attack: number,
         readonly defense: number,
         readonly skills: SkillMap,
-        readonly tag: UnitTag,
+        readonly tags: readonly UnitTag[],
         readonly variants: readonly UnitVariant[] | undefined,
     ) {}
 
@@ -39,7 +39,7 @@ export class UnitClass {
         const foundVariants = def.variantIds?.map(id => UNIT_VARIANTS.find(v => v.id === id)).filter((v): v is UnitVariant => v !== undefined) ?? [];
         const variants = foundVariants.length > 0 ? foundVariants : undefined;
 
-        return new UnitClass(def.id, def.label, def.health, def.attack, def.defense, createSkillMap(def.skills), def.tag, variants);
+        return new UnitClass(def.id, def.label, def.health, def.attack, def.defense, createSkillMap(def.skills), def.tags, variants);
     }
 }
 

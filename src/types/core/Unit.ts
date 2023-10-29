@@ -47,3 +47,16 @@ export class Unit {
         return this.unitClass.defense;
     }
 }
+
+type CommonSettings = {
+    unitClass: UnitClass;
+    health: number;
+}
+
+export type AttackerSettings = CommonSettings & {
+    isBoosted: boolean;
+}
+
+export type DefenderSettings = CommonSettings & {
+    bonus: 'none' | 'defense' | 'wall';
+}

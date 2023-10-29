@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: echo ${{ vars.DOT_ENV }} > .env
+      - run: echo "${{ vars.DOT_ENV }}" > .env
 
       - run: npm install
 

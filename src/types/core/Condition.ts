@@ -9,6 +9,7 @@ export enum ConditionType {
     Boosted = 'boosted',
     NoRetaliation = 'noRetaliation',
     SplashAttack = 'splashAttack',
+    Converted = 'converted',
 }
 
 export class Condition {
@@ -62,6 +63,10 @@ const CONDITION_DEFINITIONS: Record<ConditionType, ConditionDefinition> = {
     },
     [ConditionType.SplashAttack]: {
         label: 'SplashAttack',
+        description: 'TODO',
+    },
+    [ConditionType.Converted]: {
+        label: 'Converted',
         description: 'TODO',
     },
 };

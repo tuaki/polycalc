@@ -1,57 +1,75 @@
 import { useState } from 'react';
-import { UNITS, type UnitClass } from '../types/core/UnitClass';
-import { Unit } from '../types/core/Unit';
+import { UNITS } from '../types/core/UnitClass';
+import { type AttackerSettings, Unit, type DefenderSettings } from '../types/core/Unit';
 import { createConditionMap } from '../types/core/Condition';
 import { type FightResult, fight } from '../types/core/combat';
+import { AttackerForm, DefenderForm } from '../components/unitForm';
+import { Button, Card, CardBody } from '@nextui-org/react';
 
 export function Duel() {
-    const [ attackerClass, setAttackerClass ] = useState<UnitClass>(UNITS[0]);
-    const [ defenderClass, setDefenderClass ] = useState<UnitClass>(UNITS[0]);
+    const [ attacker, setAttacker ] = useState(defaultAttacker);
+    const [ defender, setDefender ] = useState(defaultDefender);
+
     const [ result, setResult ] = useState<FightResult>();
 
     function combat() {
-        const attacker = new Unit(attackerClass, undefined, attackerClass.health ?? 0, createConditionMap([]));
-        const defender = new Unit(defenderClass, undefined, defenderClass.health ?? 0, createConditionMap([]));
-        setResult(fight(attacker, defender));
+        const attackerUnit = new Unit(attacker.unitClass, undefined, attacker.health, createConditionMap([]));
+        const defenderUnit = new Unit(defender.unitClass, undefined, defender.health ?? 0, createConditionMap([]));
+        setResult(fight(attackerUnit, defenderUnit));
     }
 
     return (
-        <div>
+        <div className='content flex flex-col gap-3'>
             <h1>Duel</h1>
-            <p>
-                <label>Attacker</label><br />
-                <select
-                    value={attackerClass.id}
-                    onChange={e => setAttackerClass(findUnit(e.target.value))}
-                >
-                    {UNITS.map(unit => (
-                        <option key={unit.id} value={unit.id}>{unit.label}</option>
-                    ))}
-                </select>
-            </p>
-            <p>
-                <label>Defender</label><br />
-                <select
-                    value={defenderClass.id}
-                    onChange={e => setDefenderClass(findUnit(e.target.value))}
-                >
-                    {UNITS.map(unit => (
-                        <option key={unit.id} value={unit.id}>{unit.label}</option>
-                    ))}
-                </select>
-            </p>
-            <p>
-                <button onClick={combat}>Go!</button>
-            </p>
-            {result && (<p>
-                {result.attacker.health}
-                <br />
-                {result.defender.health}
-            </p>)}
+            <Card>
+                <CardBody>
+                    <AttackerForm input={attacker} onChange={setAttacker} />
+                </CardBody>
+            </Card>
+
+            <Card>
+                <CardBody>
+                    <DefenderForm input={defender} onChange={setDefender} />
+                </CardBody>
+            </Card>
+            <div className='flex justify-center'>
+                <Button onClick={combat}>
+                    Go!
+                </Button>
+            </div>
+            {result && (
+                <Card>
+                    <CardBody>
+                        Attacking unit: {result.attacker.health}
+                        <br />
+                        Defending unit: {result.defender.health}
+                    </CardBody>
+                </Card>
+            )}
         </div>
     );
 }
 
-function findUnit(id: string): UnitClass {
-    return UNITS.find(unit => unit.id === id)!;
+function createNewAttacker(): AttackerSettings {
+    const unitClass = UNITS[0];
+
+    return {
+        unitClass,
+        health: unitClass.health ?? 0,
+        isBoosted: false,
+    };
 }
+
+const defaultAttacker = createNewAttacker();
+
+function createNewDefender(): DefenderSettings {
+    const unitClass = UNITS[0];
+
+    return {
+        unitClass,
+        health: unitClass.health ?? 0,
+        bonus: 'none',
+    };
+}
+
+const defaultDefender = createNewDefender();

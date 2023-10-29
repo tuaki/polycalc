@@ -21,11 +21,18 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
         [ConditionType.Boosted]: false,
         [ConditionType.Freezed]: attacker.unitClass.skills.freeze,
         [ConditionType.Poisoned]: attacker.unitClass.skills.poison,
+        [ConditionType.Converted]: attacker.unitClass.skills.convert,
     };
 
     const newDefender = defender.update(defender.health - attackerDamage, newDefenderConditions);
+    const noRetaliation =
+        newDefender.isDead ||
+        newDefender.conditions.freezed ||
+        newDefender.conditions.converted ||
+        attacker.unitClass.skills.surprise ||
+        attacker.conditions.noRetaliation;
 
-    const noRetaliation = defender.isDead || defender.conditions.freezed || attacker.unitClass.skills.surprise || attacker.conditions.noRetaliation;
+    const newAttackerHealth = noRetaliation ? attacker.health : attacker.health - defenderDamage;
     const newAttackerConditions = {
         ...attacker.conditions,
         [ConditionType.Boosted]: false,
@@ -33,7 +40,7 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
     if (!noRetaliation)
         newAttackerConditions[ConditionType.Poisoned] = defender.unitClass.skills.poison;
 
-    const newAttacker = attacker.update(attacker.health - defenderDamage, newAttackerConditions);
+    const newAttacker = attacker.update(newAttackerHealth, newAttackerConditions);
 
     return {
         attacker: newAttacker,

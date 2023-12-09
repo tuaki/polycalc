@@ -2,6 +2,7 @@ import { ConditionType } from './Condition';
 import { type Unit } from './Unit';
 
 const DAMAGE_CONSTANT = 4.5;
+const SPLASH_DAMAGE_COEFFICIENT = 0.5;
 
 export type FightResult = {
     attacker: Unit;
@@ -13,7 +14,11 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
     const defenseForce = defender.defense * (defender.health / defender.maxHealth);
     const totalForce = attackForce + defenseForce;
 
-    const attackerDamage = Math.round((attackForce / totalForce) * attacker.attack * DAMAGE_CONSTANT);
+    const attackerDamageBeforeSplash = Math.round((attackForce / totalForce) * attacker.attack * DAMAGE_CONSTANT);
+    const attackerDamage = attacker.conditions.splashAttack
+        ? Math.floor(attackerDamageBeforeSplash * SPLASH_DAMAGE_COEFFICIENT)
+        : attackerDamageBeforeSplash;
+        
     const defenderDamage = Math.round((defenseForce / totalForce) * defender.defense * DAMAGE_CONSTANT);
 
     const newDefenderConditions = {
@@ -30,7 +35,8 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
         newDefender.conditions.freezed ||
         newDefender.conditions.converted ||
         attacker.unitClass.skills.surprise ||
-        attacker.conditions.noRetaliation;
+        attacker.conditions.noRetaliation ||
+        attacker.conditions.splashAttack;
 
     const newAttackerHealth = noRetaliation ? attacker.health : attacker.health - defenderDamage;
     const newAttackerConditions = {

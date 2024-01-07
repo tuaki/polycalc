@@ -1,5 +1,6 @@
 import { SkillType } from './Skill';
 import { type UnitClassDefinition, type UnitVariantDefinition } from './UnitClass';
+import { type VersionId } from './Version';
 
 export enum UnitTag {
     Classic = 'classic',
@@ -36,7 +37,10 @@ export const UNIT_VARIANT_DEFINITIONS: readonly UnitVariantDefinition[] = [
 
 const shipVariantIds = UNIT_VARIANT_DEFINITIONS.map(v => v.id);
 
-export const UNIT_DEFINITIONS: readonly UnitClassDefinition[] = [
+/** The second part of this type is here for the removed units. */
+type UnitClassVersionDefinition = UnitClassDefinition | string;
+
+const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     {
         id: 'warrior',
         label: 'Warrior',
@@ -346,3 +350,12 @@ export const UNIT_DEFINITIONS: readonly UnitClassDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     },
 ] as const;
+
+const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
+    'navalon',
+] as const;
+
+export const UNIT_DEFINITIONS: Record<VersionId, readonly UnitClassVersionDefinition[]> = {
+    diplomacy: UNIT_DEFINITIONS_DIPLOMACY,
+    ocean: UNIT_DEFINITIONS_OCEAN,
+};

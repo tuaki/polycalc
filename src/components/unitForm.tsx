@@ -1,6 +1,6 @@
 import { Checkbox, Input } from '@nextui-org/react';
-import { type DefenderSettings, type AttackerSettings } from '../types/core/Unit';
-import { type UnitClass } from '../types/core/UnitClass';
+import { type DefenderSettings, type AttackerSettings } from '@/types/core/Unit';
+import { type UnitClass } from '@/types/core/UnitClass';
 import { BonusSelect, UnitClassSelect } from './forms';
 
 type AttackerFormProps = {

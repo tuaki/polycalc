@@ -1,6 +1,7 @@
-import { type PlainType } from '../utils/common';
+import { type PlainType } from '@/types/utils/common';
 import { type SkillMap, type SkillType, createSkillMap } from './Skill';
 import { UNIT_DEFINITIONS, UNIT_VARIANT_DEFINITIONS, type UnitTag } from './units';
+import { VERSION_DEFINITIONS, VERSION_IDS, Version, type VersionId } from './Version';
 
 /**
  * A unit variant specifies health in case it can't be derived from the unit class.
@@ -19,7 +20,7 @@ export class UnitVariant {
     }
 }
 
-export const UNIT_VARIANTS = UNIT_VARIANT_DEFINITIONS.map(UnitVariant.fromDefinition);
+const UNIT_VARIANTS = UNIT_VARIANT_DEFINITIONS.map(UnitVariant.fromDefinition);
 
 export type UnitVariantDefinition = PlainType<UnitVariant>;
 
@@ -41,11 +42,51 @@ export class UnitClass {
 
         return new UnitClass(def.id, def.label, def.health, def.attack, def.defense, createSkillMap(def.skills), def.tags, variants);
     }
+
+    getDefaultHealth(): number {
+        return this.health ?? this.variants?.[0].health ?? 0;
+    }
 }
 
-export type UnitClassDefinition = Omit<UnitClass, 'skills' | 'variants'> & {
+export type UnitClassDefinition = {
+    id: string;
+    label: string;
+    health: number | undefined;
+    attack: number;
+    defense: number;
     skills: readonly SkillType[];
+    tags: readonly UnitTag[];
     variantIds?: readonly string[];
 };
 
-export const UNITS = UNIT_DEFINITIONS.map(UnitClass.fromDefinition);
+function createUnits() {
+    const output = {} as Record<VersionId, readonly UnitClass[]>;
+    const current: Map<string, UnitClass> = new Map();
+
+    // We iterate versions from the oldest to the newest, so that we can override unit classes.
+    VERSION_IDS.forEach(versionId => {
+        UNIT_DEFINITIONS[versionId].forEach(def => {
+            if (typeof def === 'string') {
+                // If the unit definition is only string, it means that it should be removed.
+                current.delete(def);
+            }
+            else {
+                const unit = UnitClass.fromDefinition(def);
+                current.set(unit.id, unit);
+            }
+        });
+        output[versionId] = [ ...current.values() ];
+    });
+
+    return output;
+}
+
+export const UNITS = createUnits();
+
+function createVersions() {
+    const output = {} as Record<VersionId, Version>;
+    VERSION_DEFINITIONS.forEach(def => output[def.id] = new Version(def.id, def.gameId, def.label, def.isBeta, UNITS[def.id]));
+    return output;
+}
+
+export const VERSIONS = createVersions();

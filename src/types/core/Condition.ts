@@ -1,4 +1,4 @@
-import { getStringEnumValues } from '../utils/common';
+import { getStringEnumValues } from '@/types/utils/common';
 
 export enum ConditionType {
     Veteran = 'veteran',

@@ -1,4 +1,4 @@
-import { getStringEnumValues } from '../utils/common';
+import { getStringEnumValues } from '@/types/utils/common';
 
 /**
  * Only those relevant for the combat outcome.

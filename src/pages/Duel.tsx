@@ -1,13 +1,22 @@
-import { useState } from 'react';
-import { UNITS } from '../types/core/UnitClass';
-import { type AttackerSettings, Unit, type DefenderSettings } from '../types/core/Unit';
-import { type FightResult, fight } from '../types/core/combat';
-import { AttackerForm, DefenderForm } from '../components/unitForm';
+import { useEffect, useState } from 'react';
+import { type UnitClass } from '@/types/core/UnitClass';
+import { type AttackerSettings, Unit, type DefenderSettings } from '@/types/core/Unit';
+import { type FightResult, fight } from '@/types/core/combat';
+import { AttackerForm, DefenderForm } from '@/components/unitForm';
 import { Button, Card, CardBody } from '@nextui-org/react';
+import usePreferences from '@/PreferencesProvider';
+import { type Version } from '@/types/core/Version';
 
 export function Duel() {
-    const [ attackerSettings, setAttackerSettings ] = useState(defaultAttacker);
-    const [ defenderSettings, setDefenderSettings ] = useState(defaultDefender);
+    const { preferences } = usePreferences();
+    const defaultClass = preferences.version.getDefaultClass();
+    const [ attackerSettings, setAttackerSettings ] = useState(() => createNewAttacker(defaultClass));
+    const [ defenderSettings, setDefenderSettings ] = useState(() => createNewDefender(defaultClass));
+
+    useEffect(() => {
+        setAttackerSettings(old => updateAttacker(old, preferences.version));
+        setDefenderSettings(old => updateDefender(old, preferences.version));
+    }, [ preferences.version ]);
 
     const [ result, setResult ] = useState<FightResult>();
 
@@ -53,26 +62,44 @@ export function Duel() {
     );
 }
 
-function createNewAttacker(): AttackerSettings {
-    const unitClass = UNITS[0];
-
+function createNewAttacker(unitClass: UnitClass): AttackerSettings {
     return {
         unitClass,
-        health: unitClass.health ?? 0,
+        health: unitClass.getDefaultHealth(),
         isBoosted: false,
     };
 }
 
-const defaultAttacker = createNewAttacker();
-
-function createNewDefender(): DefenderSettings {
-    const unitClass = UNITS[0];
-
+function createNewDefender(unitClass: UnitClass): DefenderSettings {
     return {
         unitClass,
-        health: unitClass.health ?? 0,
+        health: unitClass.getDefaultHealth(),
         bonus: 'none',
     };
 }
 
-const defaultDefender = createNewDefender();
+function updateAttacker(unit: AttackerSettings, newVersion: Version): AttackerSettings {
+    const newClass = newVersion.getClass(unit.unitClass.id);
+    if (newClass === unit.unitClass)
+        return unit;
+
+    const unitClass = newClass ?? newVersion.getDefaultClass();
+    return {
+        unitClass,
+        health: Math.min(unit.health, unitClass.getDefaultHealth()),
+        isBoosted: unit.isBoosted,
+    };
+}
+
+function updateDefender(unit: DefenderSettings, newVersion: Version): DefenderSettings {
+    const newClass = newVersion.getClass(unit.unitClass.id);
+    if (newClass === unit.unitClass)
+        return unit;
+
+    const unitClass = newClass ?? newVersion.getDefaultClass();
+    return {
+        unitClass,
+        health: Math.min(unit.health, unitClass.getDefaultHealth()),
+        bonus: unit.bonus,
+    };
+}

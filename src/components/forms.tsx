@@ -1,9 +1,9 @@
 import { Radio, RadioGroup, Select, SelectItem } from '@nextui-org/react';
-import { type BonusType } from '../types/core/Unit';
-import { UNITS, type UnitClass } from '../types/core/UnitClass';
-import usePreferences from '../PreferencesProvider';
+import { type BonusType } from '@/types/core/Unit';
+import { type UnitClass } from '@/types/core/UnitClass';
+import usePreferences from '@/PreferencesProvider';
 import { useEffect, useMemo } from 'react';
-import { type UnitTag } from '../types/core/units';
+import { type UnitTag } from '@/types/core/units';
 
 type BonusProps = {
     value: BonusType;
@@ -34,7 +34,7 @@ type UnitClassSelectProps = {
 
 export function UnitClassSelect({ value, onChange, label }: UnitClassSelectProps) {
     const { preferences } = usePreferences();
-    const options = useMemo(() => filterUnitsByTags(UNITS, preferences.filterTags), [ preferences.filterTags ]);
+    const options = useMemo(() => filterUnitsByTags(preferences.version.getClasses(), preferences.filterTags), [ preferences.filterTags ]);
 
     useEffect(() => {
         if (filterUnitsByTags([ value ], preferences.filterTags).length === 0)
@@ -46,7 +46,7 @@ export function UnitClassSelect({ value, onChange, label }: UnitClassSelectProps
             size='sm'
             label={label}
             selectedKeys={[ value.id ]}
-            onChange={e => onChange(findUnit(e.target.value))}
+            onChange={e => onChange(preferences.version.getClass(e.target.value)!)}
         >
             {options.map(unit => (
                 <SelectItem key={unit.id} value={unit.id}>{unit.label}</SelectItem>
@@ -55,11 +55,7 @@ export function UnitClassSelect({ value, onChange, label }: UnitClassSelectProps
     );
 }
 
-function findUnit(id: string): UnitClass {
-    return UNITS.find(unit => unit.id === id)!;
-}
-
-function filterUnitsByTags(units: UnitClass[], tags: UnitTag[]): UnitClass[] {
+function filterUnitsByTags(units: readonly UnitClass[], tags: UnitTag[]): readonly UnitClass[] {
     return tags.length === 0
         ? units
         : units.filter(unit => tags.some(tag => unit.tags.includes(tag)));

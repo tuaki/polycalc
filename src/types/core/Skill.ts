@@ -11,8 +11,13 @@ export enum SkillType {
     Infiltrate = 'infiltrate',
     Poison = 'poison',
     Splash = 'splash',
+    /** The unit's target doesn't retaliate. */
     Surprise = 'surprise',
-    /** Custom skill - the unit can become veteran */
+    /** The unit doesn't retaliate. */
+    Stiff = 'stiff',
+    /** The unit does splash-like damage to adjacent units when moving. Normal attack isn't affected. */
+    Stomp = 'stomp',
+    /** Custom skill - the unit can become veteran. */
     Promote = 'promote',
 }
 
@@ -67,6 +72,14 @@ const SKILL_DEFINITIONS: Record<SkillType, SkillDefinition> = {
     },
     [SkillType.Surprise]: {
         label: 'Surprise',
+        description: 'TODO',
+    },
+    [SkillType.Stiff]: {
+        label: 'Stiff',
+        description: 'TODO',
+    },
+    [SkillType.Stomp]: {
+        label: 'Stomp',
         description: 'TODO',
     },
     [SkillType.Promote]: {

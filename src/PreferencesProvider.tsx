@@ -49,7 +49,7 @@ function toStored(preferences: Preferences): StoredPreferences {
 
 export const PreferencesContext = createContext<PreferencesContext | undefined>(undefined);
 
-export function PreferencesProvider({ children }: { children: React.ReactNode }) {
+export function PreferencesProvider({ children }: Readonly<{ children: React.ReactNode }>) {
     const [ preferences, setPreferencesRaw ] = useState(defaultPreferences);
 
     const setPreferences = useCallback((preferences: Preferences) => {

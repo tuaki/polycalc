@@ -15,27 +15,28 @@ export enum UnitTag {
 export const UNIT_VARIANT_DEFINITIONS: readonly UnitVariantDefinition[] = [
     {
         id: 'warrior-ship',
-        label: 'Warrior Ship',
+        label: '10 HP',
         health: 10,
     },
     {
         id: 'defender-ship',
-        label: 'Defender Ship',
+        label: '15 HP',
         health: 15,
     },
     {
         id: 'veteran-defender-ship',
-        label: 'Veteran Defender Ship',
+        label: '20 HP',
         health: 20,
     },
     {
         id: 'giant-ship',
-        label: 'Giant Ship',
+        label: '40 HP',
         health: 40,
     },
 ];
 
-const shipVariantIds = UNIT_VARIANT_DEFINITIONS.map(v => v.id);
+const diplomacyVariantIds = UNIT_VARIANT_DEFINITIONS.map(v => v.id);
+const oceanVariantIds = diplomacyVariantIds.slice(0, 3);
 
 /** The second part of this type is here for the removed units. */
 type UnitClassVersionDefinition = UnitClassDefinition | string;
@@ -47,6 +48,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 2,
         defense: 2,
+        range: 1,
         skills: [ SkillType.Fortify, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
     }, {
@@ -55,6 +57,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 2,
         defense: 1,
+        range: 2,
         skills: [ SkillType.Fortify, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     }, {
@@ -63,6 +66,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 15,
         attack: 1,
         defense: 3,
+        range: 1,
         skills: [ SkillType.Fortify, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
@@ -71,6 +75,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 2,
         defense: 1,
+        range: 1,
         skills: [ SkillType.Fortify, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
@@ -79,6 +84,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 15,
         attack: 3,
         defense: 3,
+        range: 1,
         skills: [ SkillType.Fortify, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
     }, {
@@ -87,6 +93,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 4,
         defense: 0,
+        range: 3,
         skills: [ SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
@@ -95,6 +102,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 3.5,
         defense: 1,
+        range: 1,
         skills: [ SkillType.Fortify, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
@@ -103,6 +111,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 40,
         attack: 5,
         defense: 4,
+        range: 1,
         skills: [],
         tags: [ UnitTag.Land, UnitTag.Classic ],
     }, {
@@ -111,41 +120,43 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 15,
         attack: 3,
         defense: 1,
+        range: 1,
         skills: [ SkillType.Fortify ],
         tags: [ UnitTag.Land, UnitTag.Elyrion ],
     }, {
         id: 'boat',
         label: 'Boat',
-        health: undefined,
         attack: 1,
         defense: 1,
+        range: 2,
         skills: [],
         tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
-        variantIds: shipVariantIds,
+        variantIds: diplomacyVariantIds,
     }, {
         id: 'ship',
         label: 'Ship',
-        health: undefined,
         attack: 2,
         defense: 2,
+        range: 2,
         skills: [],
         tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
-        variantIds: shipVariantIds,
+        variantIds: diplomacyVariantIds,
     }, {
         id: 'battleship',
         label: 'Battleship',
-        health: undefined,
         attack: 4,
         defense: 3,
+        range: 2,
         skills: [],
         tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
-        variantIds: shipVariantIds,
+        variantIds: diplomacyVariantIds,
     }, {
         id: 'amphibian',
         label: 'Amphibian',
         health: 10,
         attack: 2,
         defense: 1,
+        range: 1,
         skills: [ SkillType.Fortify, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
     }, {
@@ -154,6 +165,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 15,
         attack: 3,
         defense: 1,
+        range: 2,
         skills: [ SkillType.Fortify, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
     }, {
@@ -162,6 +174,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 40,
         attack: 4,
         defense: 4,
+        range: 1,
         skills: [],
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
     }, {
@@ -170,6 +183,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 30,
         attack: 4,
         defense: 4,
+        range: 1,
         skills: [],
         tags: [ UnitTag.Naval, UnitTag.Elyrion ],
     }, {
@@ -178,6 +192,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 0,
         defense: 2,
+        range: 1,
         skills: [ SkillType.Fortify ],
         tags: [ UnitTag.Land, UnitTag.Elyrion ],
     }, {
@@ -186,6 +201,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 15,
         attack: 3,
         defense: 3,
+        range: 1,
         skills: [],
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Elyrion ],
     }, {
@@ -194,6 +210,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 20,
         attack: 4,
         defense: 3,
+        range: 2,
         skills: [ SkillType.Splash ],
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Elyrion ],
     }, {
@@ -202,6 +219,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 0.1,
         defense: 1,
+        range: 2,
         skills: [ SkillType.Freeze, SkillType.Fortify ],
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
@@ -210,6 +228,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 15,
         attack: 3,
         defense: 2,
+        range: 1,
         skills: [ SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
@@ -218,6 +237,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 0,
         defense: 2,
+        range: 1,
         skills: [],
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
@@ -226,6 +246,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 20,
         attack: 4,
         defense: 3,
+        range: 2,
         skills: [ SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
@@ -234,6 +255,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 30,
         attack: 4,
         defense: 4,
+        range: 1,
         skills: [],
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
@@ -242,6 +264,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 5,
         attack: 3,
         defense: 1,
+        range: 1,
         skills: [ SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
@@ -250,6 +273,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 15,
         attack: 1,
         defense: 3,
+        range: 1,
         skills: [ SkillType.Poison, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
@@ -258,6 +282,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 5,
         attack: 1,
         defense: 1,
+        range: 2,
         skills: [ SkillType.Poison, SkillType.Surprise, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Cymanti ],
     }, {
@@ -266,6 +291,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 15,
         attack: 3,
         defense: 2,
+        range: 1,
         skills: [ SkillType.Explode, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Cymanti ],
     }, {
@@ -274,6 +300,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 3,
         defense: 1,
+        range: 3,
         skills: [ SkillType.Poison, SkillType.Splash, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
@@ -282,6 +309,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 20,
         attack: 4,
         defense: 2,
+        range: 1,
         skills: [ SkillType.Explode, SkillType.Promote ],
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
@@ -290,6 +318,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 20,
         attack: 4,
         defense: 3,
+        range: 1,
         skills: [],
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
@@ -298,6 +327,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 2,
         defense: 2,
+        range: 1,
         skills: [ SkillType.Explode ],
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
@@ -306,6 +336,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 5,
         attack: 0,
         defense: 0.5,
+        range: 1,
         skills: [ SkillType.Infiltrate ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
     }, {
@@ -314,6 +345,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 2,
         defense: 2,
+        range: 1,
         skills: [ SkillType.Surprise ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
     }, {
@@ -322,6 +354,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 5,
         attack: 0,
         defense: 0.5,
+        range: 1,
         skills: [ SkillType.Infiltrate ],
         tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     }, {
@@ -330,6 +363,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 2,
         defense: 2,
+        range: 1,
         skills: [ SkillType.Surprise ],
         tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     }, {
@@ -338,6 +372,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 0,
         defense: 1,
+        range: 1,
         skills: [ SkillType.Convert ],
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
@@ -346,13 +381,110 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         health: 10,
         attack: 1,
         defense: 1,
+        range: 1,
         skills: [ SkillType.Convert ],
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     },
 ] as const;
 
 const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
+    {
+        id: 'swordsman',
+        label: 'Swordsman',
+        health: 15,
+        attack: 3,
+        defense: 3,
+        range: 1,
+        skills: [ SkillType.Promote ],
+        tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
+    },
+    'boat',
+    'ship',
+    'battleship',
+    {
+        id: 'raft',
+        label: 'Raft',
+        attack: 0,
+        defense: 1,
+        range: 1,
+        skills: [],
+        tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
+        variantIds: oceanVariantIds,
+    }, {
+        id: 'scout',
+        label: 'Scout',
+        attack: 2,
+        defense: 1,
+        range: 2,
+        skills: [],
+        tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
+        variantIds: oceanVariantIds,
+    }, {
+        id: 'rammer',
+        label: 'Rammer',
+        attack: 3,
+        defense: 3,
+        range: 1,
+        skills: [],
+        tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
+        variantIds: oceanVariantIds,
+    }, {
+        id: 'bomber',
+        label: 'Bomber',
+        attack: 4,
+        defense: 2,
+        range: 3,
+        skills: [ SkillType.Splash, SkillType.Stiff ],
+        tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
+        variantIds: oceanVariantIds,
+    }, {
+        id: 'juggernaut',
+        label: 'Juggernaut',
+        health: 40,
+        attack: 4,
+        defense: 4,
+        range: 1,
+        skills: [ SkillType.Stiff, SkillType.Stomp ], // Stomp is like splash but still can attack normally
+        tags: [ UnitTag.Naval, UnitTag.Classic ],
+    }, {
+        id: 'tridention',
+        label: 'Tridention',
+        health: 10,
+        attack: 3,
+        defense: 1,
+        range: 2,
+        skills: [ SkillType.Fortify, SkillType.Promote ],
+        tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
+    }, {
+        id: 'crab',
+        label: 'Crab',
+        health: 40,
+        attack: 4,
+        defense: 5,
+        range: 1,
+        skills: [],
+        tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
+    },
     'navalon',
+    {
+        id: 'mooni',
+        label: 'Mooni',
+        health: 10,
+        attack: 0,
+        defense: 1,
+        range: 1,
+        skills: [],
+        tags: [ UnitTag.Land, UnitTag.Polaris ],
+    }, {
+        id: 'gaami',
+        label: 'Gaami',
+        health: 30,
+        attack: 4,
+        defense: 3,
+        range: 1,
+        skills: [],
+        tags: [ UnitTag.Land, UnitTag.Polaris ],
+    }, 
 ] as const;
 
 export const UNIT_DEFINITIONS: Record<VersionId, readonly UnitClassVersionDefinition[]> = {

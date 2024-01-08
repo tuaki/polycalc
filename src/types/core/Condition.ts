@@ -8,7 +8,8 @@ export enum ConditionType {
     Poisoned = 'poisoned',
     Boosted = 'boosted',
     NoRetaliation = 'noRetaliation',
-    SplashAttack = 'splashAttack',
+    /** Splash or stomp. */
+    IndirectAttack = 'indirectAttack',
     Converted = 'converted',
 }
 
@@ -40,11 +41,11 @@ const CONDITION_DEFINITIONS: Record<ConditionType, ConditionDefinition> = {
         description: 'TODO',
     },
     [ConditionType.DefenseBonus]: {
-        label: 'DefenseBonus',
+        label: 'Defense bonus',
         description: 'TODO',
     },
     [ConditionType.WallBonus]: {
-        label: 'WallBonus',
+        label: 'Wall bonus',
         description: 'TODO',
     },
     [ConditionType.Freezed]: {
@@ -60,11 +61,11 @@ const CONDITION_DEFINITIONS: Record<ConditionType, ConditionDefinition> = {
         description: 'TODO',
     },
     [ConditionType.NoRetaliation]: {
-        label: 'NoRetaliation',
+        label: 'No retaliation',
         description: 'TODO',
     },
-    [ConditionType.SplashAttack]: {
-        label: 'SplashAttack',
+    [ConditionType.IndirectAttack]: {
+        label: 'Indirect attack',
         description: 'TODO',
     },
     [ConditionType.Converted]: {

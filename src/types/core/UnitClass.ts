@@ -20,8 +20,6 @@ export class UnitVariant {
     }
 }
 
-const UNIT_VARIANTS = UNIT_VARIANT_DEFINITIONS.map(UnitVariant.fromDefinition);
-
 export type UnitVariantDefinition = PlainType<UnitVariant>;
 
 export class UnitClass {
@@ -31,33 +29,52 @@ export class UnitClass {
         readonly health: number | undefined, // Might be a ship
         readonly attack: number,
         readonly defense: number,
+        readonly range: number,
         readonly skills: SkillMap,
         readonly tags: readonly UnitTag[],
         readonly variants: readonly UnitVariant[] | undefined,
     ) {}
 
-    static fromDefinition(def: UnitClassDefinition): UnitClass {
-        const foundVariants = def.variantIds?.map(id => UNIT_VARIANTS.find(v => v.id === id)).filter((v): v is UnitVariant => v !== undefined) ?? [];
-        const variants = foundVariants.length > 0 ? foundVariants : undefined;
+    static fromDefinition(def: UnitClassDefinition, allVariants: readonly UnitVariant[]): UnitClass {
+        const { health, variants } = getHealthOrVariants(def, allVariants);
 
-        return new UnitClass(def.id, def.label, def.health, def.attack, def.defense, createSkillMap(def.skills), def.tags, variants);
+        return new UnitClass(def.id, def.label, health, def.attack, def.defense, def.range, createSkillMap(def.skills), def.tags, variants);
+    }
+
+    getDefaultVariant(): UnitVariant | undefined {
+        return this.variants?.[0];
     }
 
     getDefaultHealth(): number {
-        return this.health ?? this.variants?.[0].health ?? 0;
+        // A unit has either health or variants.
+        return this.health ?? this.getDefaultVariant()?.health as number;
     }
+}
+
+function getHealthOrVariants(def: UnitClassDefinition, allVariants: readonly UnitVariant[]): { health?: number, variants?: readonly UnitVariant[] } {
+    if ('health' in def)
+        return { health: def.health };
+
+    const variants = def.variantIds.map(id => allVariants.find(v => v.id === id)).filter((v): v is UnitVariant => v !== undefined);
+
+    return { variants };
 }
 
 export type UnitClassDefinition = {
     id: string;
     label: string;
-    health: number | undefined;
     attack: number;
     defense: number;
+    range: number;
     skills: readonly SkillType[];
     tags: readonly UnitTag[];
-    variantIds?: readonly string[];
-};
+} & ({
+    health: number;
+} | {
+    variantIds: readonly string[];
+});
+
+const UNIT_VARIANTS = UNIT_VARIANT_DEFINITIONS.map(UnitVariant.fromDefinition);
 
 function createUnits() {
     const output = {} as Record<VersionId, readonly UnitClass[]>;
@@ -71,7 +88,7 @@ function createUnits() {
                 current.delete(def);
             }
             else {
-                const unit = UnitClass.fromDefinition(def);
+                const unit = UnitClass.fromDefinition(def, UNIT_VARIANTS);
                 current.set(unit.id, unit);
             }
         });

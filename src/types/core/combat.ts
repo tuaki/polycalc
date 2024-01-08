@@ -15,7 +15,7 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
     const totalForce = attackForce + defenseForce;
 
     const attackerDamageBeforeSplash = Math.round((attackForce / totalForce) * attacker.attack * DAMAGE_CONSTANT);
-    const attackerDamage = attacker.conditions.splashAttack
+    const attackerDamage = attacker.conditions.indirectAttack
         ? Math.floor(attackerDamageBeforeSplash * SPLASH_DAMAGE_COEFFICIENT)
         : attackerDamageBeforeSplash;
         
@@ -34,9 +34,10 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
         newDefender.isDead ||
         newDefender.conditions.freezed ||
         newDefender.conditions.converted ||
+        newDefender.unitClass.skills.stiff ||
         attacker.unitClass.skills.surprise ||
         attacker.conditions.noRetaliation ||
-        attacker.conditions.splashAttack;
+        attacker.conditions.indirectAttack;
 
     const newAttackerHealth = noRetaliation ? attacker.health : attacker.health - defenderDamage;
     const newAttackerConditions = {

@@ -10,16 +10,10 @@ export const BOOST_ADDITION = 0.5;
 export class Unit {
     constructor(
         readonly unitClass: UnitClass,
-        readonly unitVariant: UnitVariant | undefined,
+        readonly variant: UnitVariant | undefined,
         readonly health: number,
         readonly conditions: ConditionMap,
     ) {}
-
-    static createAttacker(init: AttackerSettings) {
-        return new Unit(init.unitClass, undefined, init.health, createConditionMap({
-            [ConditionType.Boosted]: init.isBoosted,
-        }));
-    }
 
     static createDefender(init: DefenderSettings) {
         return new Unit(init.unitClass, undefined, init.health, createConditionMap({
@@ -29,7 +23,7 @@ export class Unit {
     }
 
     update(health: number, conditions: ConditionMap): Unit {
-        return new Unit(this.unitClass, this.unitVariant, health, conditions);
+        return new Unit(this.unitClass, this.variant, health, conditions);
     }
 
     get isDead(): boolean {
@@ -37,8 +31,8 @@ export class Unit {
     }
 
     get maxHealth(): number {
-        if (this.unitVariant)
-            return this.unitVariant.health;
+        if (this.variant)
+            return this.variant.health;
 
         return this.unitClass.health! + (this.conditions.veteran ? VETERAN_HEALTH_BONUS : 0);
     }
@@ -64,10 +58,6 @@ export class Unit {
 type CommonSettings = {
     unitClass: UnitClass;
     health: number;
-}
-
-export type AttackerSettings = CommonSettings & {
-    isBoosted: boolean;
 }
 
 export type BonusType = 'none' | 'defense' | 'wall';

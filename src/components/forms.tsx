@@ -117,7 +117,7 @@ export function LinkSwitch(props: Readonly<SwitchProps>) {
                 {...getWrapperProps()}
                 className={slots.wrapper({
                     class: [
-                        'w-8 h-8 m-0',
+                        'w-8 h-12 m-0',
                         'flex items-center justify-center',
                         'rounded-lg bg-default-100 hover:bg-default-200',
                     ],
@@ -141,7 +141,7 @@ export function UpDownButton({ up, onClick, disabled }: UpDownButtonProps) {
             size='sm'
             onClick={onClick}
             disabled={disabled}
-            className='w-8 h-5 min-w-8 p-0 bg-default-100 hover:bg-default-200 disabled:bg-default-100'
+            className='w-8 h-5 min-w-8 p-0 bg-default-100 hover:bg-default-200'
         >
             {up ? <RxChevronUp size={16} /> : <RxChevronDown size={16} />}
         </Button>

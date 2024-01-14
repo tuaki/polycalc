@@ -36,6 +36,11 @@ export default function AttackerForm({ onChange }: AttackerFormProps) {
                     />
                 </div>
                 <div className='flex items-start gap-2'>
+                    <LinkSwitch
+                        size='sm'
+                        isSelected={state.isHealthLinked}
+                        onValueChange={value => dispatch({ type: 'flag', field: 'isHealthLinked', value })}
+                    />
                     <Input
                         size='sm'
                         type='number'
@@ -52,11 +57,6 @@ export default function AttackerForm({ onChange }: AttackerFormProps) {
                             onClick={() => dispatch({ type: 'health', operation: 'decrement' })}
                         />
                     </div>
-                    <LinkSwitch
-                        size='sm'
-                        isSelected={state.isHealthLinked}
-                        onValueChange={value => dispatch({ type: 'flag', field: 'isHealthLinked', value })}
-                    />
                 </div>
             </div>
             <div className='flex flex-col gap-3'>

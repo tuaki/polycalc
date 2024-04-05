@@ -1,6 +1,6 @@
 import { type PlainType } from '@/types/utils/common';
 import { type SkillMap, type SkillType, createSkillMap } from './Skill';
-import { UNIT_DEFINITIONS, UNIT_VARIANT_DEFINITIONS, type UnitTag } from './units';
+import { UNIT_DEFINITIONS, UNIT_VARIANT_DEFINITIONS, UnitTag } from './units';
 import { VERSION_DEFINITIONS, VERSION_IDS, Version, type VersionId } from './Version';
 
 /**
@@ -48,6 +48,11 @@ export class UnitClass {
     getDefaultHealth(): number {
         // A unit has either health or variants.
         return this.health ?? this.getDefaultVariant()?.health as number;
+    }
+
+    // A hack for now, might need a fix later.
+    get isNavalOnly(): boolean {
+        return !this.tags.includes(UnitTag.Land);
     }
 }
 

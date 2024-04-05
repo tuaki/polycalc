@@ -5,7 +5,7 @@ import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';
 import { type Version } from '@/types/core/Version';
 import { useEffect, useMemo, useReducer } from 'react';
 
-export function useAttacker() {
+export function useDefender() {
     const { preferences } = usePreferences();
     const [ state, dispatch ] = useReducer(reducer, computeInitialState(preferences.version));
     const unit = useMemo(() => toUnit(state), [ state ]);
@@ -43,19 +43,28 @@ function innerReducer(state: State, action: Action): State {
 
         return { ...state, health: state.health + (action.operation === 'increment' ? 1 : -1) };
     }
-    case 'flag': return { ...state, [action.field]: action.value };
+    case 'flag': {
+        if (action.field === 'isDefenseBonus')
+            return { ...state, bonus: action.value ? 'defense' : 'none' };
+        if (action.field === 'isWallBonus')
+            return { ...state, bonus: action.value ? 'wall' : 'none' };
+
+        return { ...state, [action.field]: action.value };
+    }
     case 'version': return version(state, action.value);
     }
 }
 
 export function toUnit(state: State): Unit {
     return new Unit(state.unitClass, state.variant, state.health, createConditionMap({
-        [ConditionType.Boosted]: state.isBoosted,
         [ConditionType.Veteran]: state.isVeteran,
-        [ConditionType.NoRetaliation]: state.isRanged,
-        [ConditionType.IndirectAttack]: state.isIndirect,
+        [ConditionType.Poisoned]: state.isPoisoned,
+        [ConditionType.DefenseBonus]: state.bonus === 'defense',
+        [ConditionType.WallBonus]: state.bonus === 'wall',
     }));
 }
+
+type BonusType = 'none' | 'defense' | 'wall';
 
 type State = {
     unitClass: UnitClass;
@@ -63,12 +72,9 @@ type State = {
     /** If yes, the health will update when changing classes, variants etc. */
     isHealthLinked: boolean;
     health: number;
-    isBoosted: boolean;
     isVeteran: boolean;
-    /** If yes, there will be no retaliation. */
-    isRanged: boolean;
-    /** Splash or stomp. */
-    isIndirect: boolean;
+    isPoisoned: boolean;
+    bonus: BonusType;
 };
 
 function computeInitialState(version: Version): State {
@@ -82,10 +88,9 @@ function computeInitialState(version: Version): State {
         variant,
         isHealthLinked: true,
         health,
-        isBoosted: false,
         isVeteran,
-        isRanged: false,
-        isIndirect: false,
+        isPoisoned: false,
+        bonus: 'none',
     };
 }
 
@@ -100,8 +105,7 @@ function unitClass(state: State, unitClass: UnitClass): State {
         unitClass,
         variant: unitClass.getDefaultVariant(),
         isVeteran: state.isVeteran && unitClass.skills.promote,
-        isRanged: state.isRanged && unitClass.range > 1,
-        isIndirect: state.isIndirect && (unitClass.skills.splash || unitClass.skills.stomp),
+        bonus: (unitClass.isNavalOnly && state.bonus === 'wall') ? 'none' : state.bonus,
     };
 }
 
@@ -127,7 +131,7 @@ type HealthAction = {
 
 type FlagAction = {
     type: 'flag';
-    field: 'isHealthLinked' | 'isBoosted' | 'isVeteran' | 'isRanged' | 'isIndirect';
+    field: 'isHealthLinked' | 'isVeteran' | 'isPoisoned' | 'isDefenseBonus' | 'isWallBonus';
     value: boolean;
 }
 

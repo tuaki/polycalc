@@ -1,17 +1,17 @@
 import { Checkbox, Input } from '@nextui-org/react';
 import { type Unit } from '@/types/core/Unit';
 import { LinkSwitch, UnitClassSelect, UnitVariantSelect, UpDownButton } from '../forms';
-import { useAttacker } from './useAttacker';
+import { UnitStats } from './UnitStats';
+import { useDefender } from './useDefender';
 import { useEffect } from 'react';
 import clsx from 'clsx';
-import { UnitStats } from './UnitStats';
 
-type AttackerFormProps = Readonly<{
+type DefenderFormProps = Readonly<{
     onChange: (unit: Unit) => void;
 }>;
 
-export function AttackerForm({ onChange }: AttackerFormProps) {
-    const { state, dispatch, unit } = useAttacker();
+export function DefenderForm({ onChange }: DefenderFormProps) {
+    const { state, dispatch, unit } = useDefender();
 
     // TODO signals probably ...
     useEffect(() => {
@@ -72,27 +72,25 @@ export function AttackerForm({ onChange }: AttackerFormProps) {
                 )}
                 <Checkbox
                     size='sm'
-                    isSelected={state.isBoosted}
-                    onValueChange={value => dispatch({ type: 'flag', field: 'isBoosted', value })}
+                    isSelected={state.isPoisoned}
+                    onValueChange={value => dispatch({ type: 'flag', field: 'isPoisoned', value })}
                 >
-                    Boosted
+                    Poisoned
                 </Checkbox>
-                {(state.unitClass.skills.stomp || state.unitClass.skills.splash) && (
+                <Checkbox
+                    size='sm'
+                    isSelected={state.bonus === 'defense'}
+                    onValueChange={value => dispatch({ type: 'flag', field: 'isDefenseBonus', value })}
+                >
+                    Defense bonus (1.5)
+                </Checkbox>
+                {!unit.unitClass.isNavalOnly && (
                     <Checkbox
                         size='sm'
-                        isSelected={state.isIndirect}
-                        onValueChange={value => dispatch({ type: 'flag', field: 'isIndirect', value })}
+                        isSelected={state.bonus === 'wall'}
+                        onValueChange={value => dispatch({ type: 'flag', field: 'isWallBonus', value })}
                     >
-                        {state.unitClass.skills.stomp ? 'Stomp' : 'Splash'}
-                    </Checkbox>
-                )}
-                {state.unitClass.range > 1 && (
-                    <Checkbox
-                        size='sm'
-                        isSelected={state.isRanged}
-                        onValueChange={value => dispatch({ type: 'flag', field: 'isRanged', value })}
-                    >
-                        Ranged
+                        Wall bonus (4.0)
                     </Checkbox>
                 )}
             </div>
@@ -102,3 +100,4 @@ export function AttackerForm({ onChange }: AttackerFormProps) {
         </div>
     );
 }
+

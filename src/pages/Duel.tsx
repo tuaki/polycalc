@@ -1,31 +1,20 @@
-import { useEffect, useState } from 'react';
-import { type UnitClass } from '@/types/core/UnitClass';
-import { Unit, type DefenderSettings } from '@/types/core/Unit';
+import { useState } from 'react';
+import { type Unit } from '@/types/core/Unit';
 import { type FightResult, fight } from '@/types/core/combat';
-import { DefenderForm } from '@/components/units/unitForm';
+import { DefenderForm } from '@/components/units/DefenderForm';
 import { Button, Card, CardBody } from '@nextui-org/react';
-import usePreferences from '@/PreferencesProvider';
-import { type Version } from '@/types/core/Version';
-import AttackerForm from '@/components/units/AttackerForm';
+import { AttackerForm } from '@/components/units/AttackerForm';
 
 export function Duel() {
-    const { preferences } = usePreferences();
-    const defaultClass = preferences.version.getDefaultClass();
-    const [ defenderSettings, setDefenderSettings ] = useState(() => createNewDefender(defaultClass));
-
-    useEffect(() => {
-        setDefenderSettings(old => updateDefender(old, preferences.version));
-    }, [ preferences.version ]);
-
     const [ attacker, setAttacker ] = useState<Unit>();
+    const [ defender, setDefender ] = useState<Unit>();
     const [ result, setResult ] = useState<FightResult>();
 
 
     function combat() {
-        if (!attacker)
+        if (!attacker || !defender)
             return;
 
-        const defender = Unit.createDefender(defenderSettings);
         setResult(fight(attacker, defender));
     }
 
@@ -44,7 +33,7 @@ export function Duel() {
 
             <Card>
                 <CardBody>
-                    <DefenderForm input={defenderSettings} onChange={setDefenderSettings} />
+                    <DefenderForm onChange={setDefender} />
                 </CardBody>
             </Card>
             <div className='flex justify-center'>
@@ -63,25 +52,4 @@ export function Duel() {
             )}
         </div>
     );
-}
-
-function createNewDefender(unitClass: UnitClass): DefenderSettings {
-    return {
-        unitClass,
-        health: unitClass.getDefaultHealth(),
-        bonus: 'none',
-    };
-}
-
-function updateDefender(unit: DefenderSettings, newVersion: Version): DefenderSettings {
-    const newClass = newVersion.getClass(unit.unitClass.id);
-    if (newClass === unit.unitClass)
-        return unit;
-
-    const unitClass = newClass ?? newVersion.getDefaultClass();
-    return {
-        unitClass,
-        health: Math.min(unit.health, unitClass.getDefaultHealth()),
-        bonus: unit.bonus,
-    };
 }

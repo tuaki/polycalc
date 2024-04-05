@@ -3,6 +3,7 @@ import { type Unit } from './Unit';
 
 const DAMAGE_CONSTANT = 4.5;
 const SPLASH_DAMAGE_COEFFICIENT = 0.5;
+const ROUNDING_ERROR = 1e-6;
 
 export type FightResult = {
     attacker: Unit;
@@ -14,12 +15,12 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
     const defenseForce = defender.defense * (defender.health / defender.maxHealth);
     const totalForce = attackForce + defenseForce;
 
-    const attackerDamageBeforeSplash = Math.round((attackForce / totalForce) * attacker.attack * DAMAGE_CONSTANT);
+    const attackerDamageBeforeSplash = Math.round((attackForce / totalForce) * attacker.attack * DAMAGE_CONSTANT + ROUNDING_ERROR);
     const attackerDamage = attacker.conditions.indirectAttack
         ? Math.floor(attackerDamageBeforeSplash * SPLASH_DAMAGE_COEFFICIENT)
         : attackerDamageBeforeSplash;
         
-    const defenderDamage = Math.round((defenseForce / totalForce) * defender.defense * DAMAGE_CONSTANT);
+    const defenderDamage = Math.round((defenseForce / totalForce) * defender.defense * DAMAGE_CONSTANT + ROUNDING_ERROR);
 
     const newDefenderConditions = {
         ...defender.conditions,

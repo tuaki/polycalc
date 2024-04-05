@@ -1,11 +1,12 @@
 import { Radio, RadioGroup, Select, SelectItem, type SwitchProps, VisuallyHidden, useSwitch, Button } from '@nextui-org/react';
-import { type BonusType } from '@/types/core/Unit';
 import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';
 import usePreferences from '@/PreferencesProvider';
 import { useEffect, useMemo } from 'react';
 import { type UnitTag } from '@/types/core/units';
 import { PiLinkBold, PiLinkBreakBold } from 'react-icons/pi';
 import { RxChevronUp, RxChevronDown } from 'react-icons/rx';   
+
+type BonusType = 'none' | 'defense' | 'wall';
 
 type BonusProps = Readonly<{
     value: BonusType;

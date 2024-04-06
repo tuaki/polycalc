@@ -2,7 +2,7 @@ import { Card, CardBody, Listbox, ListboxItem } from '@nextui-org/react';
 import usePreferences, { type FilterTag } from '@/PreferencesProvider';
 import { UnitTag } from '@/types/core/units';
 
-export default function TribesMenu() {
+export function TribesMenu() {
     const { preferences, setPreferences } = usePreferences();
 
     return (

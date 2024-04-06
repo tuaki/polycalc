@@ -3,6 +3,11 @@ import { type Unit } from './Unit';
 
 const DAMAGE_CONSTANT = 4.5;
 const SPLASH_DAMAGE_COEFFICIENT = 0.5;
+/**
+ * This fixes some JS rounding errors.
+ * E.g., when a full-HP swordsman attack to an 8-HP swordsman with defense bonus, it should deal 8 damage and kill it. However, normal JS math would let him deal only 7 damage.
+ * This computation comes to 40.5 / 5.4, which is 7.5, but JS would say 7.499999... Therefore, it would be rounded down to 7, not upt to 8.
+ */
 const ROUNDING_ERROR = 1e-6;
 
 export type FightResult = {

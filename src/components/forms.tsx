@@ -4,7 +4,8 @@ import usePreferences from '@/PreferencesProvider';
 import { useEffect, useMemo } from 'react';
 import { type UnitTag } from '@/types/core/units';
 import { PiLinkBold, PiLinkBreakBold } from 'react-icons/pi';
-import { RxChevronUp, RxChevronDown } from 'react-icons/rx';   
+import { RxChevronUp, RxChevronDown, RxChevronLeft, RxChevronRight } from 'react-icons/rx';   
+import clsx from 'clsx';
 
 type BonusType = 'none' | 'defense' | 'wall';
 
@@ -130,21 +131,25 @@ export function LinkSwitch(props: Readonly<SwitchProps>) {
     );
 }
 
-type UpDownButtonProps = Readonly<{
-    up?: boolean;
+type LeftRightButtonProps = Readonly<{
+    variant: 'up' | 'down' | 'left' | 'right';
     onClick?: () => void;
     disabled?: boolean;
+    className?: string;
 }>;
 
-export function UpDownButton({ up, onClick, disabled }: UpDownButtonProps) {
+export function ArrowButton({ variant, onClick, disabled, className }: LeftRightButtonProps) {
     return (
         <Button
             size='sm'
             onClick={onClick}
             disabled={disabled}
-            className='w-8 h-5 min-w-8 p-0 bg-default-100 hover:bg-default-200'
+            className={clsx('min-w-8 p-0 bg-default-100 hover:bg-default-200', (variant === 'up' || variant === 'down') ? 'w-8 h-5' : 'w-5 h-8', className)}
         >
-            {up ? <RxChevronUp size={16} /> : <RxChevronDown size={16} />}
+            {variant === 'up' && <RxChevronUp size={16} />}
+            {variant === 'down' && <RxChevronDown size={16} />}
+            {variant === 'left' && <RxChevronLeft size={16} />}
+            {variant === 'right' && <RxChevronRight size={16} />}
         </Button>
     );
 }

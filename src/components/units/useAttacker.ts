@@ -1,25 +1,30 @@
+import { useEffect, useMemo, useReducer } from 'react';
 import usePreferences from '@/PreferencesProvider';
 import { ConditionType, createConditionMap } from '@/types/core/Condition';
 import { Unit, VETERAN_HEALTH_BONUS } from '@/types/core/Unit';
 import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';
 import { type Version } from '@/types/core/Version';
-import { useEffect, useMemo, useReducer } from 'react';
 
-export function useAttacker() {
+export function useAttacker(input: Unit, onChange: (unit: Unit) => void) {
     const { preferences } = usePreferences();
-    const [ state, dispatch ] = useReducer(reducer, computeInitialState(preferences.version));
-    const unit = useMemo(() => toUnit(state), [ state ]);
+    const [ state, dispatch ] = useReducer(reducer, computeInitialState(input));
 
     useEffect(() => {
         dispatch({ type: 'version', value: preferences.version });
     }, [ preferences.version ]);
 
-    return { state, dispatch, unit };
+    const innerUnit = useMemo(() => toUnit(state), [ state ]);
+    // TODO signals probably ...
+    useEffect(() => {
+        onChange(innerUnit);
+    }, [ innerUnit ]);
+
+    return { state, dispatch };
 }
 
 type Action = UnitClassAction | VariantAction | HealthAction | FlagAction | VersionAction;
 
-export function reducer(state: State, action: Action): State {
+function reducer(state: State, action: Action): State {
     console.log('Reduce:', state, action);
     
     const newState = innerReducer(state, action);
@@ -48,15 +53,6 @@ function innerReducer(state: State, action: Action): State {
     }
 }
 
-export function toUnit(state: State): Unit {
-    return new Unit(state.unitClass, state.variant, state.health, createConditionMap({
-        [ConditionType.Boosted]: state.isBoosted,
-        [ConditionType.Veteran]: state.isVeteran,
-        [ConditionType.NoRetaliation]: state.isRanged,
-        [ConditionType.IndirectAttack]: state.isIndirect,
-    }));
-}
-
 type State = {
     unitClass: UnitClass;
     variant?: UnitVariant;
@@ -71,22 +67,40 @@ type State = {
     isIndirect: boolean;
 };
 
-function computeInitialState(version: Version): State {
-    const unitClass = version.getDefaultClass();
-    const variant = unitClass.getDefaultVariant();
-    const isVeteran = false;
-    const health = computeDefaultHealth({ unitClass, variant, isVeteran });
+function computeInitialState(unit: Unit): State {
+    const unitClass = unit.unitClass;
+    const variant = unit.variant;
+    const isVeteran = unit.conditions.veteran;
+    const defaultHealth = computeDefaultHealth({ unitClass, variant, isVeteran });
+    const health = unit.health;
 
     return {
         unitClass,
         variant,
-        isHealthLinked: true,
+        isHealthLinked: defaultHealth === health,
         health,
-        isBoosted: false,
         isVeteran,
-        isRanged: false,
-        isIndirect: false,
+        isBoosted: unit.conditions.boosted,
+        isRanged: unit.conditions.noRetaliation,
+        isIndirect: unit.conditions.indirectAttack,
     };
+}
+
+export function createDefaultAttacker(version: Version): Unit {
+    const unitClass = version.getDefaultClass();
+    const variant = unitClass.getDefaultVariant();
+    const health = computeDefaultHealth({ unitClass, variant, isVeteran: false });
+
+    return new Unit(unitClass, variant, health, createConditionMap());
+}
+
+function toUnit(state: State): Unit {
+    return new Unit(state.unitClass, state.variant, state.health, createConditionMap({
+        [ConditionType.Boosted]: state.isBoosted,
+        [ConditionType.Veteran]: state.isVeteran,
+        [ConditionType.NoRetaliation]: state.isRanged,
+        [ConditionType.IndirectAttack]: state.isIndirect,
+    }));
 }
 
 type UnitClassAction = {

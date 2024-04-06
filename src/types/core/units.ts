@@ -16,21 +16,25 @@ export const UNIT_VARIANT_DEFINITIONS: readonly UnitVariantDefinition[] = [
     {
         id: 'warrior-ship',
         label: '10 HP',
+        labelShort: '10',
         health: 10,
     },
     {
         id: 'defender-ship',
         label: '15 HP',
+        labelShort: '15',
         health: 15,
     },
     {
         id: 'veteran-defender-ship',
         label: '20 HP',
+        labelShort: '20',
         health: 20,
     },
     {
         id: 'giant-ship',
         label: '40 HP',
+        labelShort: '40',
         health: 40,
     },
 ];
@@ -45,6 +49,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     {
         id: 'warrior',
         label: 'Warrior',
+        labelShort: 'wr',
         health: 10,
         attack: 2,
         defense: 2,
@@ -54,6 +59,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'archer',
         label: 'Archer',
+        labelShort: 'ar',
         health: 10,
         attack: 2,
         defense: 1,
@@ -63,6 +69,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'defender',
         label: 'Defender',
+        labelShort: 'df',
         health: 15,
         attack: 1,
         defense: 3,
@@ -72,6 +79,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'rider',
         label: 'Rider',
+        labelShort: 'rd',
         health: 10,
         attack: 2,
         defense: 1,
@@ -81,6 +89,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'swordsman',
         label: 'Swordsman',
+        labelShort: 'sw',
         health: 15,
         attack: 3,
         defense: 3,
@@ -90,6 +99,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'catapult',
         label: 'Catapult',
+        labelShort: 'ct',
         health: 10,
         attack: 4,
         defense: 0,
@@ -99,6 +109,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'knight',
         label: 'Knight',
+        labelShort: 'kn',
         health: 10,
         attack: 3.5,
         defense: 1,
@@ -108,6 +119,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'giant',
         label: 'Giant',
+        labelShort: 'gi',
         health: 40,
         attack: 5,
         defense: 4,
@@ -117,6 +129,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'polytaur',
         label: 'Polytaur',
+        labelShort: 'po',
         health: 15,
         attack: 3,
         defense: 1,
@@ -126,6 +139,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'boat',
         label: 'Boat',
+        labelShort: 'bo',
         attack: 1,
         defense: 1,
         range: 2,
@@ -135,6 +149,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'ship',
         label: 'Ship',
+        labelShort: 'sp',
         attack: 2,
         defense: 2,
         range: 2,
@@ -144,6 +159,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'battleship',
         label: 'Battleship',
+        labelShort: 'bs',
         attack: 4,
         defense: 3,
         range: 2,
@@ -153,6 +169,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'amphibian',
         label: 'Amphibian',
+        labelShort: 'am',
         health: 10,
         attack: 2,
         defense: 1,
@@ -162,6 +179,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'tridention',
         label: 'Tridention',
+        labelShort: 'tr',
         health: 15,
         attack: 3,
         defense: 1,
@@ -171,6 +189,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'crab',
         label: 'Crab',
+        labelShort: 'cr',
         health: 40,
         attack: 4,
         defense: 4,
@@ -180,6 +199,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'navalon',
         label: 'Navalon',
+        labelShort: 'na',
         health: 30,
         attack: 4,
         defense: 4,
@@ -189,6 +209,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'dragon-egg',
         label: 'Dragon Egg',
+        labelShort: 'de',
         health: 10,
         attack: 0,
         defense: 2,
@@ -198,6 +219,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'baby-dragon',
         label: 'Baby Dragon',
+        labelShort: 'bd',
         health: 15,
         attack: 3,
         defense: 3,
@@ -207,6 +229,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'fire-dragon',
         label: 'Fire Dragon',
+        labelShort: 'fd',
         health: 20,
         attack: 4,
         defense: 3,
@@ -216,6 +239,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'ice-archer',
         label: 'Ice Archer',
+        labelShort: 'ia',
         health: 10,
         attack: 0.1,
         defense: 1,
@@ -225,6 +249,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'battle-sled',
         label: 'Battle Sled',
+        labelShort: 'sl',
         health: 15,
         attack: 3,
         defense: 2,
@@ -234,6 +259,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'mooni',
         label: 'Mooni',
+        labelShort: 'mo',
         health: 10,
         attack: 0,
         defense: 2,
@@ -243,6 +269,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'ice-fortress',
         label: 'Ice Fortress',
+        labelShort: 'if',
         health: 20,
         attack: 4,
         defense: 3,
@@ -252,6 +279,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'gaami',
         label: 'Gaami',
+        labelShort: 'ga',
         health: 30,
         attack: 4,
         defense: 4,
@@ -261,6 +289,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'hexapod',
         label: 'Hexapod',
+        labelShort: 'hx',
         health: 5,
         attack: 3,
         defense: 1,
@@ -270,6 +299,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'kiton',
         label: 'Kiton',
+        labelShort: 'kt',
         health: 15,
         attack: 1,
         defense: 3,
@@ -279,6 +309,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'phychi',
         label: 'Phychi',
+        labelShort: 'ph',
         health: 5,
         attack: 1,
         defense: 1,
@@ -288,6 +319,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'raychi',
         label: 'Raychi',
+        labelShort: 'rc',
         health: 15,
         attack: 3,
         defense: 2,
@@ -297,6 +329,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'exida',
         label: 'Exida',
+        labelShort: 'ex',
         health: 10,
         attack: 3,
         defense: 1,
@@ -306,6 +339,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'doomux',
         label: 'Doomux',
+        labelShort: 'dm',
         health: 20,
         attack: 4,
         defense: 2,
@@ -315,6 +349,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'centipede',
         label: 'Centipede',
+        labelShort: 'cp',
         health: 20,
         attack: 4,
         defense: 3,
@@ -324,6 +359,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'segment',
         label: 'Segment',
+        labelShort: 'sg',
         health: 10,
         attack: 2,
         defense: 2,
@@ -333,6 +369,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'cloak',
         label: 'Cloak',
+        labelShort: 'cl',
         health: 5,
         attack: 0,
         defense: 0.5,
@@ -342,6 +379,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'dagger',
         label: 'Dagger',
+        labelShort: 'dg',
         health: 10,
         attack: 2,
         defense: 2,
@@ -351,6 +389,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'dinghy',
         label: 'Dinghy',
+        labelShort: 'di',
         health: 5,
         attack: 0,
         defense: 0.5,
@@ -360,6 +399,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'pirate',
         label: 'Pirate',
+        labelShort: 'pi',
         health: 10,
         attack: 2,
         defense: 2,
@@ -369,6 +409,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'mind-bender',
         label: 'Mind Bender',
+        labelShort: 'mb',
         health: 10,
         attack: 0,
         defense: 1,
@@ -378,6 +419,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'shaman',
         label: 'Shaman',
+        labelShort: 'sh',
         health: 10,
         attack: 1,
         defense: 1,
@@ -391,6 +433,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     {
         id: 'swordsman',
         label: 'Swordsman',
+        labelShort: 'sw',
         health: 15,
         attack: 3,
         defense: 3,
@@ -404,6 +447,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     {
         id: 'raft',
         label: 'Raft',
+        labelShort: 'rf',
         attack: 0,
         defense: 1,
         range: 1,
@@ -413,6 +457,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'scout',
         label: 'Scout',
+        labelShort: 'sc',
         attack: 2,
         defense: 1,
         range: 2,
@@ -422,6 +467,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'rammer',
         label: 'Rammer',
+        labelShort: 'rm',
         attack: 3,
         defense: 3,
         range: 1,
@@ -431,6 +477,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'bomber',
         label: 'Bomber',
+        labelShort: 'bm',
         attack: 4,
         defense: 2,
         range: 3,
@@ -440,6 +487,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'juggernaut',
         label: 'Juggernaut',
+        labelShort: 'jg',
         health: 40,
         attack: 4,
         defense: 4,
@@ -449,6 +497,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'tridention',
         label: 'Tridention',
+        labelShort: 'tr',
         health: 10,
         attack: 3,
         defense: 1,
@@ -458,6 +507,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'crab',
         label: 'Crab',
+        labelShort: 'cr',
         health: 40,
         attack: 4,
         defense: 5,
@@ -469,6 +519,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     {
         id: 'mooni',
         label: 'Mooni',
+        labelShort: 'mo',
         health: 10,
         attack: 0,
         defense: 1,
@@ -478,6 +529,7 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     }, {
         id: 'gaami',
         label: 'Gaami',
+        labelShort: 'ga',
         health: 30,
         attack: 4,
         defense: 3,

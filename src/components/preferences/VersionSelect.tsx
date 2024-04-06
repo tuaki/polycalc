@@ -1,9 +1,11 @@
-import { Card, CardBody, Select, SelectItem } from '@nextui-org/react';
+import { Select, SelectItem } from '@nextui-org/react';
 import usePreferences from '@/PreferencesProvider';
 import { VERSIONS } from '@/types/core/UnitClass';
 import { VERSION_IDS, type VersionId } from '@/types/core/Version';
 
-export default function VersionSelect() {
+const reversedVersionIds = VERSION_IDS.slice().reverse();
+
+export function VersionSelect() {
     const { preferences, setPreferences } = usePreferences();
 
     function onChange(versionId: string) {
@@ -12,18 +14,14 @@ export default function VersionSelect() {
     }
 
     return (
-        <Card>
-            <CardBody>
-                <Select
-                    size='sm'
-                    label='Version'
-                    selectedKeys={[ preferences.version.id ]}
-                    onChange={e => onChange(e.target.value)}
-                >
-                    {VERSION_IDS.map(versionOption)}
-                </Select>
-            </CardBody>
-        </Card>
+        <Select
+            size='sm'
+            label='Version'
+            selectedKeys={[ preferences.version.id ]}
+            onChange={e => onChange(e.target.value)}
+        >
+            {reversedVersionIds.map(versionOption)}
+        </Select>
     );
 }
 

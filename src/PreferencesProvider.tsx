@@ -1,8 +1,9 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import { type UnitTag } from './types/core/units';
-import localStorage from './types/utils/localStorage';
+import { localStorage } from './types/utils/localStorage';
 import { DEFAULT_VERSION_ID, type VersionId, type Version } from './types/core/Version';
 import { VERSIONS } from './types/core/UnitClass';
+import { MODE_IDS, type ModeId } from './components/preferences/ModeSelect';
 
 const PREFERENCES_KEY = 'preferences';
 
@@ -11,6 +12,7 @@ export type FilterTag = Exclude<UnitTag, UnitTag.Land | UnitTag.Naval>;
 type Preferences = {
     filterTags: FilterTag[];
     version: Version;
+    modeId: ModeId;
 }
 
 type PreferencesContext = {
@@ -21,6 +23,7 @@ type PreferencesContext = {
 type StoredPreferences = {
     filterTags?: FilterTag[];
     versionId?: string;
+    modeId?: string;
 };
 
 function fromStored(): Preferences {
@@ -32,9 +35,16 @@ function fromStored(): Preferences {
             : DEFAULT_VERSION_ID
     ) as VersionId;
 
+    const modeId = (
+        (stored.modeId && MODE_IDS.includes(stored.modeId as ModeId))
+            ? stored.modeId
+            : MODE_IDS[0]
+    ) as ModeId;
+
     return {
         filterTags: stored.filterTags ?? [],
         version: VERSIONS[versionId],
+        modeId,
     };
 }
 
@@ -44,6 +54,7 @@ function toStored(preferences: Preferences): StoredPreferences {
     return {
         filterTags: preferences.filterTags,
         versionId: preferences.version.id,
+        modeId: preferences.modeId,
     };
 }
 

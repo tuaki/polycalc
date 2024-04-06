@@ -12,11 +12,12 @@ export class UnitVariant {
     constructor(
         readonly id: string,
         readonly label: string,
+        readonly labelShort: string,
         readonly health: number,
     ) {}
 
     static fromDefinition(def: UnitVariantDefinition): UnitVariant {
-        return new UnitVariant(def.id, def.label, def.health);
+        return new UnitVariant(def.id, def.label, def.labelShort, def.health);
     }
 }
 
@@ -26,6 +27,7 @@ export class UnitClass {
     constructor(
         readonly id: string,
         readonly label: string,
+        readonly labelShort: string,
         readonly health: number | undefined, // Might be a ship
         readonly attack: number,
         readonly defense: number,
@@ -38,7 +40,7 @@ export class UnitClass {
     static fromDefinition(def: UnitClassDefinition, allVariants: readonly UnitVariant[]): UnitClass {
         const { health, variants } = getHealthOrVariants(def, allVariants);
 
-        return new UnitClass(def.id, def.label, health, def.attack, def.defense, def.range, createSkillMap(def.skills), def.tags, variants);
+        return new UnitClass(def.id, def.label, def.labelShort, health, def.attack, def.defense, def.range, createSkillMap(def.skills), def.tags, variants);
     }
 
     getDefaultVariant(): UnitVariant | undefined {
@@ -68,6 +70,7 @@ function getHealthOrVariants(def: UnitClassDefinition, allVariants: readonly Uni
 export type UnitClassDefinition = {
     id: string;
     label: string;
+    labelShort: string;
     attack: number;
     defense: number;
     range: number;

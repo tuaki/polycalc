@@ -1,22 +1,17 @@
-import { Checkbox, Input } from '@nextui-org/react';
+import { Button, Checkbox, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
 import { type Unit } from '@/types/core/Unit';
-import { LinkSwitch, UnitClassSelect, UnitVariantSelect, UpDownButton } from '../forms';
+import { LinkSwitch, UnitClassSelect, UnitVariantSelect, ArrowButton } from '../forms';
 import { useAttacker } from './useAttacker';
-import { useEffect } from 'react';
 import clsx from 'clsx';
 import { UnitStats } from './UnitStats';
 
 type AttackerFormProps = Readonly<{
+    unit: Unit;
     onChange: (unit: Unit) => void;
 }>;
 
-export function AttackerForm({ onChange }: AttackerFormProps) {
-    const { state, dispatch, unit } = useAttacker();
-
-    // TODO signals probably ...
-    useEffect(() => {
-        onChange(unit);
-    }, [ unit, onChange ]);
+export function AttackerForm({ unit, onChange }: AttackerFormProps) {
+    const { state, dispatch } = useAttacker(unit, onChange);
 
     const isVariants = !!state.unitClass.variants;
 
@@ -51,10 +46,10 @@ export function AttackerForm({ onChange }: AttackerFormProps) {
                         disabled={state.isHealthLinked}
                     />
                     <div className='flex flex-col justify-between h-12'>
-                        <UpDownButton up disabled={state.isHealthLinked}
+                        <ArrowButton variant='up' disabled={state.isHealthLinked}
                             onClick={() => dispatch({ type: 'health', operation: 'increment' })}
                         />
-                        <UpDownButton disabled={state.isHealthLinked}
+                        <ArrowButton variant='down' disabled={state.isHealthLinked}
                             onClick={() => dispatch({ type: 'health', operation: 'decrement' })}
                         />
                     </div>
@@ -99,6 +94,44 @@ export function AttackerForm({ onChange }: AttackerFormProps) {
             <div>
                 <UnitStats unit={unit} />
             </div>
+        </div>
+    );
+}
+
+type AttackerFormModalProps = AttackerFormProps & Readonly<{
+    onDelete: () => void;
+    short?: boolean;
+}>;
+
+export function AttackerFormModal({ unit, onChange, onDelete, short }: AttackerFormModalProps) {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    function innerDelete() {
+        onDelete();
+        onClose();
+    }
+
+    return (
+        <div>
+            <Button onClick={onOpen}>{short ? unit.toStringShort() : unit.toString()}</Button>
+            <Modal isOpen={isOpen} onClose={onClose} size='3xl'>
+                <ModalContent>
+                    <ModalHeader>
+                        Attacker
+                    </ModalHeader>
+                    <ModalBody>
+                        <AttackerForm unit={unit} onChange={onChange} />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button onClick={innerDelete} color='danger'>
+                            Delete
+                        </Button>
+                        <Button onClick={onClose}>
+                            OK
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </div>
     );
 }

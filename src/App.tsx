@@ -1,5 +1,6 @@
-import { PreferencesProvider } from './PreferencesProvider';
+import usePreferences, { PreferencesProvider } from './PreferencesProvider';
 import { Duel } from './pages/Duel';
+import { Brawl } from './pages/Brawl';
 import { Preferences } from './pages/Preferences';
 
 function App() {
@@ -10,11 +11,17 @@ function App() {
                     <Preferences />
                 </div>
                 <div className='md:col-start-2'>
-                    <Duel />
+                    <ApplicationMode />
                 </div>
             </div>
         </PreferencesProvider>
     );
+}
+
+function ApplicationMode() {
+    const { preferences } = usePreferences();
+
+    return preferences.modeId === 'duel' ? <Duel /> : <Brawl />;
 }
 
 export default App;

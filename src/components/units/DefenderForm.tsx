@@ -1,22 +1,17 @@
-import { Checkbox, Input } from '@nextui-org/react';
+import { Button, Checkbox, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
 import { type Unit } from '@/types/core/Unit';
-import { LinkSwitch, UnitClassSelect, UnitVariantSelect, UpDownButton } from '../forms';
+import { LinkSwitch, UnitClassSelect, UnitVariantSelect, ArrowButton } from '../forms';
 import { UnitStats } from './UnitStats';
 import { useDefender } from './useDefender';
-import { useEffect } from 'react';
 import clsx from 'clsx';
 
 type DefenderFormProps = Readonly<{
+    unit: Unit;
     onChange: (unit: Unit) => void;
 }>;
 
-export function DefenderForm({ onChange }: DefenderFormProps) {
-    const { state, dispatch, unit } = useDefender();
-
-    // TODO signals probably ...
-    useEffect(() => {
-        onChange(unit);
-    }, [ unit, onChange ]);
+export function DefenderForm({ unit, onChange }: DefenderFormProps) {
+    const { state, dispatch } = useDefender(unit, onChange);
 
     const isVariants = !!state.unitClass.variants;
 
@@ -51,10 +46,10 @@ export function DefenderForm({ onChange }: DefenderFormProps) {
                         disabled={state.isHealthLinked}
                     />
                     <div className='flex flex-col justify-between h-12'>
-                        <UpDownButton up disabled={state.isHealthLinked}
+                        <ArrowButton variant='up' disabled={state.isHealthLinked}
                             onClick={() => dispatch({ type: 'health', operation: 'increment' })}
                         />
-                        <UpDownButton disabled={state.isHealthLinked}
+                        <ArrowButton variant='down' disabled={state.isHealthLinked}
                             onClick={() => dispatch({ type: 'health', operation: 'decrement' })}
                         />
                     </div>
@@ -101,3 +96,40 @@ export function DefenderForm({ onChange }: DefenderFormProps) {
     );
 }
 
+type DefenderFormModalProps = DefenderFormProps & Readonly<{
+    onDelete: () => void;
+    short?: boolean;
+}>;
+
+export function DefenderFormModal({ unit, onChange, onDelete, short }: DefenderFormModalProps) {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    function innerDelete() {
+        onDelete();
+        onClose();
+    }
+
+    return (
+        <div>
+            <Button onClick={onOpen}>{short ? unit.toStringShort() : unit.toString()}</Button>
+            <Modal isOpen={isOpen} onClose={onClose} size='3xl'>
+                <ModalContent>
+                    <ModalHeader>
+                        Defender
+                    </ModalHeader>
+                    <ModalBody>
+                        <DefenderForm unit={unit} onChange={onChange} />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button onClick={innerDelete} color='danger'>
+                            Delete
+                        </Button>
+                        <Button onClick={onClose}>
+                            OK
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </div>
+    );
+}

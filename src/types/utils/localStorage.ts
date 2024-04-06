@@ -27,7 +27,7 @@ type LocalStorage = {
 };
 
 /* eslint-disable @typescript-eslint/no-empty-function */
-const localStorage: LocalStorage = window.localStorage ? {
+export const localStorage: LocalStorage = window.localStorage ? {
     get,
     set,
     remove,
@@ -38,5 +38,3 @@ const localStorage: LocalStorage = window.localStorage ? {
     remove: () => {},
     clear: () => {},
 };
-
-export default localStorage;

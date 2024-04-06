@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { type Unit } from '@/types/core/Unit';
 import { type FightResult, fight } from '@/types/core/combat';
 import { DefenderForm } from '@/components/units/DefenderForm';
 import { Button, Card, CardBody } from '@nextui-org/react';
 import { AttackerForm } from '@/components/units/AttackerForm';
+import { createDefaultDefender } from '@/components/units/useDefender';
+import usePreferences from '@/PreferencesProvider';
+import { createDefaultAttacker } from '@/components/units/useAttacker';
 
 export function Duel() {
-    const [ attacker, setAttacker ] = useState<Unit>();
-    const [ defender, setDefender ] = useState<Unit>();
+    const { preferences } = usePreferences();
+    const [ attacker, setAttacker ] = useState(createDefaultAttacker(preferences.version));
+    const [ defender, setDefender ] = useState(createDefaultDefender(preferences.version));
     const [ result, setResult ] = useState<FightResult>();
-
 
     function combat() {
         if (!attacker || !defender)
@@ -27,13 +29,13 @@ export function Duel() {
             </Card>
             <Card>
                 <CardBody>
-                    <AttackerForm onChange={setAttacker} />
+                    <AttackerForm unit={attacker} onChange={setAttacker} />
                 </CardBody>
             </Card>
 
             <Card>
                 <CardBody>
-                    <DefenderForm onChange={setDefender} />
+                    <DefenderForm unit={defender} onChange={setDefender} />
                 </CardBody>
             </Card>
             <div className='flex justify-center'>

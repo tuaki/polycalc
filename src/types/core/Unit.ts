@@ -1,4 +1,4 @@
-import { type ConditionMap } from './Condition';
+import { type ConditionType, type ConditionMap } from './Condition';
 import { type UnitVariant, type UnitClass } from './UnitClass';
 
 export const VETERAN_HEALTH_BONUS = 5;
@@ -55,13 +55,16 @@ export class Unit {
         return this.unitClass.defense;
     }
 
+    get activeConditions(): ConditionType[] {
+        return Object.entries(this.conditions).filter(([ , value ]) => value).map(([ key ]) => key as ConditionType);
+    }
+
     toString(): string {
         const variantString = this.variant ? ` (${this.variant.label})` : '';
         return `${this.unitClass.label}${variantString} ${this.health}/${this.maxHealth}`;
     }
 
     toStringShort(): string {
-        const variantString = this.variant ? ` (${this.variant.labelShort})` : '';
-        return `${this.unitClass.labelShort}${variantString} ${this.health}`;
+        return `${this.unitClass.idShort} ${this.health}/${this.maxHealth}`;
     }
 }

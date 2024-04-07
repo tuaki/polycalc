@@ -16,25 +16,21 @@ export const UNIT_VARIANT_DEFINITIONS: readonly UnitVariantDefinition[] = [
     {
         id: 'warrior-ship',
         label: '10 HP',
-        labelShort: '10',
         health: 10,
     },
     {
         id: 'defender-ship',
         label: '15 HP',
-        labelShort: '15',
         health: 15,
     },
     {
         id: 'veteran-defender-ship',
         label: '20 HP',
-        labelShort: '20',
         health: 20,
     },
     {
         id: 'giant-ship',
         label: '40 HP',
-        labelShort: '40',
         health: 40,
     },
 ];
@@ -48,8 +44,8 @@ type UnitClassVersionDefinition = UnitClassDefinition | string;
 const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     {
         id: 'warrior',
+        idShort: 'wr',
         label: 'Warrior',
-        labelShort: 'wr',
         health: 10,
         attack: 2,
         defense: 2,
@@ -58,8 +54,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
     }, {
         id: 'archer',
+        idShort: 'ar',
         label: 'Archer',
-        labelShort: 'ar',
         health: 10,
         attack: 2,
         defense: 1,
@@ -68,8 +64,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     }, {
         id: 'defender',
+        idShort: 'df',
         label: 'Defender',
-        labelShort: 'df',
         health: 15,
         attack: 1,
         defense: 3,
@@ -78,8 +74,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
         id: 'rider',
+        idShort: 'rd',
         label: 'Rider',
-        labelShort: 'rd',
         health: 10,
         attack: 2,
         defense: 1,
@@ -88,8 +84,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
         id: 'swordsman',
+        idShort: 'sw',
         label: 'Swordsman',
-        labelShort: 'sw',
         health: 15,
         attack: 3,
         defense: 3,
@@ -98,8 +94,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
     }, {
         id: 'catapult',
+        idShort: 'ct',
         label: 'Catapult',
-        labelShort: 'ct',
         health: 10,
         attack: 4,
         defense: 0,
@@ -108,8 +104,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
         id: 'knight',
+        idShort: 'kn',
         label: 'Knight',
-        labelShort: 'kn',
         health: 10,
         attack: 3.5,
         defense: 1,
@@ -118,8 +114,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
         id: 'giant',
+        idShort: 'gi',
         label: 'Giant',
-        labelShort: 'gi',
         health: 40,
         attack: 5,
         defense: 4,
@@ -128,8 +124,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic ],
     }, {
         id: 'polytaur',
+        idShort: 'po',
         label: 'Polytaur',
-        labelShort: 'po',
         health: 15,
         attack: 3,
         defense: 1,
@@ -138,8 +134,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Elyrion ],
     }, {
         id: 'boat',
+        idShort: 'bo',
         label: 'Boat',
-        labelShort: 'bo',
         attack: 1,
         defense: 1,
         range: 2,
@@ -148,8 +144,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         variantIds: diplomacyVariantIds,
     }, {
         id: 'ship',
+        idShort: 'sp',
         label: 'Ship',
-        labelShort: 'sp',
         attack: 2,
         defense: 2,
         range: 2,
@@ -158,8 +154,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         variantIds: diplomacyVariantIds,
     }, {
         id: 'battleship',
+        idShort: 'bs',
         label: 'Battleship',
-        labelShort: 'bs',
         attack: 4,
         defense: 3,
         range: 2,
@@ -168,8 +164,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         variantIds: diplomacyVariantIds,
     }, {
         id: 'amphibian',
+        idShort: 'am',
         label: 'Amphibian',
-        labelShort: 'am',
         health: 10,
         attack: 2,
         defense: 1,
@@ -178,8 +174,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
     }, {
         id: 'tridention',
+        idShort: 'tr',
         label: 'Tridention',
-        labelShort: 'tr',
         health: 15,
         attack: 3,
         defense: 1,
@@ -188,8 +184,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
     }, {
         id: 'crab',
+        idShort: 'cr',
         label: 'Crab',
-        labelShort: 'cr',
         health: 40,
         attack: 4,
         defense: 4,
@@ -198,8 +194,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
     }, {
         id: 'navalon',
+        idShort: 'na',
         label: 'Navalon',
-        labelShort: 'na',
         health: 30,
         attack: 4,
         defense: 4,
@@ -208,8 +204,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Naval, UnitTag.Elyrion ],
     }, {
         id: 'dragon-egg',
+        idShort: 'de',
         label: 'Dragon Egg',
-        labelShort: 'de',
         health: 10,
         attack: 0,
         defense: 2,
@@ -218,8 +214,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Elyrion ],
     }, {
         id: 'baby-dragon',
+        idShort: 'bd',
         label: 'Baby Dragon',
-        labelShort: 'bd',
         health: 15,
         attack: 3,
         defense: 3,
@@ -228,8 +224,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Elyrion ],
     }, {
         id: 'fire-dragon',
+        idShort: 'fd',
         label: 'Fire Dragon',
-        labelShort: 'fd',
         health: 20,
         attack: 4,
         defense: 3,
@@ -238,8 +234,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Elyrion ],
     }, {
         id: 'ice-archer',
+        idShort: 'ia',
         label: 'Ice Archer',
-        labelShort: 'ia',
         health: 10,
         attack: 0.1,
         defense: 1,
@@ -248,8 +244,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
         id: 'battle-sled',
+        idShort: 'sl',
         label: 'Battle Sled',
-        labelShort: 'sl',
         health: 15,
         attack: 3,
         defense: 2,
@@ -258,8 +254,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
         id: 'mooni',
+        idShort: 'mo',
         label: 'Mooni',
-        labelShort: 'mo',
         health: 10,
         attack: 0,
         defense: 2,
@@ -268,8 +264,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
         id: 'ice-fortress',
+        idShort: 'if',
         label: 'Ice Fortress',
-        labelShort: 'if',
         health: 20,
         attack: 4,
         defense: 3,
@@ -278,8 +274,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
         id: 'gaami',
+        idShort: 'ga',
         label: 'Gaami',
-        labelShort: 'ga',
         health: 30,
         attack: 4,
         defense: 4,
@@ -288,8 +284,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
         id: 'hexapod',
+        idShort: 'hx',
         label: 'Hexapod',
-        labelShort: 'hx',
         health: 5,
         attack: 3,
         defense: 1,
@@ -298,8 +294,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
         id: 'kiton',
+        idShort: 'kt',
         label: 'Kiton',
-        labelShort: 'kt',
         health: 15,
         attack: 1,
         defense: 3,
@@ -308,8 +304,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
         id: 'phychi',
+        idShort: 'ph',
         label: 'Phychi',
-        labelShort: 'ph',
         health: 5,
         attack: 1,
         defense: 1,
@@ -318,8 +314,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Cymanti ],
     }, {
         id: 'raychi',
+        idShort: 'rc',
         label: 'Raychi',
-        labelShort: 'rc',
         health: 15,
         attack: 3,
         defense: 2,
@@ -328,8 +324,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Cymanti ],
     }, {
         id: 'exida',
+        idShort: 'ex',
         label: 'Exida',
-        labelShort: 'ex',
         health: 10,
         attack: 3,
         defense: 1,
@@ -338,8 +334,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
         id: 'doomux',
+        idShort: 'dm',
         label: 'Doomux',
-        labelShort: 'dm',
         health: 20,
         attack: 4,
         defense: 2,
@@ -348,8 +344,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
         id: 'centipede',
+        idShort: 'cp',
         label: 'Centipede',
-        labelShort: 'cp',
         health: 20,
         attack: 4,
         defense: 3,
@@ -358,8 +354,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
         id: 'segment',
+        idShort: 'sg',
         label: 'Segment',
-        labelShort: 'sg',
         health: 10,
         attack: 2,
         defense: 2,
@@ -368,8 +364,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Cymanti ],
     }, {
         id: 'cloak',
+        idShort: 'cl',
         label: 'Cloak',
-        labelShort: 'cl',
         health: 5,
         attack: 0,
         defense: 0.5,
@@ -378,8 +374,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
     }, {
         id: 'dagger',
+        idShort: 'dg',
         label: 'Dagger',
-        labelShort: 'dg',
         health: 10,
         attack: 2,
         defense: 2,
@@ -388,8 +384,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
     }, {
         id: 'dinghy',
+        idShort: 'di',
         label: 'Dinghy',
-        labelShort: 'di',
         health: 5,
         attack: 0,
         defense: 0.5,
@@ -398,8 +394,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     }, {
         id: 'pirate',
+        idShort: 'pi',
         label: 'Pirate',
-        labelShort: 'pi',
         health: 10,
         attack: 2,
         defense: 2,
@@ -408,8 +404,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     }, {
         id: 'mind-bender',
+        idShort: 'mb',
         label: 'Mind Bender',
-        labelShort: 'mb',
         health: 10,
         attack: 0,
         defense: 1,
@@ -418,8 +414,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
     }, {
         id: 'shaman',
+        idShort: 'sh',
         label: 'Shaman',
-        labelShort: 'sh',
         health: 10,
         attack: 1,
         defense: 1,
@@ -432,8 +428,8 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
 const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     {
         id: 'swordsman',
+        idShort: 'sw',
         label: 'Swordsman',
-        labelShort: 'sw',
         health: 15,
         attack: 3,
         defense: 3,
@@ -446,8 +442,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     'battleship',
     {
         id: 'raft',
+        idShort: 'rf',
         label: 'Raft',
-        labelShort: 'rf',
         attack: 0,
         defense: 1,
         range: 1,
@@ -456,8 +452,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
         variantIds: oceanVariantIds,
     }, {
         id: 'scout',
+        idShort: 'sc',
         label: 'Scout',
-        labelShort: 'sc',
         attack: 2,
         defense: 1,
         range: 2,
@@ -466,8 +462,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
         variantIds: oceanVariantIds,
     }, {
         id: 'rammer',
+        idShort: 'rm',
         label: 'Rammer',
-        labelShort: 'rm',
         attack: 3,
         defense: 3,
         range: 1,
@@ -476,8 +472,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
         variantIds: oceanVariantIds,
     }, {
         id: 'bomber',
+        idShort: 'bm',
         label: 'Bomber',
-        labelShort: 'bm',
         attack: 4,
         defense: 2,
         range: 3,
@@ -486,8 +482,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
         variantIds: oceanVariantIds,
     }, {
         id: 'juggernaut',
+        idShort: 'jg',
         label: 'Juggernaut',
-        labelShort: 'jg',
         health: 40,
         attack: 4,
         defense: 4,
@@ -496,8 +492,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Naval, UnitTag.Classic ],
     }, {
         id: 'tridention',
+        idShort: 'tr',
         label: 'Tridention',
-        labelShort: 'tr',
         health: 10,
         attack: 3,
         defense: 1,
@@ -506,8 +502,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
     }, {
         id: 'crab',
+        idShort: 'cr',
         label: 'Crab',
-        labelShort: 'cr',
         health: 40,
         attack: 4,
         defense: 5,
@@ -518,8 +514,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     'navalon',
     {
         id: 'mooni',
+        idShort: 'mo',
         label: 'Mooni',
-        labelShort: 'mo',
         health: 10,
         attack: 0,
         defense: 1,
@@ -528,8 +524,8 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
         tags: [ UnitTag.Land, UnitTag.Polaris ],
     }, {
         id: 'gaami',
+        idShort: 'ga',
         label: 'Gaami',
-        labelShort: 'ga',
         health: 30,
         attack: 4,
         defense: 3,

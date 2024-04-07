@@ -4,6 +4,7 @@ import { LinkSwitch, UnitClassSelect, UnitVariantSelect, ArrowButton } from '../
 import { useAttacker } from './useAttacker';
 import clsx from 'clsx';
 import { UnitStats } from './UnitStats';
+import { UnitIconButton } from './UnitIcon';
 
 type AttackerFormProps = Readonly<{
     unit: Unit;
@@ -43,13 +44,12 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
                         label='Health'
                         value={'' + state.health}
                         onChange={e => dispatch({ type: 'health', value: parseInt(e.target.value) })}
-                        disabled={state.isHealthLinked}
                     />
                     <div className='flex flex-col justify-between h-12'>
-                        <ArrowButton variant='up' disabled={state.isHealthLinked}
+                        <ArrowButton variant='up'
                             onClick={() => dispatch({ type: 'health', operation: 'increment' })}
                         />
-                        <ArrowButton variant='down' disabled={state.isHealthLinked}
+                        <ArrowButton variant='down'
                             onClick={() => dispatch({ type: 'health', operation: 'decrement' })}
                         />
                     </div>
@@ -100,10 +100,9 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
 
 type AttackerFormModalProps = AttackerFormProps & Readonly<{
     onDelete: () => void;
-    short?: boolean;
 }>;
 
-export function AttackerFormModal({ unit, onChange, onDelete, short }: AttackerFormModalProps) {
+export function AttackerFormModal({ unit, onChange, onDelete }: AttackerFormModalProps) {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     function innerDelete() {
@@ -113,7 +112,7 @@ export function AttackerFormModal({ unit, onChange, onDelete, short }: AttackerF
 
     return (
         <div>
-            <Button onClick={onOpen}>{short ? unit.toStringShort() : unit.toString()}</Button>
+            <UnitIconButton unit={unit} onClick={onOpen} />
             <Modal isOpen={isOpen} onClose={onClose} size='3xl'>
                 <ModalContent>
                     <ModalHeader>

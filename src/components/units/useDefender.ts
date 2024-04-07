@@ -43,10 +43,13 @@ function innerReducer(state: State, action: Action): State {
     case 'unitClass': return unitClass(state, action.value);
     case 'variant': return variant(state, action.value);
     case 'health': {
-        if ('value' in action)
-            return { ...state, health: action.value };
+        const health = 'value' in action
+            ? action.value
+            : state.health + (action.operation === 'increment' ? 1 : -1);
 
-        return { ...state, health: state.health + (action.operation === 'increment' ? 1 : -1) };
+        const isHealthLinked = state.isHealthLinked && health === computeDefaultHealth(state);
+
+        return { ...state, health, isHealthLinked };
     }
     case 'flag': {
         if (action.field === 'isDefenseBonus')

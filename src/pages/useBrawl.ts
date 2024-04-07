@@ -13,7 +13,7 @@ export function useBrawl() {
     return { state, dispatch };
 }
 
-type Action = CreateUnitAction | EditUnitAction | DeleteUnitAction | MoveUnitAction | FightModeAction | FlagAction;
+type Action = CreateUnitAction | EditUnitAction | DeleteUnitAction | MoveUnitAction | FightModeAction;
 
 function reducer(state: UseBrawlState, action: Action): UseBrawlState {
     console.log('Reduce:', state, action);
@@ -30,7 +30,6 @@ function innerReducer(state: UseBrawlState, action: Action): UseBrawlState {
     case 'deleteUnit': return deleteUnit(state, action);
     case 'moveUnit': return moveUnit(state, action);
     case 'fightMode': return fightMode(state, action);
-    case 'flag': return { ...state, [action.field]: action.value };
     }
 }
 
@@ -48,7 +47,6 @@ export type UseBrawlState = {
     defenders: Unit[];
     attackers: Attacker[];
     results: (Unit | undefined)[][] | undefined;
-    isShortLabels?: boolean;
 };
 
 function computeInitialState(version: Version): UseBrawlState {
@@ -133,18 +131,37 @@ type FightModeAction = {
     type: 'fightMode';
     defenderIndex: number;
     attackerIndex: number;
-    value: FightMode;
 }
 
 function fightMode(state: UseBrawlState, action: FightModeAction): UseBrawlState {
     const attacker = { ...state.attackers[action.attackerIndex] };
     attacker.fights = [ ...attacker.fights ];
-    attacker.fights[action.defenderIndex] = action.value;
+
+    const currentValue = attacker.fights[action.defenderIndex];
+    const isIndeirectSupported = attacker.unit.unitClass.skills.stomp || attacker.unit.unitClass.skills.splash;
+    const nextValue = getNextFightMode(currentValue, isIndeirectSupported);
+
+    attacker.fights[action.defenderIndex] = nextValue;
+    if (isIndeirectSupported && nextValue === 'direct') {
+        for (let i = 0; i < attacker.fights.length; i++) {
+            if (i !== action.defenderIndex && attacker.fights[i] === 'direct')
+                attacker.fights[i] = 'indirect';
+        }
+    }
 
     const attackers = [ ...state.attackers ];
     attackers[action.attackerIndex] = attacker;
 
     return { ...state, attackers };
+}
+
+function getNextFightMode(current: FightMode, isIndeirectSupported: boolean): FightMode {
+    if (current === 'none')
+        return 'direct';
+    if (current === 'indirect')
+        return 'none';
+
+    return isIndeirectSupported ? 'indirect' : 'none';
 }
 
 function computeResults({ attackers, defenders }: UseBrawlState): (Unit | undefined)[][] {
@@ -173,10 +190,4 @@ function computeResults({ attackers, defenders }: UseBrawlState): (Unit | undefi
     }
 
     return results;
-}
-
-type FlagAction = {
-    type: 'flag';
-    field: 'isShortLabels';
-    value: boolean;
 }

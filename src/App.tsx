@@ -6,11 +6,11 @@ import { Preferences } from './pages/Preferences';
 function App() {
     return (
         <PreferencesProvider>
-            <div className='p-4 gap-4 grid md:grid-cols-2 2xl:grid-cols-3'>
+            <div className='p-4 gap-4 grid md:grid-cols-2 2xl:grid-cols-6'>
                 <div>
                     <Preferences />
                 </div>
-                <div className='md:col-start-2'>
+                <div className='md:col-start-2 col-span-5'>
                     <ApplicationMode />
                 </div>
             </div>

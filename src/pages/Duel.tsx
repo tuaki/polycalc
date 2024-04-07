@@ -23,7 +23,7 @@ export function Duel() {
     return (
         <div className='flex flex-col gap-3'>
             <Card>
-                <CardBody>
+                <CardBody className='py-3'>
                     <h1>Duel</h1>
                 </CardBody>
             </Card>

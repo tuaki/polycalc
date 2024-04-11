@@ -42,20 +42,26 @@ type Attacker = {
     fights: FightMode[];
 }
 
+type BrawlResults = {
+    defenders: (Unit | undefined)[][];
+    attackers: Unit[];
+}
+
 export type UseBrawlState = {
     version: Version; // TODO
     defenders: Unit[];
     attackers: Attacker[];
-    results: (Unit | undefined)[][] | undefined;
+    results: BrawlResults;
 };
 
 function computeInitialState(version: Version): UseBrawlState {
-    return {
+    const state: Omit<UseBrawlState, 'results'> = {
         version,
         defenders: [ createDefaultDefender(version) ],
         attackers: [ { unit: createDefaultAttacker(version), fights: [ 'direct' ] } ],
-        results: undefined,
     };
+
+    return { ...state, results: computeResults(state) };
 }
 
 type CreateUnitAction = {
@@ -164,12 +170,16 @@ function getNextFightMode(current: FightMode, isIndeirectSupported: boolean): Fi
     return isIndeirectSupported ? 'indirect' : 'none';
 }
 
-function computeResults({ attackers, defenders }: UseBrawlState): (Unit | undefined)[][] {
-    const results = [];
+function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>): BrawlResults {
+    const output: BrawlResults = {
+        defenders: [],
+        attackers: [],
+    };
     let previousDefenders: (Unit | undefined)[] = defenders;
 
     for (const element of attackers) {
         const attacker = element.unit;
+        let finalAttacker: Unit | undefined;
         const attackerResults = previousDefenders.map((defender, defenderIndex) => {
             if (!defender || defender.isDead)
                 return;
@@ -182,12 +192,17 @@ function computeResults({ attackers, defenders }: UseBrawlState): (Unit | undefi
             const updatedAttacker = attacker.update(attacker.health, { ...attacker.conditions, indirectAttack });
             const fightResult = fight(updatedAttacker, defender);
 
+            if (!indirectAttack)
+                finalAttacker = fightResult?.attacker;
+
             return fightResult?.defender;
         });
 
-        results.push(attackerResults);
+        output.defenders.push(attackerResults);
         previousDefenders = attackerResults;
+
+        output.attackers.push(finalAttacker ?? attacker);
     }
 
-    return results;
+    return output;
 }

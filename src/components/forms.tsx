@@ -52,7 +52,11 @@ export function UnitClassSelect({ value, onChange, label }: UnitClassSelectProps
             size='sm'
             label={label}
             selectedKeys={selectedKeys}
-            onChange={e => onChange(preferences.version.getClass(e.target.value)!)}
+            onChange={e => {
+                const newClass = preferences.version.getClass(e.target.value);
+                if (newClass)
+                    onChange(newClass); 
+            }}
         >
             {options.map(unit => (
                 <SelectItem key={unit.id} value={unit.id}>{unit.label}</SelectItem>

@@ -9,6 +9,7 @@ import { Fragment } from 'react';
 import { GiFlame } from 'react-icons/gi';
 import { LuSwords } from 'react-icons/lu';
 import { MdNotInterested } from 'react-icons/md';
+import { UnitIcon } from '@/components/units/UnitIcon';
 
 export function Brawl() {
     const { state, dispatch } = useBrawl();
@@ -31,6 +32,7 @@ export function Brawl() {
                     >
                         {attackersRow(state, dispatch)}
                         {state.defenders.map((_, index) => defenderRow(state, dispatch, index))}
+                        {finalAttackersRow(state)}
                     </div>
                     <div className='flex gap-2 mt-8 justify-end'>
                         <Button
@@ -91,7 +93,7 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
             </div>
             {state.attackers.map((attacker, attackerIndex) => {
                 const fightMode = attacker.fights[index];
-                const health = state.results?.[attackerIndex][index]?.health;
+                const health = state.results?.defenders[attackerIndex][index]?.health;
 
                 return (
                     <div key={attackerIndex} className='flex-1 flex items-center justify-center grid-item'>
@@ -110,6 +112,20 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
             })}
         </Fragment>
     );
+}
+
+function finalAttackersRow(state: UseBrawlState) {
+    if (!state.results)
+        return null;
+
+    return (<>
+        <div className='grid-item' />
+        {state.results.attackers.map((attacker, index) => (
+            <div key={index} className='flex justify-center grid-item'>
+                <UnitIcon unit={attacker} />
+            </div>
+        ))}
+    </>);
 }
 
 type FightModeButtonProps = Readonly<{

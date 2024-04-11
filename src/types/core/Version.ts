@@ -38,7 +38,7 @@ type VersionDefinition = {
 
 export const VERSION_DEFINITIONS: readonly VersionDefinition[] = [
     { id: 'diplomacy', gameId: '2.7.2', label: 'Diplomacy', isBeta: false },
-    { id: 'ocean', gameId: '2.8.4', label: 'Path of the Ocean', isBeta: false },
+    { id: 'ocean', gameId: '2.8.4', label: 'Path of the Ocean (103)', isBeta: false },
 ];
 
 export const VERSION_IDS: readonly VersionId[] = VERSION_DEFINITIONS.map(def => def.id);

@@ -10,7 +10,7 @@ function App() {
                 <div>
                     <Preferences />
                 </div>
-                <div className='md:col-start-2 col-span-5'>
+                <div className='md:col-start-2 2xl:col-span-5'>
                     <ApplicationMode />
                 </div>
             </div>

@@ -55,6 +55,10 @@ export class UnitClass {
     get isNavalOnly(): boolean {
         return !this.tags.includes(UnitTag.Land);
     }
+
+    get isIndirectSupported(): boolean {
+        return this.skills.stomp || this.skills.splash;
+    }
 }
 
 function getHealthOrVariants(def: UnitClassDefinition, allVariants: readonly UnitVariant[]): { health?: number, variants?: readonly UnitVariant[] } {

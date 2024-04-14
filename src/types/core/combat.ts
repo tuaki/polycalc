@@ -16,6 +16,9 @@ export type FightResult = {
 };
 
 export function fight(attacker: Unit, defender: Unit): FightResult {
+    if (defender.conditions.converted)
+        return { attacker, defender };
+    
     const attackForce = attacker.attack * (attacker.health / attacker.maxHealth);
     const defenseForce = defender.defense * (defender.health / defender.maxHealth);
     const totalForce = attackForce + defenseForce;
@@ -30,8 +33,8 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
     const newDefenderConditions = {
         ...defender.conditions,
         [ConditionType.Boosted]: false,
-        [ConditionType.Freezed]: attacker.unitClass.skills.freeze,
-        [ConditionType.Poisoned]: attacker.unitClass.skills.poison,
+        [ConditionType.Freezed]: attacker.unitClass.skills.freeze || defender.conditions.freezed,
+        [ConditionType.Poisoned]: attacker.unitClass.skills.poison || defender.conditions.poisoned,
         [ConditionType.Converted]: attacker.unitClass.skills.convert,
     };
 

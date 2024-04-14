@@ -425,7 +425,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     },
 ] as const;
 
-const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
+const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [
     {
         id: 'swordsman',
         idShort: 'sw',
@@ -535,7 +535,23 @@ const UNIT_DEFINITIONS_OCEAN: readonly UnitClassVersionDefinition[] = [
     }, 
 ] as const;
 
+const UNIT_DEFINITIONS_OCEAN_1: readonly UnitClassVersionDefinition[] = [
+    {
+        id: 'bomber',
+        idShort: 'bm',
+        label: 'Bomber',
+        attack: 3,
+        defense: 2,
+        range: 3,
+        skills: [ SkillType.Splash, SkillType.Stiff ],
+        tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
+        variantIds: oceanVariantIds,
+    },
+];
+
+
 export const UNIT_DEFINITIONS: Record<VersionId, readonly UnitClassVersionDefinition[]> = {
-    diplomacy: UNIT_DEFINITIONS_DIPLOMACY,
-    ocean: UNIT_DEFINITIONS_OCEAN,
+    'diplomacy': UNIT_DEFINITIONS_DIPLOMACY,
+    'ocean-0': UNIT_DEFINITIONS_OCEAN_0,
+    'ocean-1': UNIT_DEFINITIONS_OCEAN_1,
 };

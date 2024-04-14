@@ -17,11 +17,6 @@ export function Brawl() {
     return (
         <div className='flex flex-col gap-3'>
             <Card>
-                <CardBody className='py-3'>
-                    <h1>Brawl</h1>
-                </CardBody>
-            </Card>
-            <Card>
                 <CardBody>
                     <div
                         className='grid gap-1 pc-brawl-grid w-fit'

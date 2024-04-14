@@ -122,6 +122,13 @@ function unitClass(state: State, unitClass: UnitClass): State {
     };
 }
 
+export function updateAttackerUnitClass(unit: Unit, newClass: UnitClass): Unit {
+    const state = computeInitialState(unit);
+    const updatedState = unitClass(state, newClass);
+
+    return toUnit(updatedState);
+}
+
 type VariantAction = {
     type: 'variant';
     value: UnitVariant;

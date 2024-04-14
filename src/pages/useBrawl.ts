@@ -1,19 +1,23 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { type Unit } from '@/types/core/Unit';
 import { fight } from '@/types/core/combat';
-import { createDefaultDefender } from '@/components/units/useDefender';
+import { createDefaultDefender, updateDefenderUnitClass } from '@/components/units/useDefender';
 import usePreferences from '@/PreferencesProvider';
 import { type Version } from '@/types/core/Version';
-import { createDefaultAttacker } from '@/components/units/useAttacker';
+import { createDefaultAttacker, updateAttackerUnitClass } from '@/components/units/useAttacker';
 
 export function useBrawl() {
     const { preferences } = usePreferences();
     const [ state, dispatch ] = useReducer(reducer, computeInitialState(preferences.version));
 
+    useEffect(() => {
+        dispatch({ type: 'version', value: preferences.version });
+    }, [ preferences.version ]);
+
     return { state, dispatch };
 }
 
-type Action = CreateUnitAction | EditUnitAction | DeleteUnitAction | MoveUnitAction | FightModeAction;
+type Action = CreateUnitAction | EditUnitAction | DeleteUnitAction | MoveUnitAction | FightModeAction | VersionAction;
 
 function reducer(state: UseBrawlState, action: Action): UseBrawlState {
     console.log('Reduce:', state, action);
@@ -30,6 +34,7 @@ function innerReducer(state: UseBrawlState, action: Action): UseBrawlState {
     case 'deleteUnit': return deleteUnit(state, action);
     case 'moveUnit': return moveUnit(state, action);
     case 'fightMode': return fightMode(state, action);
+    case 'version': return version(state, action.value);
     }
 }
 
@@ -144,14 +149,17 @@ function fightMode(state: UseBrawlState, action: FightModeAction): UseBrawlState
     attacker.fights = [ ...attacker.fights ];
 
     const currentValue = attacker.fights[action.defenderIndex];
-    const isIndeirectSupported = attacker.unit.unitClass.skills.stomp || attacker.unit.unitClass.skills.splash;
-    const nextValue = getNextFightMode(currentValue, isIndeirectSupported);
+    const isIndirectSupported = attacker.unit.unitClass.isIndirectSupported;
+    const nextValue = getNextFightMode(currentValue, isIndirectSupported);
 
     attacker.fights[action.defenderIndex] = nextValue;
-    if (isIndeirectSupported && nextValue === 'direct') {
+    // If this is a direct fight, we should turn off all other direct fights. We either make them indirect (if it's supported), or none.
+    if (nextValue === 'direct') {
+        const replaceValue = isIndirectSupported ? 'indirect' : 'none';
+
         for (let i = 0; i < attacker.fights.length; i++) {
             if (i !== action.defenderIndex && attacker.fights[i] === 'direct')
-                attacker.fights[i] = 'indirect';
+                attacker.fights[i] = replaceValue;
         }
     }
 
@@ -161,13 +169,13 @@ function fightMode(state: UseBrawlState, action: FightModeAction): UseBrawlState
     return { ...state, attackers };
 }
 
-function getNextFightMode(current: FightMode, isIndeirectSupported: boolean): FightMode {
+function getNextFightMode(current: FightMode, isIndirectSupported: boolean): FightMode {
     if (current === 'none')
         return 'direct';
     if (current === 'indirect')
         return 'none';
 
-    return isIndeirectSupported ? 'indirect' : 'none';
+    return isIndirectSupported ? 'indirect' : 'none';
 }
 
 function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>): BrawlResults {
@@ -205,4 +213,33 @@ function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>
     }
 
     return output;
+}
+
+type VersionAction = {
+    type: 'version';
+    value: Version;
+}
+
+function version(state: UseBrawlState, version: Version): UseBrawlState {
+    const defenders = state.defenders.map(unit => {
+        const newClass = version.getClass(unit.unitClass.id) ?? version.getDefaultClass();
+        return newClass === unit.unitClass ? unit : updateDefenderUnitClass(unit, newClass);
+    });
+
+    const attackers = state.attackers.map(attacker => {
+        const { unit, fights } = attacker;
+        const newClass = version.getClass(unit.unitClass.id) ?? version.getDefaultClass();
+        if (newClass === unit.unitClass)
+            return attacker;
+
+        const newUnit = updateAttackerUnitClass(unit, newClass);
+        if (!(unit.unitClass.isIndirectSupported && !newClass.isIndirectSupported))
+            return { unit: newUnit, fights };
+
+        // The previous unit did support splash, but the new one doesn't. We have to fix all fights.
+        const newFights = fights.map(fight => fight === 'indirect' ? 'none' : fight);
+        return { unit: newUnit, fights: newFights };
+    });
+
+    return { ...state, defenders, attackers };
 }

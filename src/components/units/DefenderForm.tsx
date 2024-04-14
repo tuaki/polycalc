@@ -21,7 +21,7 @@ export function DefenderForm({ unit, onChange }: DefenderFormProps) {
             <div className='col-span-2 flex flex-col gap-3'>
                 <div className={clsx(isVariants && 'grid grid-cols-2 gap-3')}>
                     <UnitClassSelect
-                        label='Attacking unit'
+                        label='Defending unit'
                         value={state.unitClass}
                         onChange={value => dispatch({ type: 'unitClass', value })}
                     />

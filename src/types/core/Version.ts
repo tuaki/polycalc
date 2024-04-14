@@ -1,6 +1,6 @@
 import { type UnitClass } from './UnitClass';
 
-export type VersionId = 'diplomacy' | 'ocean';
+export type VersionId = 'diplomacy' | 'ocean-0' | 'ocean-1';
 
 /**
  * Each version represents a major update which has an impact on the game mechanics. Therefore, most actual versions are skipped.
@@ -37,8 +37,9 @@ type VersionDefinition = {
 };
 
 export const VERSION_DEFINITIONS: readonly VersionDefinition[] = [
-    { id: 'diplomacy', gameId: '2.7.2', label: 'Diplomacy', isBeta: false },
-    { id: 'ocean', gameId: '2.8.4', label: 'Path of the Ocean (103)', isBeta: false },
+    { id: 'diplomacy', gameId: '2.7.2', label: 'Diplomacy (100)', isBeta: false },
+    { id: 'ocean-0', gameId: '2.8.4', label: 'Path of the Ocean (103)', isBeta: false },
+    { id: 'ocean-1', gameId: '2.8.5', label: 'Path of the Ocean (104)', isBeta: false },
 ];
 
 export const VERSION_IDS: readonly VersionId[] = VERSION_DEFINITIONS.map(def => def.id);

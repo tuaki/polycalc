@@ -9,7 +9,7 @@ type UnitIconButtonProps = UnitIconProps & Readonly<{
 
 export function UnitIconButton({ unit, size, onClick }: UnitIconButtonProps) {
     return (
-        <button className='' onClick={onClick} aria-label={unit.toString()}>
+        <button onClick={onClick} aria-label={unit.toString()}>
             <UnitIcon unit={unit} size={size} />
         </button>
     );

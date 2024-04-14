@@ -68,3 +68,8 @@ export class Unit {
         return `${this.unitClass.idShort} ${this.health}/${this.maxHealth}`;
     }
 }
+
+/** It's expected that the number has at most one valid decimal place. */
+export function decimalNumberToString(number: number): string {
+    return (Math.round(number * 10) / 10).toString();
+}

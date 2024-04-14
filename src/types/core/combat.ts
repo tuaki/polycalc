@@ -18,8 +18,9 @@ export type FightResult = {
 export function fight(attacker: Unit, defender: Unit): FightResult {
     if (defender.conditions.converted)
         return { attacker, defender };
-    
+
     const attackForce = attacker.attack * (attacker.health / attacker.maxHealth);
+    // Here we use the modified defense value (see the comment below).
     const defenseForce = defender.defense * (defender.health / defender.maxHealth);
     const totalForce = attackForce + defenseForce;
 
@@ -27,8 +28,10 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
     const attackerDamage = attacker.conditions.indirectAttack
         ? Math.floor(attackerDamageBeforeSplash * SPLASH_DAMAGE_COEFFICIENT)
         : attackerDamageBeforeSplash;
-        
-    const defenderDamage = Math.round((defenseForce / totalForce) * defender.defense * DAMAGE_CONSTANT + ROUNDING_ERROR);
+    
+    // Here it's important to use unitClass.defense instead of just defense.
+    // Basically we need the original defense without any modifiers (defense bonus, wall bonus, poison). This is different from the attack, where we use the modified value for both force and damage.
+    const defenderDamage = Math.round((defenseForce / totalForce) * defender.unitClass.defense * DAMAGE_CONSTANT + ROUNDING_ERROR);
 
     const newDefenderConditions = {
         ...defender.conditions,

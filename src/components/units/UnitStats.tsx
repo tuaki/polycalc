@@ -1,4 +1,4 @@
-import { type Unit } from '@/types/core/Unit';
+import { decimalNumberToString, type Unit } from '@/types/core/Unit';
 import { HiOutlineArrowRight } from 'react-icons/hi';
 
 type UnitStatsProps = Readonly<{
@@ -18,7 +18,7 @@ export function UnitStats({ unit }: UnitStatsProps) {
                 {unit.baseAttack}
                 {attackDiff !== 0 && (<>
                     <HiOutlineArrowRight />
-                    <span className={attackDiff > 0 ? 'text-success' : 'text-danger'}>{unit.attack}</span>
+                    <span className={attackDiff > 0 ? 'text-success' : 'text-danger'}>{decimalNumberToString(unit.attack)}</span>
                 </>)}
             </div>
             <div>
@@ -28,7 +28,7 @@ export function UnitStats({ unit }: UnitStatsProps) {
                 {unit.baseDefense}
                 {defenseDiff !== 0 && (<>
                     <HiOutlineArrowRight />
-                    <span className={defenseDiff > 0 ? 'text-success' : 'text-danger'}>{unit.defense}</span>
+                    <span className={defenseDiff > 0 ? 'text-success' : 'text-danger'}>{decimalNumberToString(unit.defense)}</span>
                 </>)}
             </div>
         </div>

@@ -48,8 +48,9 @@ type Attacker = {
 }
 
 type BrawlResults = {
-    defenders: (Unit | undefined)[][];
     attackers: Unit[];
+    defenders: Unit[];
+    middleDefenders: (Unit | undefined)[][];
 }
 
 export type UseBrawlState = {
@@ -180,8 +181,9 @@ function getNextFightMode(current: FightMode, isIndirectSupported: boolean): Fig
 
 function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>): BrawlResults {
     const output: BrawlResults = {
-        defenders: [],
+        middleDefenders: [],
         attackers: [],
+        defenders: [],
     };
     let previousDefenders: (Unit | undefined)[] = defenders;
 
@@ -206,10 +208,21 @@ function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>
             return fightResult?.defender;
         });
 
-        output.defenders.push(attackerResults);
+        output.middleDefenders.push(attackerResults);
         previousDefenders = attackerResults;
 
         output.attackers.push(finalAttacker ?? attacker);
+    }
+
+    for (let i = 0; i < defenders.length; i++) {
+        let lastVersion = defenders[i];
+        for (let j = 0; j < attackers.length; j++) {
+            const defender = output.middleDefenders[j][i];
+            if (defender)
+                lastVersion = defender;
+        }
+
+        output.defenders.push(lastVersion);
     }
 
     return output;

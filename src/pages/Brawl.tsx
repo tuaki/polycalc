@@ -21,7 +21,7 @@ export function Brawl() {
                     <div
                         className='grid gap-1 pc-brawl-grid w-fit'
                         style={{
-                            gridTemplateColumns: `48px repeat(${state.attackers.length}, 104px)`,
+                            gridTemplateColumns: `48px repeat(${state.attackers.length}, 104px) 48px`,
                             gridTemplateRows: `repeat(${state.defenders.length + 1}, 48px)`,
                         }}
                     >
@@ -71,11 +71,13 @@ function attackersRow(state: UseBrawlState, dispatch: UseBrawlDispatch) {
                 />
             </div>
         ))}
+        <div className='grid-item' />
     </>);
 }
 
 function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: number) {
     const defender = state.defenders[index];
+    const finalDefender = state.results.defenders[index];
     
     return (
         <Fragment key={index}>
@@ -88,7 +90,7 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
             </div>
             {state.attackers.map((attacker, attackerIndex) => {
                 const fightMode = attacker.fights[index];
-                const health = state.results?.defenders[attackerIndex][index]?.health;
+                const health = state.results.middleDefenders[attackerIndex][index]?.health;
 
                 return (
                     <div key={attackerIndex} className='flex-1 flex items-center justify-center grid-item'>
@@ -105,14 +107,14 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
                     </div>
                 );
             })}
+            <div className='grid-item'>
+                <UnitIcon unit={finalDefender} />
+            </div>
         </Fragment>
     );
 }
 
 function finalAttackersRow(state: UseBrawlState) {
-    if (!state.results)
-        return null;
-
     return (<>
         <div className='grid-item' />
         {state.results.attackers.map((attacker, index) => (
@@ -120,6 +122,7 @@ function finalAttackersRow(state: UseBrawlState) {
                 <UnitIcon unit={attacker} />
             </div>
         ))}
+        <div className='grid-item' />
     </>);
 }
 

@@ -1,29 +1,34 @@
 import usePreferences, { PreferencesProvider } from './PreferencesProvider';
-import { Duel } from './pages/Duel';
-import { Brawl } from './pages/Brawl';
-import { Preferences } from './pages/Preferences';
-import { ModeSelect } from './components/preferences/ModeSelect';
+import { Preferences } from './components/preferences/Preferences';
+import { ApplicationMode, ModeSelect } from './components/modes/Modes';
+import clsx from 'clsx';
 
 function App() {
     return (
         <PreferencesProvider>
-            <div className='p-4 gap-4 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-6'>
-                <div>
-                    <Preferences />
-                </div>
-                <div className='md:col-start-2 2xl:col-span-5 flex flex-col gap-3'>
-                    <ModeSelect />
-                    <ApplicationMode />
-                </div>
-            </div>
+            <AppWithPreferences />
         </PreferencesProvider>
     );
 }
 
-function ApplicationMode() {
-    const { preferences } = usePreferences();
+function AppWithPreferences() {
+    const { isPreferencesCollapsed } = usePreferences().preferences;
 
-    return preferences.modeId === 'duel' ? <Duel /> : <Brawl />;
+    return (
+        <div className={clsx('pc-layout', isPreferencesCollapsed && 'pc-preferences-collapsed')}>
+            <div className='pc-preferences'>
+                <Preferences />
+            </div>
+            <div className='pc-content p-2 max-md:pt-1 flex flex-col gap-3'>
+                <div className='max-md:hidden pc-centered'>
+                    <div className='flex justify-center'>
+                        <ModeSelect />
+                    </div>
+                </div>
+                <ApplicationMode />
+            </div>
+        </div>
+    );
 }
 
 export default App;

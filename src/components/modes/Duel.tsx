@@ -16,7 +16,7 @@ export function Duel() {
     const result: FightResult = useMemo(() => fight(attacker, defender), [ attacker, defender ]);
 
     return (
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 max-w-screen-md'>
             <Card>
                 <CardBody>
                     <AttackerForm unit={attacker} onChange={setAttacker} />

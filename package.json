@@ -12,6 +12,7 @@
   "dependencies": {
     "@nextui-org/react": "^2.1.13",
     "clsx": "^2.1.0",
+    "eslint-plugin-react": "^7.34.2",
     "framer-motion": "^10.16.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

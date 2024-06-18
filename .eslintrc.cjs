@@ -2,11 +2,14 @@ module.exports = {
     root: true,
     env: {
         browser: true,
-        es2021: true
+        es2021: true,
     },
     extends: [
         'eslint:recommended',
-        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-type-checked',
+        'plugin:@typescript-eslint/stylistic-type-checked',
+        'plugin:react/recommended',
+        'plugin:react/jsx-runtime',
         'plugin:react-hooks/recommended',
     ],
     ignorePatterns: [ 'dist', '.eslintrc.cjs' ],
@@ -14,6 +17,8 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
+        project: ['./tsconfig.json', './tsconfig.node.json'],
+        tsconfigRootDir: __dirname,
     },
     plugins: [ 'react-refresh' ],
     rules: {
@@ -38,6 +43,9 @@ module.exports = {
         'comma-dangle': [ 'warn', 'always-multiline' ],
         'react-hooks/exhaustive-deps': [ 'warn' ],
         'quotes': [ 'warn', 'single', { allowTemplateLiterals: true } ],
-        'jsx-quotes': [ 'warn', 'prefer-single' ]
+        'jsx-quotes': [ 'warn', 'prefer-single' ],
+        '@typescript-eslint/no-confusing-void-expression': [ 'error', { ignoreArrowShorthand: true } ],
+        '@typescript-eslint/consistent-type-definitions': [ 'warn', 'type' ],
+        '@typescript-eslint/unbound-method': [ 'error', { 'ignoreStatic': true } ],
     },
 }

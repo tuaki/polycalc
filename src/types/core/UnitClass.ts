@@ -25,6 +25,7 @@ export type UnitVariantDefinition = PlainType<UnitVariant>;
 export class UnitClass {
     constructor(
         readonly id: string,
+        /** /[a-z]{2}/ */
         readonly idShort: string,
         readonly label: string,
         readonly health: number | undefined, // Might be a ship
@@ -48,7 +49,7 @@ export class UnitClass {
 
     getDefaultHealth(): number {
         // A unit has either health or variants.
-        return this.health ?? this.getDefaultVariant()?.health as number;
+        return this.health ?? this.getDefaultVariant()!.health;
     }
 
     // A hack for now, might need a fix later.
@@ -89,7 +90,7 @@ const UNIT_VARIANTS = UNIT_VARIANT_DEFINITIONS.map(UnitVariant.fromDefinition);
 
 function createUnits() {
     const output = {} as Record<VersionId, readonly UnitClass[]>;
-    const current: Map<string, UnitClass> = new Map();
+    const current = new Map<string, UnitClass>();
 
     // We iterate versions from the oldest to the newest, so that we can override unit classes.
     VERSION_IDS.forEach(versionId => {

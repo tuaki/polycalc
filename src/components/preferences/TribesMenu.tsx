@@ -7,7 +7,7 @@ export function TribesMenu() {
 
     return (
         <Card>
-            <CardBody>
+            <CardBody className='break-normal overflow-hidden'>
                 <h2>Tribes</h2>
                 <Listbox
                     aria-label='Tribe selection'

@@ -1,0 +1,70 @@
+/**
+ * Prevent scrollbar from affecting the width.
+ */
+ @mixin scrollbar-fix {
+    overflow: auto;
+    scrollbar-gutter: stable;
+}
+
+@mixin scrollbar-center {
+    scrollbar-gutter: stable both-edges;
+}
+
+/**
+ * This will be the main scrolling element unless there is a another one inside. So the most nested one will be the main scroller.
+ * This way, child components can override their parents.
+ */
+.pc-main-scroller:not(:has(.pc-main-scroller)) {
+    @include scrollbar-fix;
+
+    &:not(.pc-main-scroller-no-center) {
+        @include scrollbar-center;
+    }
+
+    height: 100%;
+}
+
+$preferencesWidth: 300px;
+$preferencesCollapsedWidth: 56px;
+
+.pc-layout {
+    @extend .pc-main-scroller;
+    @extend .pc-main-scroller-no-center;
+    display: grid;
+    transition: 300ms;
+
+    grid-template-rows: auto 1fr;
+}
+
+.pc-preferences {
+    grid-column-start: 1;
+    grid-row-start: 1;
+}
+
+.pc-content {
+    grid-column-start: 1;
+    grid-row-start: 2;
+}
+
+@media (screen(md)) {
+    .pc-layout {
+        --preferences-width: #{$preferencesWidth};
+        grid-template-columns: var(--preferences-width) auto;
+        grid-template-rows: auto;
+
+        &.pc-preferences-collapsed {
+            --preferences-width: #{$preferencesCollapsedWidth};
+        }
+    }
+    
+    .pc-content {
+        grid-column-start: 2;
+        grid-row-start: 1;
+
+        .pc-centered {
+            display: grid;
+            transition: 300ms;
+            grid-template-columns: auto var(--preferences-width);
+        }
+    }
+}

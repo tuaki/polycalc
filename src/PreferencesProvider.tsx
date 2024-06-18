@@ -3,16 +3,18 @@ import { type UnitTag } from './types/core/units';
 import { localStorage } from './types/utils/localStorage';
 import { DEFAULT_VERSION_ID, type VersionId, type Version } from './types/core/Version';
 import { VERSIONS } from './types/core/UnitClass';
-import { MODE_IDS, type ModeId } from './components/preferences/ModeSelect';
+import { MODE_IDS, type ModeId } from './components/modes/Modes';
 
 const PREFERENCES_KEY = 'preferences';
 
 export type FilterTag = Exclude<UnitTag, UnitTag.Land | UnitTag.Naval>;
 
 type Preferences = {
+    isPreferencesCollapsed: boolean;
     filterTags: FilterTag[];
     version: Version;
     modeId: ModeId;
+    isIconsHidden: boolean;
 }
 
 type PreferencesContext = {
@@ -21,13 +23,15 @@ type PreferencesContext = {
 }
 
 type StoredPreferences = {
-    filterTags?: FilterTag[];
-    versionId?: string;
-    modeId?: string;
+    isPreferencesCollapsed: boolean;
+    filterTags: FilterTag[];
+    versionId: string;
+    modeId: string;
+    isIconsHidden: boolean;
 };
 
 function fromStored(): Preferences {
-    const stored = localStorage.get<StoredPreferences>(PREFERENCES_KEY) ?? {};
+    const stored = localStorage.get<Partial<StoredPreferences>>(PREFERENCES_KEY) ?? {};
 
     const versionId = (
         (stored.versionId && stored.versionId in VERSIONS)
@@ -42,9 +46,11 @@ function fromStored(): Preferences {
     ) as ModeId;
 
     return {
+        isPreferencesCollapsed: stored.isPreferencesCollapsed ?? false,
         filterTags: stored.filterTags ?? [],
         version: VERSIONS[versionId],
         modeId,
+        isIconsHidden: stored.isIconsHidden ?? false,
     };
 }
 
@@ -52,24 +58,26 @@ const defaultPreferences = fromStored();
 
 function toStored(preferences: Preferences): StoredPreferences {
     return {
+        isPreferencesCollapsed: preferences.isPreferencesCollapsed,
         filterTags: preferences.filterTags,
         versionId: preferences.version.id,
         modeId: preferences.modeId,
+        isIconsHidden: preferences.isIconsHidden,
     };
 }
 
 export const PreferencesContext = createContext<PreferencesContext | undefined>(undefined);
 
 export function PreferencesProvider({ children }: Readonly<{ children: React.ReactNode }>) {
-    const [ preferences, setPreferencesRaw ] = useState(defaultPreferences);
+    const [ preferences, setPreferences ] = useState(defaultPreferences);
 
-    const setPreferences = useCallback((preferences: Preferences) => {
+    const setPreferencesWithStorage = useCallback((preferences: Preferences) => {
         localStorage.set(PREFERENCES_KEY, toStored(preferences));
-        setPreferencesRaw(preferences);
+        setPreferences(preferences);
     }, []);
 
     return (
-        <PreferencesContext.Provider value={{ preferences, setPreferences }}>
+        <PreferencesContext.Provider value={{ preferences, setPreferences: setPreferencesWithStorage }}>
             {children}
         </PreferencesContext.Provider>
     );

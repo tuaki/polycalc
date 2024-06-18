@@ -203,9 +203,9 @@ function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>
             const fightResult = fight(updatedAttacker, defender);
 
             if (!indirectAttack)
-                finalAttacker = fightResult?.attacker;
+                finalAttacker = fightResult.attacker;
 
-            return fightResult?.defender;
+            return fightResult.defender;
         });
 
         output.middleDefenders.push(attackerResults);

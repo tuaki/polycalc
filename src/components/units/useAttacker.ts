@@ -35,7 +35,7 @@ function reducer(state: State, action: Action): State {
 }
 
 function computeDefaultHealth({ unitClass, variant, isVeteran }: Pick<State, 'unitClass' | 'variant' | 'isVeteran'>): number {
-    return (unitClass.health ?? variant?.health as number) + (isVeteran ? VETERAN_HEALTH_BONUS : 0);
+    return (unitClass.health ?? variant!.health) + (isVeteran ? VETERAN_HEALTH_BONUS : 0);
 }
 
 function innerReducer(state: State, action: Action): State {

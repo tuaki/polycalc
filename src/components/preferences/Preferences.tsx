@@ -1,9 +1,11 @@
-import usePreferences from '@/PreferencesProvider';
+import usePreferences from '@/components/preferences/PreferencesProvider';
 import { ModeSelect } from '@/components/modes/Modes';
 import { TribesMenu } from '@/components/preferences/TribesMenu';
 import { VersionSelect } from '@/components/preferences/VersionSelect';
 import { Button, Card, CardBody, Switch } from '@nextui-org/react';
 import { BsWindowSidebar } from 'react-icons/bs';
+import { wiki } from '@/components/wiki/wikiPages';
+import { WikiInfo } from '../wiki/WikiModal';
 
 export function Preferences() {
     const { isPreferencesCollapsed } = usePreferences().preferences;
@@ -33,6 +35,7 @@ export function Preferences() {
                 <VersionSelect />
                 <TribesMenu />
                 <HideIconsSwitch />
+                <WikiInfo type={wiki.root} />
             </>)}
         </div>
     );

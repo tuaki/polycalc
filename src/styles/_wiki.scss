@@ -1,0 +1,27 @@
+.pc-wiki {
+    @apply whitespace-pre-line;
+    
+    h1 {
+        @apply text-2xl font-semibold;
+    }
+
+    h2 {
+        @apply text-xl font-semibold;
+    }
+
+    h3 {
+        @apply text-lg font-semibold;
+    }
+
+    p {
+        @apply mb-4;
+    }
+
+    li {
+        @apply list-disc list-inside ms-4;
+    }
+
+    a {
+        @apply underline underline-offset-2 hover:opacity-80 active:opacity-disabled transition-opacity;
+    }
+}

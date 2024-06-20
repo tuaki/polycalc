@@ -1,5 +1,5 @@
 import { Tab, Tabs } from '@nextui-org/react';
-import usePreferences from '@/PreferencesProvider';
+import usePreferences from '@/components/preferences/PreferencesProvider';
 import { type Key, type ReactNode } from 'react';
 import { Duel } from './Duel';
 import { Brawl } from './Brawl';

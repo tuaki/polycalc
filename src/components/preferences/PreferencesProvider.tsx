@@ -1,9 +1,9 @@
 import { createContext, useCallback, useContext, useState } from 'react';
-import { type UnitTag } from './types/core/units';
-import { localStorage } from './types/utils/localStorage';
-import { DEFAULT_VERSION_ID, type VersionId, type Version } from './types/core/Version';
-import { VERSIONS } from './types/core/UnitClass';
-import { MODE_IDS, type ModeId } from './components/modes/Modes';
+import { type UnitTag } from '../../types/core/units';
+import { localStorage } from '../../types/utils/localStorage';
+import { DEFAULT_VERSION_ID, type VersionId, type Version } from '../../types/core/Version';
+import { VERSIONS } from '../../types/core/UnitClass';
+import { MODE_IDS, type ModeId } from '../modes/Modes';
 
 const PREFERENCES_KEY = 'preferences';
 

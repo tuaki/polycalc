@@ -1,4 +1,4 @@
-import usePreferences from '@/PreferencesProvider';
+import usePreferences from '@/components/preferences/PreferencesProvider';
 import { ConditionType } from '@/types/core/Condition';
 import { type Unit } from '@/types/core/Unit';
 import { type UnitClass } from '@/types/core/UnitClass';

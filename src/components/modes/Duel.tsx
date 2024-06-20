@@ -4,7 +4,7 @@ import { DefenderForm } from '@/components/units/DefenderForm';
 import { Card, CardBody } from '@nextui-org/react';
 import { AttackerForm } from '@/components/units/AttackerForm';
 import { createDefaultDefender } from '@/components/units/useDefender';
-import usePreferences from '@/PreferencesProvider';
+import usePreferences from '@/components/preferences/PreferencesProvider';
 import { createDefaultAttacker } from '@/components/units/useAttacker';
 import { UnitIcon } from '@/components/units/UnitIcon';
 

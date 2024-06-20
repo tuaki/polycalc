@@ -1,5 +1,5 @@
 import { Card, CardBody, Listbox, ListboxItem } from '@nextui-org/react';
-import usePreferences, { type FilterTag } from '@/PreferencesProvider';
+import usePreferences, { type FilterTag } from '@/components/preferences/PreferencesProvider';
 import { UnitTag } from '@/types/core/units';
 
 export function TribesMenu() {

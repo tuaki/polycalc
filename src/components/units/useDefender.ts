@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useReducer } from 'react';
-import usePreferences from '@/PreferencesProvider';
+import usePreferences from '@/components/preferences/PreferencesProvider';
 import { ConditionType, createConditionMap } from '@/types/core/Condition';
 import { Unit, VETERAN_HEALTH_BONUS } from '@/types/core/Unit';
 import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';

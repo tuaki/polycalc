@@ -1,21 +1,26 @@
-import usePreferences, { PreferencesProvider } from './PreferencesProvider';
+import usePreferences, { PreferencesProvider } from './components/preferences/PreferencesProvider';
 import { Preferences } from './components/preferences/Preferences';
 import { ApplicationMode, ModeSelect } from './components/modes/Modes';
 import clsx from 'clsx';
+import { WikiProvider } from './components/wiki/WikiProvider';
+import { WikiModal } from './components/wiki/WikiModal';
 
 function App() {
     return (
         <PreferencesProvider>
-            <AppWithPreferences />
+            <WikiProvider>
+                <InnerApp />
+            </WikiProvider>
         </PreferencesProvider>
     );
 }
 
-function AppWithPreferences() {
+function InnerApp() {
     const { isPreferencesCollapsed } = usePreferences().preferences;
 
     return (
         <div className={clsx('pc-layout', isPreferencesCollapsed && 'pc-preferences-collapsed')}>
+            <WikiModal />
             <div className='pc-preferences'>
                 <Preferences />
             </div>

@@ -1,5 +1,5 @@
 import { Select, SelectItem } from '@nextui-org/react';
-import usePreferences from '@/PreferencesProvider';
+import usePreferences from '@/components/preferences/PreferencesProvider';
 import { VERSIONS } from '@/types/core/UnitClass';
 import { VERSION_IDS, type VersionId } from '@/types/core/Version';
 

@@ -2,7 +2,7 @@ import { useEffect, useReducer } from 'react';
 import { type Unit } from '@/types/core/Unit';
 import { fight } from '@/types/core/combat';
 import { createDefaultDefender, updateDefenderUnitClass } from '@/components/units/useDefender';
-import usePreferences from '@/PreferencesProvider';
+import usePreferences from '@/components/preferences/PreferencesProvider';
 import { type Version } from '@/types/core/Version';
 import { createDefaultAttacker, updateAttackerUnitClass } from '@/components/units/useAttacker';
 

@@ -1,5 +1,3 @@
 # PolyCalc
 
-```
-npm run dev
-```
+Try the app [here](https://tuaki.github.io/polycalc/)!

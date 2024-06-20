@@ -1,4 +1,4 @@
-import { type Wiki, getWikiPageDetailFromRoot, type WikiPage } from '../../types/core/Wiki';
+import { type Wiki, getWikiPageDetailFromRoot, type WikiPage } from '@/types/core/Wiki';
 
 export function getWikiPageDetail(path: string) {
     return getWikiPageDetailFromRoot(path, wikiPages);

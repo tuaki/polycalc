@@ -1,4 +1,4 @@
-import { Select, SelectItem } from '@nextui-org/react';
+import { Chip, Select, SelectItem } from '@nextui-org/react';
 import usePreferences from '@/components/preferences/PreferencesProvider';
 import { VERSIONS } from '@/types/core/UnitClass';
 import { VERSION_IDS, type VersionId } from '@/types/core/Version';
@@ -27,8 +27,12 @@ export function VersionSelect() {
 
 function versionOption(id: VersionId) {
     const version = VERSIONS[id];
+    const textValue = `(${version.gameId}) ${version.label}`;
 
     return (
-        <SelectItem key={id} value={id}>{`(${version.gameId}) - ${version.label}`}</SelectItem>
+        <SelectItem key={id} value={id} textValue={textValue}>
+            {textValue}
+            {version.status === 'beta' && <Chip size='sm' color='warning' className='ms-2 h-5'>Beta</Chip>}
+        </SelectItem>
     );
 }

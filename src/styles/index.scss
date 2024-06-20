@@ -5,6 +5,7 @@ body, #root {
 
 #root {
     height: 100vh;
+    font-variant-numeric: tabular-nums;
 }
 
 /*
@@ -22,7 +23,6 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
-
 
 /*
     Font enhancements.

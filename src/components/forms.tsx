@@ -1,8 +1,7 @@
 import { Radio, RadioGroup, Select, SelectItem, type SwitchProps, VisuallyHidden, useSwitch, Button } from '@nextui-org/react';
 import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';
 import usePreferences from '@/components/preferences/PreferencesProvider';
-import { useEffect, useMemo } from 'react';
-import { type UnitTag } from '@/types/core/units';
+import { useMemo } from 'react';
 import { PiLinkBold, PiLinkBreakBold } from 'react-icons/pi';
 import { RxChevronUp, RxChevronDown, RxChevronLeft, RxChevronRight } from 'react-icons/rx';   
 import clsx from 'clsx';
@@ -37,15 +36,8 @@ type UnitClassSelectProps = Readonly<{
 }>;
 
 export function UnitClassSelect({ value, onChange, label }: UnitClassSelectProps) {
-    const { preferences } = usePreferences();
-    const options = useMemo(() => filterUnitsByTags(preferences.version.getClasses(), preferences.filterTags), [ preferences ]);
-
-    useEffect(() => {
-        if (filterUnitsByTags([ value ], preferences.filterTags).length === 0)
-            onChange(options[0]);
-    }, [ options ]);
-
-    const selectedKeys = useMemo(() => options.some(o => o.id === value.id) ? [ value.id ] : [], [ options, value ]);
+    const { units } = usePreferences();
+    const selectedKeys = useMemo(() => units.findClass(value.id) ? [ value.id ] : [], [ value.id, units ]);
 
     return (
         <Select
@@ -53,22 +45,16 @@ export function UnitClassSelect({ value, onChange, label }: UnitClassSelectProps
             label={label}
             selectedKeys={selectedKeys}
             onChange={e => {
-                const newClass = preferences.version.getClass(e.target.value);
+                const newClass = units.findClass(e.target.value);
                 if (newClass)
                     onChange(newClass); 
             }}
         >
-            {options.map(unit => (
+            {units.getClasses().map(unit => (
                 <SelectItem key={unit.id} value={unit.id}>{unit.label}</SelectItem>
             ))}
         </Select>
     );
-}
-
-function filterUnitsByTags(units: readonly UnitClass[], tags: UnitTag[]): readonly UnitClass[] {
-    return tags.length === 0
-        ? units
-        : units.filter(unit => tags.some(tag => unit.tags.includes(tag)));
 }
 
 type UnitVariantSelectProps = Readonly<{

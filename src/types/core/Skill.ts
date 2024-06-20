@@ -17,6 +17,8 @@ export enum SkillType {
     Stiff = 'stiff',
     /** The unit does splash-like damage to adjacent units when moving. Normal attack isn't affected. */
     Stomp = 'stomp',
+    /** The unit does damage to all units that move next to it (before they attack). Both when they move and when this moves. Apply also to training. */
+    Tentacles = 'tentacles',
     /** Custom skill - the unit can become veteran. */
     Promote = 'promote',
 }
@@ -80,6 +82,10 @@ const SKILL_DEFINITIONS: Record<SkillType, SkillDefinition> = {
     },
     [SkillType.Stomp]: {
         label: 'Stomp',
+        description: 'TODO',
+    },
+    [SkillType.Tentacles]: {
+        label: 'Tentacles',
         description: 'TODO',
     },
     [SkillType.Promote]: {

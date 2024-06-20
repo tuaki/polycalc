@@ -1,3 +1,4 @@
+import { type EmptyIntersection } from '../utils/common';
 import { SkillType } from './Skill';
 import { type UnitClassDefinition, type UnitVariantDefinition } from './UnitClass';
 import { type VersionId } from './Version';
@@ -38,8 +39,15 @@ export const UNIT_VARIANT_DEFINITIONS: readonly UnitVariantDefinition[] = [
 const diplomacyVariantIds = UNIT_VARIANT_DEFINITIONS.map(v => v.id);
 const oceanVariantIds = diplomacyVariantIds.slice(0, 3);
 
-/** The second part of this type is here for the removed units. */
-type UnitClassVersionDefinition = UnitClassDefinition | string;
+type UnitDefinitionOperation<TOperation extends string, TData = void> = {
+    operation: TOperation;
+    id: string;
+} & (TData extends void ? EmptyIntersection : TData);
+
+type UnitClassVersionDefinition =
+    UnitClassDefinition
+    | UnitDefinitionOperation<'update', Partial<Omit<UnitClassDefinition, 'idShort'>> & ({ health?: number } | { variantIds?: readonly string[] })>
+    | UnitDefinitionOperation<'delete'>;
 
 const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
     {
@@ -427,20 +435,43 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [
 
 const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [
     {
+        // Swordsman loses fortify.
+        operation: 'update',
         id: 'swordsman',
-        idShort: 'sw',
-        label: 'Swordsman',
-        health: 15,
-        attack: 3,
-        defense: 3,
-        range: 1,
         skills: [ SkillType.Promote ],
-        tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
-    },
-    'boat',
-    'ship',
-    'battleship',
-    {
+    }, {
+        // Tridention health goes from 15 to 10.
+        operation: 'update',
+        id: 'tridention',
+        health: 10,
+    }, {
+        // Crab defense goes from 4 to 5.
+        operation: 'update',
+        id: 'crab',
+        defense: 5,
+    }, {
+        // Mooni defense goes from 2 to 1.
+        operation: 'update',
+        id: 'mooni',
+        defense: 1,
+    }, {
+        // Gaami defense goes from 4 to 3.
+        operation: 'update',
+        id: 'gaami',
+        defense: 3,
+    }, {
+        operation: 'delete',
+        id: 'navalon',
+    }, {
+        operation: 'delete',
+        id: 'boat',
+    }, {
+        operation: 'delete',
+        id: 'ship',
+    }, {
+        operation: 'delete',
+        id: 'battleship',
+    }, {
         id: 'raft',
         idShort: 'rf',
         label: 'Raft',
@@ -488,70 +519,69 @@ const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [
         attack: 4,
         defense: 4,
         range: 1,
-        skills: [ SkillType.Stiff, SkillType.Stomp ], // Stomp is like splash but still can attack normally
+        skills: [ SkillType.Stiff, SkillType.Stomp ],
         tags: [ UnitTag.Naval, UnitTag.Classic ],
-    }, {
-        id: 'tridention',
-        idShort: 'tr',
-        label: 'Tridention',
-        health: 10,
-        attack: 3,
-        defense: 1,
-        range: 2,
-        skills: [ SkillType.Fortify, SkillType.Promote ],
-        tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
-    }, {
-        id: 'crab',
-        idShort: 'cr',
-        label: 'Crab',
-        health: 40,
-        attack: 4,
-        defense: 5,
-        range: 1,
-        skills: [],
-        tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
     },
-    'navalon',
-    {
-        id: 'mooni',
-        idShort: 'mo',
-        label: 'Mooni',
-        health: 10,
-        attack: 0,
-        defense: 1,
-        range: 1,
-        skills: [],
-        tags: [ UnitTag.Land, UnitTag.Polaris ],
-    }, {
-        id: 'gaami',
-        idShort: 'ga',
-        label: 'Gaami',
-        health: 30,
-        attack: 4,
-        defense: 3,
-        range: 1,
-        skills: [],
-        tags: [ UnitTag.Land, UnitTag.Polaris ],
-    }, 
 ] as const;
 
 const UNIT_DEFINITIONS_OCEAN_1: readonly UnitClassVersionDefinition[] = [
     {
+        // Bomber attack goes from 4 to 3.
+        operation: 'update',
         id: 'bomber',
-        idShort: 'bm',
-        label: 'Bomber',
         attack: 3,
-        defense: 2,
-        range: 3,
-        skills: [ SkillType.Splash, SkillType.Stiff ],
-        tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
-        variantIds: oceanVariantIds,
     },
-];
+] as const;
 
+const UNIT_DEFINITIONS_AQUARION_REWORK: readonly UnitClassVersionDefinition[] = [
+    {
+        // Tridention loses fortify.
+        operation: 'update',
+        id: 'tridention',
+        skills: [ SkillType.Promote ],
+    }, {
+        // Aquarion loses all ships.
+        operation: 'update',
+        id: 'raft',
+        tags:[ UnitTag.Naval, UnitTag.Classic, UnitTag.Elyrion ],
+    }, {
+        operation: 'update',
+        id: 'scout',
+        tags:[ UnitTag.Naval, UnitTag.Classic, UnitTag.Elyrion ],
+    }, {
+        operation: 'update',
+        id: 'rammer',
+        tags:[ UnitTag.Naval, UnitTag.Classic, UnitTag.Elyrion ],
+    }, {
+        operation: 'update',
+        id: 'bomber',
+        tags:[ UnitTag.Naval, UnitTag.Classic, UnitTag.Elyrion ],
+    }, {
+        id: 'shark',
+        idShort: 'sk',
+        label: 'Shark',
+        health: 10,
+        attack: 3,
+        defense: 3,
+        range: 1,
+        skills: [],
+        tags: [ UnitTag.Naval, UnitTag.Aquarion ],
+    }, {
+        id: 'yelly-belly',
+        idShort: 'yb',
+        label: 'Yelly Belly',
+        health: 15,
+        attack: 0,
+        defense: 3,
+        range: 1,
+        skills: [ SkillType.Stiff, SkillType.Tentacles ],
+        tags: [ UnitTag.Naval, UnitTag.Aquarion ],
+    },
+] as const;
 
 export const UNIT_DEFINITIONS: Record<VersionId, readonly UnitClassVersionDefinition[]> = {
     'diplomacy': UNIT_DEFINITIONS_DIPLOMACY,
     'ocean-0': UNIT_DEFINITIONS_OCEAN_0,
     'ocean-1': UNIT_DEFINITIONS_OCEAN_1,
+    'aquarion-rework': UNIT_DEFINITIONS_AQUARION_REWORK,
 };

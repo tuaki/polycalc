@@ -44,5 +44,6 @@ module.exports = {
         '@typescript-eslint/no-confusing-void-expression': [ 'error', { ignoreArrowShorthand: true } ],
         '@typescript-eslint/consistent-type-definitions': [ 'warn', 'type' ],
         '@typescript-eslint/unbound-method': [ 'error', { 'ignoreStatic': true } ],
+        '@typescript-eslint/no-unused-vars': [ 'error', { 'destructuredArrayIgnorePattern': '^_' } ],
     },
 }

@@ -3,16 +3,16 @@ import { type Unit } from '@/types/core/Unit';
 import { fight } from '@/types/core/combat';
 import { createDefaultDefender, updateDefenderUnitClass } from '@/components/units/useDefender';
 import usePreferences from '@/components/preferences/PreferencesProvider';
-import { type Version } from '@/types/core/Version';
+import { type UnitsCache } from '@/types/core/Version';
 import { createDefaultAttacker, updateAttackerUnitClass } from '@/components/units/useAttacker';
 
 export function useBrawl() {
-    const { preferences } = usePreferences();
-    const [ state, dispatch ] = useReducer(reducer, computeInitialState(preferences.version));
+    const { units } = usePreferences();
+    const [ state, dispatch ] = useReducer(reducer, computeInitialState(units));
 
     useEffect(() => {
-        dispatch({ type: 'version', value: preferences.version });
-    }, [ preferences.version ]);
+        dispatch({ type: 'units', value: units });
+    }, [ units ]);
 
     return { state, dispatch };
 }
@@ -34,7 +34,7 @@ function innerReducer(state: UseBrawlState, action: Action): UseBrawlState {
     case 'deleteUnit': return deleteUnit(state, action);
     case 'moveUnit': return moveUnit(state, action);
     case 'fightMode': return fightMode(state, action);
-    case 'version': return version(state, action.value);
+    case 'units': return units(state, action.value);
     }
 }
 
@@ -45,26 +45,26 @@ export type FightMode = 'none' | 'direct' | 'indirect';
 type Attacker = {
     unit: Unit;
     fights: FightMode[];
-}
+};
 
 type BrawlResults = {
     attackers: Unit[];
     defenders: Unit[];
     middleDefenders: (Unit | undefined)[][];
-}
+};
 
 export type UseBrawlState = {
-    version: Version; // TODO
+    units: UnitsCache;
     defenders: Unit[];
     attackers: Attacker[];
     results: BrawlResults;
 };
 
-function computeInitialState(version: Version): UseBrawlState {
+function computeInitialState(units: UnitsCache): UseBrawlState {
     const state: Omit<UseBrawlState, 'results'> = {
-        version,
-        defenders: [ createDefaultDefender(version) ],
-        attackers: [ { unit: createDefaultAttacker(version), fights: [ 'direct' ] } ],
+        units,
+        defenders: [ createDefaultDefender(units) ],
+        attackers: [ { unit: createDefaultAttacker(units), fights: [ 'direct' ] } ],
     };
 
     return { ...state, results: computeResults(state) };
@@ -78,10 +78,10 @@ type CreateUnitAction = {
 function creteUnit(state: UseBrawlState, { isAttacker }: CreateUnitAction): UseBrawlState {
     if (isAttacker) {
         const fights: FightMode[] = state.defenders.map(() => 'none');
-        return { ...state, attackers: [ ...state.attackers, { unit: createDefaultAttacker(state.version), fights } ] };
+        return { ...state, attackers: [ ...state.attackers, { unit: createDefaultAttacker(state.units), fights } ] };
     }
     
-    const defenders = [ ...state.defenders, createDefaultDefender(state.version) ];
+    const defenders = [ ...state.defenders, createDefaultDefender(state.units) ];
     const attackers: Attacker[] = state.attackers.map(attacker => ({ ...attacker, fights: [ ...attacker.fights, 'none' ] }));
 
     return { ...state, defenders, attackers };
@@ -143,7 +143,7 @@ type FightModeAction = {
     type: 'fightMode';
     defenderIndex: number;
     attackerIndex: number;
-}
+};
 
 function fightMode(state: UseBrawlState, action: FightModeAction): UseBrawlState {
     const attacker = { ...state.attackers[action.attackerIndex] };
@@ -229,19 +229,19 @@ function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>
 }
 
 type VersionAction = {
-    type: 'version';
-    value: Version;
-}
+    type: 'units';
+    value: UnitsCache;
+};
 
-function version(state: UseBrawlState, version: Version): UseBrawlState {
+function units(state: UseBrawlState, units: UnitsCache): UseBrawlState {
     const defenders = state.defenders.map(unit => {
-        const newClass = version.getClass(unit.unitClass.id) ?? version.getDefaultClass();
+        const newClass = units.findClass(unit.unitClass.id) ?? units.getDefaultClass();
         return newClass === unit.unitClass ? unit : updateDefenderUnitClass(unit, newClass);
     });
 
     const attackers = state.attackers.map(attacker => {
         const { unit, fights } = attacker;
-        const newClass = version.getClass(unit.unitClass.id) ?? version.getDefaultClass();
+        const newClass = units.findClass(unit.unitClass.id) ?? units.getDefaultClass();
         if (newClass === unit.unitClass)
             return attacker;
 

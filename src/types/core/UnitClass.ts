@@ -89,20 +89,31 @@ export type UnitClassDefinition = {
 const UNIT_VARIANTS = UNIT_VARIANT_DEFINITIONS.map(UnitVariant.fromDefinition);
 
 function createUnits() {
+    const definitions = new Map<string, UnitClassDefinition>();
     const output = {} as Record<VersionId, readonly UnitClass[]>;
     const current = new Map<string, UnitClass>();
 
     // We iterate versions from the oldest to the newest, so that we can override unit classes.
     VERSION_IDS.forEach(versionId => {
         UNIT_DEFINITIONS[versionId].forEach(def => {
-            if (typeof def === 'string') {
-                // If the unit definition is only string, it means that it should be removed.
-                current.delete(def);
-            }
-            else {
+            if (!('operation' in def)) {
                 const unit = UnitClass.fromDefinition(def, UNIT_VARIANTS);
+                definitions.set(def.id, def);
                 current.set(unit.id, unit);
+                return;
             }
+
+            if (def.operation === 'delete') {
+                current.delete(def.id);
+                return;
+            }
+
+            const newDefinition = { ...definitions.get(def.id), ...def } as UnitClassDefinition & { operation?: string };
+            delete(newDefinition.operation);
+
+            const unit = UnitClass.fromDefinition(newDefinition, UNIT_VARIANTS);
+            definitions.set(def.id, newDefinition);
+            current.set(unit.id, unit);
         });
         output[versionId] = [ ...current.values() ];
     });
@@ -114,7 +125,7 @@ export const UNITS = createUnits();
 
 function createVersions() {
     const output = {} as Record<VersionId, Version>;
-    VERSION_DEFINITIONS.forEach(def => output[def.id] = new Version(def.id, def.gameId, def.label, def.isBeta, UNITS[def.id]));
+    VERSION_DEFINITIONS.forEach(def => output[def.id] = new Version(def.id, def.gameId, def.label, def.status, UNITS[def.id]));
     return output;
 }
 

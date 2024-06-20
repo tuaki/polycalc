@@ -1,8 +1,8 @@
-import { createContext, useCallback, useContext, useState } from 'react';
-import { type UnitTag } from '../../types/core/units';
-import { localStorage } from '../../types/utils/localStorage';
-import { DEFAULT_VERSION_ID, type VersionId, type Version } from '../../types/core/Version';
-import { VERSIONS } from '../../types/core/UnitClass';
+import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { type UnitTag } from '@/types/core/units';
+import { localStorage } from '@/types/utils/localStorage';
+import { DEFAULT_VERSION_ID, type VersionId, type Version, UnitsCache } from '@/types/core/Version';
+import { VERSIONS } from '@/types/core/UnitClass';
 import { MODE_IDS, type ModeId } from '../modes/Modes';
 
 const PREFERENCES_KEY = 'preferences';
@@ -15,12 +15,13 @@ type Preferences = {
     version: Version;
     modeId: ModeId;
     isIconsHidden: boolean;
-}
+};
 
 type PreferencesContext = {
+    units: UnitsCache;
     preferences: Preferences;
     setPreferences: (preferences: Preferences) => void;
-}
+};
 
 type StoredPreferences = {
     isPreferencesCollapsed: boolean;
@@ -76,8 +77,10 @@ export function PreferencesProvider({ children }: Readonly<{ children: React.Rea
         setPreferences(preferences);
     }, []);
 
+    const units = useMemo(() => new UnitsCache(preferences.version, preferences.filterTags), [ preferences.version, preferences.filterTags ]);
+
     return (
-        <PreferencesContext.Provider value={{ preferences, setPreferences: setPreferencesWithStorage }}>
+        <PreferencesContext.Provider value={{ units, preferences, setPreferences: setPreferencesWithStorage }}>
             {children}
         </PreferencesContext.Provider>
     );

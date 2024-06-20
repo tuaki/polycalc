@@ -9,9 +9,9 @@ import { createDefaultAttacker } from '@/components/units/useAttacker';
 import { UnitIcon } from '@/components/units/UnitIcon';
 
 export function Duel() {
-    const { preferences } = usePreferences();
-    const [ attacker, setAttacker ] = useState(createDefaultAttacker(preferences.version));
-    const [ defender, setDefender ] = useState(createDefaultDefender(preferences.version));
+    const { units } = usePreferences();
+    const [ attacker, setAttacker ] = useState(createDefaultAttacker(units));
+    const [ defender, setDefender ] = useState(createDefaultDefender(units));
 
     const result: FightResult = useMemo(() => fight(attacker, defender), [ attacker, defender ]);
 

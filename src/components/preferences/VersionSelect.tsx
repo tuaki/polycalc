@@ -27,12 +27,12 @@ export function VersionSelect() {
 
 function versionOption(id: VersionId) {
     const version = VERSIONS[id];
-    const textValue = `(${version.gameId}) ${version.label}`;
 
     return (
-        <SelectItem key={id} value={id} textValue={textValue}>
-            {textValue}
+        <SelectItem key={id} value={id} textValue={version.label}>
+            {version.label}
             {version.status === 'beta' && <Chip size='sm' color='warning' className='ms-2 h-5'>Beta</Chip>}
+            {version.status === 'latest' && <Chip size='sm' color='success' className='ms-2 h-5'>Latest</Chip>}
         </SelectItem>
     );
 }

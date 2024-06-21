@@ -52,10 +52,10 @@ type VersionDefinition = {
 };
 
 export const VERSION_DEFINITIONS: readonly VersionDefinition[] = [
-    { id: 'diplomacy', gameId: '2.7.2', label: 'Diplomacy (100)', status: 'deprecated' },
-    { id: 'ocean-0', gameId: '2.8.4', label: 'Path of the Ocean (103)', status: 'deprecated' },
-    { id: 'ocean-1', gameId: '2.8.5', label: 'Path of the Ocean (104)', status: 'latest' },
-    { id: 'aquarion-rework', gameId: '2.9.2', label: 'Aquarion Rework', status: 'beta' },
+    { id: 'diplomacy', gameId: '2.2.9.8251', label: '(100) Diplomacy', status: 'deprecated' },
+    { id: 'ocean-0', gameId: '2.8.0', label: '(101) Path of the Ocean', status: 'deprecated' },
+    { id: 'ocean-1', gameId: '2.8.5.11917', label: '(104) Path of the Ocean', status: 'latest' },
+    { id: 'aquarion-rework', gameId: '2.9.2.12491', label: 'Aquarion Rework', status: 'beta' },
 ];
 
 export const VERSION_IDS: readonly VersionId[] = VERSION_DEFINITIONS.map(def => def.id);

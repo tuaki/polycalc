@@ -18,10 +18,14 @@
     }
 
     li {
-        @apply list-disc list-inside ms-4;
+        @apply list-disc ms-8;
     }
 
     a {
         @apply underline underline-offset-2 hover:opacity-80 active:opacity-disabled transition-opacity;
+    }
+
+    .pc-hp {
+        @apply font-medium text-nowrap;
     }
 }

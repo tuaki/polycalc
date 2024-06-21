@@ -134,7 +134,7 @@ export function ArrowButton({ variant, onClick, disabled, className }: LeftRight
             size='sm'
             onClick={onClick}
             disabled={disabled}
-            className={clsx('min-w-8 p-0 bg-default-100 hover:bg-default-200', (variant === 'up' || variant === 'down') ? 'w-8 h-5' : 'w-5 h-8', className)}
+            className={clsx('p-0 bg-default-100 hover:bg-default-200', (variant === 'up' || variant === 'down') ? 'min-h-5 w-8 h-5' : 'min-w-5 w-5 h-8', className)}
         >
             {variant === 'up' && <RxChevronUp size={16} />}
             {variant === 'down' && <RxChevronDown size={16} />}

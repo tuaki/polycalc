@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { type FightResult, fight } from '@/types/core/combat';
+import { type FightResult, fight, type FightConditions } from '@/types/core/combat';
 import { DefenderForm } from '@/components/units/DefenderForm';
 import { Card, CardBody } from '@nextui-org/react';
 import { AttackerForm } from '@/components/units/AttackerForm';
@@ -13,7 +13,16 @@ export function Duel() {
     const [ attacker, setAttacker ] = useState(createDefaultAttacker(units));
     const [ defender, setDefender ] = useState(createDefaultDefender(units));
 
-    const result: FightResult = useMemo(() => fight(attacker, defender), [ attacker, defender ]);
+    const result: FightResult = useMemo(() => {
+        const conditions: FightConditions = {
+            isBasic: true,
+            // isIndirect: attacker.conditions.indirectAttack,
+            // isRanged: attacker.conditions.noRetaliation,
+            // TODO
+        };
+
+        return fight(attacker, defender, conditions);
+    }, [ attacker, defender ]);
 
     return (
         <div className='flex flex-col gap-3 max-w-screen-md'>

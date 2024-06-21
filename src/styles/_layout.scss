@@ -44,6 +44,7 @@ $preferencesCollapsedWidth: 56px;
 .pc-content {
     grid-column-start: 1;
     grid-row-start: 2;
+    min-width: 0px;
 }
 
 @media (screen(md)) {

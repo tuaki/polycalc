@@ -7,9 +7,6 @@ export enum ConditionType {
     Freezed = 'freezed',
     Poisoned = 'poisoned',
     Boosted = 'boosted',
-    NoRetaliation = 'noRetaliation',
-    /** Splash or stomp. */
-    IndirectAttack = 'indirectAttack',
     Converted = 'converted',
 }
 
@@ -58,14 +55,6 @@ const CONDITION_DEFINITIONS: Record<ConditionType, ConditionDefinition> = {
     },
     [ConditionType.Boosted]: {
         label: 'Boosted',
-        description: 'TODO',
-    },
-    [ConditionType.NoRetaliation]: {
-        label: 'No retaliation',
-        description: 'TODO',
-    },
-    [ConditionType.IndirectAttack]: {
-        label: 'Indirect attack',
         description: 'TODO',
     },
     [ConditionType.Converted]: {

@@ -15,14 +15,22 @@ export type FightResult = {
     defender: Unit;
 };
 
-export function fight(attacker: Unit, defender: Unit): FightResult {
+export function fight(attacker: Unit, defender: Unit, conditions: FightConditions): FightResult {
     let output = { attacker, defender };
-    if (defender.conditions.converted)
+    if (!isFightHappening(attacker, defender, conditions))
         return output;
 
-    output = tryDefenderTentacles(output);
+    // TODO only do this if the tentacles are present
+    output = tryDefenderTentacles(output, conditions);
 
-    return basicFight(output);
+    return basicFight(output, conditions);
+}
+
+function isFightHappening(attacker: Unit, defender: Unit, conditions: FightConditions): boolean {
+    if (attacker.isDead || defender.isDead || defender.conditions.converted)
+        return false;
+
+    return conditions.isBasic || !!conditions.isTentacles;
 }
 
 
@@ -32,24 +40,24 @@ export function fight(attacker: Unit, defender: Unit): FightResult {
 //      - The attacker doesn't retaliate.
 //      - Otherwise, everything works as usual.
 //  - Then the attacker attacks the defender. Now everything works as usual.
-function tryDefenderTentacles(input: FightResult): FightResult {
+function tryDefenderTentacles(input: FightResult, conditions: FightConditions): FightResult {
     const { attacker, defender } = input;
     const noTentacles =
         !defender.unitClass.skills.tentacles
-        || defender.conditions.freezed
-        || attacker.conditions.noRetaliation;
+        || defender.conditions.freezed;
+        // || attacker.conditions.noRetaliation;
 
     if (noTentacles)
         return input;
 
-    const reverse = basicFight({ attacker: defender, defender: attacker });
+    const reverse = basicFight({ attacker: defender, defender: attacker }, conditions);
 
     return { attacker: reverse.defender, defender: reverse.attacker };
 }
 
-function basicFight({ attacker, defender }: FightResult): FightResult {
+function basicFight({ attacker, defender }: FightResult, conditions: FightConditions): FightResult {
     // Indirect attack causes less damage but can't be retaliated.
-    const isIndirect = attacker.conditions.indirectAttack
+    const isIndirect = !!conditions.isIndirect
         // An attack with tentacles is always indirect.
         || attacker.unitClass.skills.tentacles;
 
@@ -71,7 +79,7 @@ function basicFight({ attacker, defender }: FightResult): FightResult {
         newDefender.conditions.converted ||
         newDefender.unitClass.skills.stiff ||
         attacker.unitClass.skills.surprise ||
-        attacker.conditions.noRetaliation ||
+        !!conditions.isRanged ||
         isIndirect;
 
     const newAttackerHealth = noRetaliation ? attacker.health : attacker.health - attackerDamage;
@@ -112,3 +120,14 @@ function calculateDamage(attacker: Unit, defender: Unit, isIndirect: boolean): {
 
     return { attackerDamage, defenderDamage };
 }
+
+export type FightConditions = {
+    /** Whether the basic fight is even happening. */
+    isBasic: boolean;
+    /** Whether the attack is indirect. If undefined, the option isn't even available. */
+    isIndirect?: boolean;
+    /** Whether the attacker receives no retaliation. If undefined, the option isn't even available. */
+    isRanged?: boolean;
+    /** Whether any of the units (or both) should receive the tentacle damage. If undefined, the option isn't even available. */
+    isTentacles?: boolean;
+};

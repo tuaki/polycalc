@@ -121,7 +121,7 @@ export function DefenderFormModal({ unit, onChange, onDelete }: DefenderFormModa
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={innerDelete} color='danger'>
-                            Delete
+                            Remove
                         </Button>
                         <Button onClick={onClose}>
                             OK

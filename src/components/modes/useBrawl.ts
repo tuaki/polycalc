@@ -1,10 +1,11 @@
 import { useEffect, useReducer } from 'react';
 import { type Unit } from '@/types/core/Unit';
-import { fight } from '@/types/core/combat';
+import { type FightConditions, fight } from '@/types/core/combat';
 import { createDefaultDefender, updateDefenderUnitClass } from '@/components/units/useDefender';
 import usePreferences from '@/components/preferences/PreferencesProvider';
 import { type UnitsCache } from '@/types/core/Version';
 import { createDefaultAttacker, updateAttackerUnitClass } from '@/components/units/useAttacker';
+import { type PartialBy } from '@/types/utils/common';
 
 export function useBrawl() {
     const { units } = usePreferences();
@@ -17,7 +18,7 @@ export function useBrawl() {
     return { state, dispatch };
 }
 
-type Action = CreateUnitAction | EditUnitAction | DeleteUnitAction | MoveUnitAction | FightModeAction | VersionAction;
+type Action = CreateUnitAction | EditUnitAction | DeleteUnitAction | MoveUnitAction | FightConditionsAction | VersionAction;
 
 function reducer(state: UseBrawlState, action: Action): UseBrawlState {
     console.log('Reduce:', state, action);
@@ -33,24 +34,28 @@ function innerReducer(state: UseBrawlState, action: Action): UseBrawlState {
     case 'editUnit': return editUnit(state, action);
     case 'deleteUnit': return deleteUnit(state, action);
     case 'moveUnit': return moveUnit(state, action);
-    case 'fightMode': return fightMode(state, action);
+    case 'fightConditions': return fightConditions(state, action);
     case 'units': return units(state, action.value);
     }
 }
 
 export type UseBrawlDispatch = React.Dispatch<Action>;
 
-export type FightMode = 'none' | 'direct' | 'indirect';
-
 type Attacker = {
     unit: Unit;
-    fights: FightMode[];
+    fights: FightConditions[];
+};
+
+type MiddleResult = {
+    attacker: Unit;
+    defender: Unit;
+    wasDead?: 'attacker' | 'defender' | 'both';
 };
 
 type BrawlResults = {
     attackers: Unit[];
     defenders: Unit[];
-    middleDefenders: (Unit | undefined)[][];
+    middleFights: MiddleResult[][];
 };
 
 export type UseBrawlState = {
@@ -61,10 +66,13 @@ export type UseBrawlState = {
 };
 
 function computeInitialState(units: UnitsCache): UseBrawlState {
+    const defender = createDefaultDefender(units);
+    const attacker = createDefaultAttacker(units);
+
     const state: Omit<UseBrawlState, 'results'> = {
         units,
-        defenders: [ createDefaultDefender(units) ],
-        attackers: [ { unit: createDefaultAttacker(units), fights: [ 'direct' ] } ],
+        defenders: [ defender ],
+        attackers: [ { unit: attacker, fights: [ createFightConditions(attacker, defender) ] } ],
     };
 
     return { ...state, results: computeResults(state) };
@@ -77,12 +85,16 @@ type CreateUnitAction = {
 
 function creteUnit(state: UseBrawlState, { isAttacker }: CreateUnitAction): UseBrawlState {
     if (isAttacker) {
-        const fights: FightMode[] = state.defenders.map(() => 'none');
-        return { ...state, attackers: [ ...state.attackers, { unit: createDefaultAttacker(state.units), fights } ] };
+        const attacker = createDefaultAttacker(state.units);
+        const fights: FightConditions[] = state.defenders
+            .map((defender, index) => createFightConditions(attacker, defender, undefined, index !== 0));
+        return { ...state, attackers: [ ...state.attackers, { unit: attacker, fights } ] };
     }
     
-    const defenders = [ ...state.defenders, createDefaultDefender(state.units) ];
-    const attackers: Attacker[] = state.attackers.map(attacker => ({ ...attacker, fights: [ ...attacker.fights, 'none' ] }));
+    const defender = createDefaultDefender(state.units);
+    const defenders = [ ...state.defenders, defender ];
+    const attackers: Attacker[] = state.attackers
+        .map(attacker => ({ ...attacker, fights: [ ...attacker.fights, createFightConditions(attacker.unit, defender, undefined, true) ] }));
 
     return { ...state, defenders, attackers };
 }
@@ -95,17 +107,26 @@ type EditUnitAction = {
 };
 
 function editUnit(state: UseBrawlState, { isAttacker, index, unit }: EditUnitAction): UseBrawlState {
-    if (!isAttacker) {
-        const defenders = [ ...state.defenders ];
-        defenders[index] = unit;
-
-        return { ...state, defenders };
+    if (isAttacker) {
+        const attackers = [ ...state.attackers ];
+        // Update all fights for this attacker.
+        const fights = state.defenders.map((defender, i) => createFightConditions(unit, defender, attackers[index].fights[i]));
+        attackers[index] = { unit, fights };
+    
+        return { ...state, attackers };
     }
 
-    const attackers = [ ...state.attackers ];
-    attackers[index] = { ...state.attackers[index], unit };
+    const defenders = [ ...state.defenders ];
+    defenders[index] = unit;
 
-    return { ...state, attackers };
+    // Update all fights for this defender, which means updating all attackers.
+    const attackers: Attacker[] = state.attackers.map(attacker => {
+        const fights = [ ...attacker.fights ];
+        fights[index] = createFightConditions(attacker.unit, unit, fights[index]);
+        return { ...attacker, fights };
+    });
+
+    return { ...state, attackers, defenders };
 }
 
 type DeleteUnitAction = {
@@ -139,28 +160,37 @@ function moveUnit(state: UseBrawlState, action: MoveUnitAction): UseBrawlState {
     return { ...state, attackers };
 }
 
-type FightModeAction = {
-    type: 'fightMode';
+type FightConditionsAction = {
+    type: 'fightConditions';
     defenderIndex: number;
     attackerIndex: number;
+    operation: keyof FightConditions;
 };
 
-function fightMode(state: UseBrawlState, action: FightModeAction): UseBrawlState {
+function fightConditions(state: UseBrawlState, action: FightConditionsAction): UseBrawlState {
     const attacker = { ...state.attackers[action.attackerIndex] };
     attacker.fights = [ ...attacker.fights ];
 
     const currentValue = attacker.fights[action.defenderIndex];
-    const isIndirectSupported = attacker.unit.unitClass.isIndirectSupported;
-    const nextValue = getNextFightMode(currentValue, isIndirectSupported);
-
+    const nextValue = updateFightConditions(currentValue, action.operation);
     attacker.fights[action.defenderIndex] = nextValue;
+    
     // If this is a direct fight, we should turn off all other direct fights. We either make them indirect (if it's supported), or none.
-    if (nextValue === 'direct') {
-        const replaceValue = isIndirectSupported ? 'indirect' : 'none';
+    // In order to qualify, either we had a no-fight that become direct fight, or we had an indirect fight that became direct fight.
+    const isIndirectSupported = attacker.unit.unitClass.isIndirectSupported;
+    const isNewDirectFight = nextValue.isBasic
+        && !nextValue.isIndirect
+        && (action.operation === 'isBasic' || action.operation === 'isIndirect');
 
+    if (isNewDirectFight) {
         for (let i = 0; i < attacker.fights.length; i++) {
-            if (i !== action.defenderIndex && attacker.fights[i] === 'direct')
-                attacker.fights[i] = replaceValue;
+            if (i === action.defenderIndex || !attacker.fights[i].isBasic)
+                continue;
+
+            if (isIndirectSupported) 
+                attacker.fights[i].isIndirect = true;
+            else 
+                attacker.fights[i].isBasic = false;
         }
     }
 
@@ -170,60 +200,112 @@ function fightMode(state: UseBrawlState, action: FightModeAction): UseBrawlState
     return { ...state, attackers };
 }
 
-function getNextFightMode(current: FightMode, isIndirectSupported: boolean): FightMode {
-    if (current === 'none')
-        return 'direct';
-    if (current === 'indirect')
-        return 'none';
+/**
+ * Returns valid fight conditions for the given combination of attacker and defender.
+ * Takes into account previous fight conditions (if they are provided), even if they were used for a different unit.
+ * @param prev Previous fight conditions, if available.
+ * @param isPassive Whether the default action is to "do nothing". If false, the unit will be attacking or something.
+ */
+function createFightConditions(attacker: Unit, defender: Unit, prev?: FightConditions, isPassive?: boolean): FightConditions {
+    const isActive = !isPassive;
 
-    return isIndirectSupported ? 'indirect' : 'none';
+    // There are two options for the defender - either he has tentacles, or he doesn't. Let's call them T and B.
+    // The attacker, however, can have five options - basic, indirect, ranged, indirect + ranged, and tentacles (B, S, R, SR, and T).
+    // Therefore, we have 10 combinations - from B-B, B-R, B-S, ..., T-T.
+
+    // Each of the four conditions can be either enabled or disabled. If it's enabled, we try to use the prev value, then the default value.
+
+    if (attacker.unitClass.skills.tentacles) {
+        // T-T and T-B are the same - if there is action, it will end up as tentacle fight. Basic fight is not possible since the only tentacle unit in the game lacks normal attack.
+        // TODO isBasic should be undefined.
+        return { isBasic: false, isTentacles: prev?.isTentacles ?? isActive };
+    }
+
+    // The tentacles option is now fully orthogonal to the other options.
+    const isTentacles = computeIsTentacles(attacker, defender, prev, isPassive);
+
+    const isBasic = prev?.isBasic ?? isActive;
+
+    // Indirect attack isn't the default.
+    const isIndirect = attacker.unitClass.isIndirectSupported
+        ? (prev?.isIndirect ?? false)
+        : undefined;
+
+    // Ranged attack is the default.
+    const isRanged = attacker.unitClass.range > 1
+        ? (prev?.isRanged ?? true)
+        : undefined;
+    
+    return { isBasic, isIndirect, isRanged, isTentacles };
+}
+
+function computeIsTentacles(attacker: Unit, defender: Unit, prev?: FightConditions, isPassive?: boolean): boolean | undefined {
+    if (!defender.unitClass.skills.tentacles) {
+        // *-B
+        return undefined;
+    }
+    if (prev?.isTentacles !== undefined)
+        return prev.isTentacles;
+    if (isPassive)
+        return false;
+
+    // Let's assume that ranged units will avoid tentacles, while all other units will not. Non-ranged splash units can't avoid them in any case!
+    return attacker.unitClass.range <= 1;
+}
+
+/**
+ * Updates the fight conditions by toggling one of its properties.
+ */
+function updateFightConditions(prev: FightConditions, toggle: keyof FightConditions): FightConditions {
+    if (prev[toggle] === undefined)
+        // This should not happen.
+        return prev;
+
+    // We don't check whether the fight is actually happening. If not, we just disable the toggle, but we still keep the settings.
+    const copy = { ...prev };
+    copy[toggle] = !copy[toggle];
+
+    return copy;
 }
 
 function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>): BrawlResults {
     const output: BrawlResults = {
-        middleDefenders: [],
         attackers: [],
         defenders: [],
+        middleFights: [],
     };
-    let previousDefenders: (Unit | undefined)[] = defenders;
+    // For the previous attackers
+    let previousFights: PartialBy<MiddleResult, 'attacker'>[] = defenders.map(defender => ({ defender }));
 
     for (const element of attackers) {
-        const attacker = element.unit;
-        let finalAttacker: Unit | undefined;
-        const attackerResults = previousDefenders.map((defender, defenderIndex) => {
-            if (!defender || defender.isDead)
-                return;
+        let attacker = element.unit;
+        const attackerResults: MiddleResult[] = previousFights.map(({ defender }, defenderIndex) => {
+            let wasDead: MiddleResult['wasDead'] = undefined;
+            if (defender.isDead) 
+                wasDead = attacker.isDead ? 'both' : 'defender';
+            
+            else if (attacker.isDead) 
+                wasDead = 'attacker';
+            
 
-            const fightMode = element.fights[defenderIndex];
-            if (fightMode === 'none')
-                return defender;
+            if (wasDead) 
+                return { attacker, defender, wasDead };
+            
 
-            const indirectAttack = fightMode === 'indirect';
-            const updatedAttacker = attacker.update(attacker.health, { ...attacker.conditions, indirectAttack });
-            const fightResult = fight(updatedAttacker, defender);
+            const result = fight(attacker, defender, element.fights[defenderIndex]);
+            attacker = result.attacker;
 
-            if (!indirectAttack)
-                finalAttacker = fightResult.attacker;
-
-            return fightResult.defender;
+            return result;
         });
 
-        output.middleDefenders.push(attackerResults);
-        previousDefenders = attackerResults;
+        output.middleFights.push(attackerResults);
+        previousFights = attackerResults;
 
-        output.attackers.push(finalAttacker ?? attacker);
+        output.attackers.push(attacker);
     }
 
-    for (let i = 0; i < defenders.length; i++) {
-        let lastVersion = defenders[i];
-        for (let j = 0; j < attackers.length; j++) {
-            const defender = output.middleDefenders[j][i];
-            if (defender)
-                lastVersion = defender;
-        }
-
-        output.defenders.push(lastVersion);
-    }
+    for (let i = 0; i < defenders.length; i++) 
+        output.defenders.push(output.middleFights[attackers.length - 1][i].defender);
 
     return output;
 }
@@ -246,11 +328,9 @@ function units(state: UseBrawlState, units: UnitsCache): UseBrawlState {
             return attacker;
 
         const newUnit = updateAttackerUnitClass(unit, newClass);
-        if (!(unit.unitClass.isIndirectSupported && !newClass.isIndirectSupported))
-            return { unit: newUnit, fights };
+        // We have to fix all fights. There might be tentacles in play, or something even more scarier.
+        const newFights = fights.map((fight, index) => createFightConditions(newUnit, state.defenders[index], fight));
 
-        // The previous unit did support splash, but the new one doesn't. We have to fix all fights.
-        const newFights = fights.map(fight => fight === 'indirect' ? 'none' : fight);
         return { unit: newUnit, fights: newFights };
     });
 

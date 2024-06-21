@@ -16,3 +16,17 @@ export type PlainType<T> = {
 export function capitalize(word: string) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
+
+/**
+ * Distributive omit - if T = A | B | C, then DOmit<T, K> = DOmit<A, K> | DOmit<B, K> | DOmit<C, K>
+ */
+export type DOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
+
+/**
+ * Distributive keyof
+ */
+export type DKeyof<T> = T extends unknown ? keyof T : never;
+
+export type PartialBy<T, K extends keyof T> = Pick<Partial<T>, K> & DOmit<T, K>;
+
+export type RequiredBy<T, K extends keyof T> = Pick<Required<T>, K> & DOmit<T, K>;

@@ -72,7 +72,8 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
                 >
                     Boosted
                 </Checkbox>
-                {(state.unitClass.skills.stomp || state.unitClass.skills.splash) && (
+                {/* TODO enable these for duel + add tentacles */}
+                {/* {(state.unitClass.skills.stomp || state.unitClass.skills.splash) && (
                     <Checkbox
                         size='sm'
                         isSelected={state.isIndirect}
@@ -89,7 +90,7 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
                     >
                         Ranged
                     </Checkbox>
-                )}
+                )} */}
             </div>
             <div>
                 <UnitStats unit={unit} />
@@ -123,7 +124,7 @@ export function AttackerFormModal({ unit, onChange, onDelete }: AttackerFormModa
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={innerDelete} color='danger'>
-                            Delete
+                            Remove
                         </Button>
                         <Button onClick={onClose}>
                             OK

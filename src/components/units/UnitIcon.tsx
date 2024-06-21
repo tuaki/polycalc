@@ -27,7 +27,7 @@ export function UnitIcon({ unit, size }: UnitIconProps) {
     const conditions = unit.activeConditions.splice(0, 4);
 
     return (
-        <div style={{ width: innerSize, height: innerSize }} className='grid grid-cols-4 grid-rows-4 text-center text-xs leading-3 font-medium'>
+        <div style={{ width: innerSize, height: innerSize }} className='overflow-hidden grid grid-cols-4 grid-rows-4 text-center text-xs leading-3 font-medium'>
             <div className='col-span-3 row-span-3'>
                 <UnitClassIcon unitClass={unit.unitClass} size={iconSizeToClassIconSize(innerSize)} />
             </div>
@@ -37,7 +37,7 @@ export function UnitIcon({ unit, size }: UnitIconProps) {
             {conditions.map(condition => {
                 const { label, color } = conditionLabels[condition];
                 return (
-                    <div key={condition} className={color}>
+                    <div key={condition} className={clsx(color, 'font-semibold')}>
                         {label}
                     </div>
                 );
@@ -58,8 +58,6 @@ const conditionLabels: Record<ConditionType, { label: string, color: string }> =
     [ConditionType.Freezed]:        { label: 'F', color: 'text-sky-400' },
     [ConditionType.Poisoned]:       { label: 'P', color: 'text-lime-500' },
     [ConditionType.Boosted]:        { label: 'B', color: 'text-red-500' },
-    [ConditionType.NoRetaliation]:  { label: 'R', color: '' },
-    [ConditionType.IndirectAttack]: { label: 'S', color: '' },
     [ConditionType.Converted]:      { label: 'C', color: 'text-purple-500' },
 };
 

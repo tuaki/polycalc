@@ -72,25 +72,6 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
                 >
                     Boosted
                 </Checkbox>
-                {/* TODO enable these for duel + add tentacles */}
-                {/* {(state.unitClass.skills.stomp || state.unitClass.skills.splash) && (
-                    <Checkbox
-                        size='sm'
-                        isSelected={state.isIndirect}
-                        onValueChange={value => dispatch({ type: 'flag', field: 'isIndirect', value })}
-                    >
-                        {state.unitClass.skills.stomp ? 'Stomp' : 'Splash'}
-                    </Checkbox>
-                )}
-                {state.unitClass.range > 1 && (
-                    <Checkbox
-                        size='sm'
-                        isSelected={state.isRanged}
-                        onValueChange={value => dispatch({ type: 'flag', field: 'isRanged', value })}
-                    >
-                        Ranged
-                    </Checkbox>
-                )} */}
             </div>
             <div>
                 <UnitStats unit={unit} />

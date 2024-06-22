@@ -1,15 +1,14 @@
 import clsx from 'clsx';
 import { DefenderFormModal } from '@/components/units/DefenderForm';
-import { Button, Card, CardBody, Divider, ScrollShadow } from '@nextui-org/react';
+import { Button, Card, CardBody, ScrollShadow } from '@nextui-org/react';
 import { type UseBrawlDispatch, type UseBrawlState, useBrawl } from './useBrawl';
 import { AttackerFormModal } from '@/components/units/AttackerForm';
 import { ArrowButton } from '@/components/forms';
 import { FaPlus, FaSkull } from 'react-icons/fa6';
-import { Fragment } from 'react';
-import { GiCurledTentacle, GiFlame, GiHighShot } from 'react-icons/gi';
-import { LuShield, LuSword, LuSwords, LuTarget } from 'react-icons/lu';
-import { MdNotInterested } from 'react-icons/md';
+import { Fragment, useCallback } from 'react';
 import { UnitIcon } from '@/components/units/UnitIcon';
+import { type FightConditions } from '@/types/core/combat';
+import { IconFightForm } from './FightForm';
 
 export function Brawl() {
     const { state, dispatch } = useBrawl();
@@ -90,10 +89,9 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
                     onDelete={() => dispatch({ type: 'deleteUnit', isAttacker: false, index })}
                 />
             </div>
-            {state.attackers.map((attacker, attackerIndex) => {
-                const fightConditions = attacker.fights[index];
+            {state.attackers.map((_, attackerIndex) => {
                 const fightResult = state.results.middleFights[attackerIndex][index];
-
+                
                 if (fightResult.wasDead) {
                     return (
                         <div key={attackerIndex} className='grid-item flex gap-3 items-center justify-center'>
@@ -106,73 +104,35 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
                         </div>
                     );
                 }
-
-                const health = fightResult.defender.health;
-
-                const showSecondRow = fightConditions.isIndirect !== undefined
-                    || fightConditions.isRanged !== undefined
-                    || fightConditions.isTentacles !== undefined;
-                const isLessThanThree = fightConditions.isIndirect === undefined
-                    || fightConditions.isRanged === undefined
-                    || fightConditions.isTentacles === undefined;
-                const marginClass = isLessThanThree ? 'mx-2' : 'mx-1';
-
+                
                 return (
-                    <div key={attackerIndex} className='grid-item flex flex-col justify-center gap-1'>
-                        <div className='flex items-center justify-center'>
-                            <IsBasicToggle
-                                value={fightConditions.isBasic}
-                                attackerIndex={attackerIndex}
-                                defenderIndex={index}
-                                dispatch={dispatch}
-                                className='mx-2'
-                            />
-                            <div className={clsx('leading-5 w-9 text-center', health <= 0 && 'text-danger')}>
-                                {health}
-                            </div>
-                        </div>
-                        {showSecondRow && (<>
-                            <Divider className='w-20 self-center' />
-                            <div className='flex items-center justify-center'>
-                                {fightConditions.isIndirect !== undefined && (
-                                    <IsIndirectToggle
-                                        value={fightConditions.isIndirect}
-                                        attackerIndex={attackerIndex}
-                                        defenderIndex={index}
-                                        dispatch={dispatch}
-                                        className={marginClass}
-                                        disabled={!fightConditions.isBasic}
-                                    />
-                                )}
-                                {fightConditions.isRanged !== undefined && !fightConditions.isIndirect && (
-                                    // Indirect attack is always 'ranged', meaning no retaliation is taken, so we hide the icon.
-                                    <IsRangedToggle
-                                        value={fightConditions.isRanged}
-                                        attackerIndex={attackerIndex}
-                                        defenderIndex={index}
-                                        dispatch={dispatch}
-                                        className={marginClass}
-                                        disabled={!fightConditions.isBasic}
-                                    />
-                                )}
-                                {fightConditions.isTentacles !== undefined && (
-                                    <IsTentaclesToggle
-                                        value={fightConditions.isTentacles}
-                                        attackerIndex={attackerIndex}
-                                        defenderIndex={index}
-                                        dispatch={dispatch}
-                                        className={marginClass}
-                                    />
-                                )}
-                            </div>
-                        </>)}
-                    </div>
+                    <BrawlFightForm key={attackerIndex} state={state} dispatch={dispatch} attackerIndex={attackerIndex} defenderIndex={index} />
                 );
             })}
             <div className='grid-item flex items-center md:ps-2'>
                 <UnitIcon unit={finalDefender} />
             </div>
         </Fragment>
+    );
+}
+
+type BrawlFightFormProps = Readonly<{
+    state: UseBrawlState;
+    dispatch: UseBrawlDispatch;
+    attackerIndex: number;
+    defenderIndex: number;
+}>;
+
+function BrawlFightForm({ state, dispatch, attackerIndex, defenderIndex }: BrawlFightFormProps) {
+    const value = state.attackers[attackerIndex].fights[defenderIndex];
+    const result = state.results.middleFights[attackerIndex][defenderIndex];
+    
+    const onChange = useCallback((toggle: keyof FightConditions) => {
+        dispatch({ type: 'fightConditions', attackerIndex, defenderIndex, toggle });
+    }, [ dispatch, attackerIndex, defenderIndex ]);
+
+    return (
+        <IconFightForm value={value} onChange={onChange} result={result} className='grid-item' />
     );
 }
 
@@ -186,106 +146,4 @@ function finalAttackersRow(state: UseBrawlState) {
         ))}
         <div className='grid-item' />
     </>);
-}
-
-type IsBasicToggleProps = Readonly<{
-    value: boolean;
-    attackerIndex: number;
-    defenderIndex: number;
-    dispatch: UseBrawlDispatch;
-    className?: string;
-}>;
-
-function IsBasicToggle({ value, attackerIndex, defenderIndex, dispatch, className }: IsBasicToggleProps) {
-    return (
-        <button
-            onClick={() => dispatch({ type: 'fightConditions', attackerIndex, defenderIndex, operation: 'isBasic' })}
-            className={className}
-            aria-label={value ? 'Fight' : 'Skip'}
-        >
-            {value ? (
-                <LuSwords size={20} className='text-success' />
-            ) : (
-                <MdNotInterested size={20} className='text-gray-400' />
-            )}
-        </button>
-    );
-}
-
-type IsIndirectToggleProps = Readonly<{
-    value: boolean;
-    attackerIndex: number;
-    defenderIndex: number;
-    dispatch: UseBrawlDispatch;
-    className?: string;
-    disabled?: boolean;
-}>;
-
-function IsIndirectToggle({ value, attackerIndex, defenderIndex, dispatch, className, disabled }: IsIndirectToggleProps) {
-    const colorClass = disabled
-        ? 'text-gray-400'
-        : (value ? 'text-warning' : 'text-red-800');
-    const icon = value ? GiFlame : LuTarget;
-
-    return (
-        <button
-            onClick={() => dispatch({ type: 'fightConditions', attackerIndex, defenderIndex, operation: 'isIndirect' })}
-            className={clsx(className, colorClass)}
-            aria-label={value ? 'Splash damage' : 'Direct damage'}
-            disabled={disabled}
-        >
-            {icon({ size: 20 })}
-        </button>
-    );
-}
-
-type IsRangedToggleProps = Readonly<{
-    value: boolean;
-    attackerIndex: number;
-    defenderIndex: number;
-    dispatch: UseBrawlDispatch;
-    className?: string;
-    disabled?: boolean;
-}>;
-
-function IsRangedToggle({ value, attackerIndex, defenderIndex, dispatch, className, disabled }: IsRangedToggleProps) {
-    const colorClass = disabled
-        ? 'text-gray-400'
-        : (value ? 'text-yellow-900' : '');
-    const icon = value ? GiHighShot : LuSword;
-
-    return (
-        <button
-            onClick={() => dispatch({ type: 'fightConditions', attackerIndex, defenderIndex, operation: 'isRanged' })}
-            className={clsx(className, colorClass)}
-            aria-label={value ? 'Ranged combat' : 'Close combat'}
-            disabled={disabled}
-        >
-            {icon({ size: 20, className: value ? '' : '-scale-x-100' })}
-        </button>
-    );
-}
-
-type IsTentaclesToggleProps = Readonly<{
-    value: boolean;
-    attackerIndex: number;
-    defenderIndex: number;
-    dispatch: UseBrawlDispatch;
-    className?: string;
-}>;
-
-function IsTentaclesToggle({ value, attackerIndex, defenderIndex, dispatch, className }: IsTentaclesToggleProps) {
-    return (
-        <button
-            onClick={() => dispatch({ type: 'fightConditions', attackerIndex, defenderIndex, operation: 'isTentacles' })}
-            className={className}
-            aria-label={value ? 'Tentacles enabled' : 'Tentacles disabled'}
-        >
-            {value ? (
-                <GiCurledTentacle size={20} className='text-purple-600' />
-            ) : (
-                <LuShield size={20} />
-            )}
-        </button>
-    );
 }

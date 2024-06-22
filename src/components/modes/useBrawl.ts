@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from 'react';
 import { type Unit } from '@/types/core/Unit';
-import { type FightConditions, fight } from '@/types/core/combat';
+import { type FightConditions, fight, createFightConditions, updateFightConditions } from '@/types/core/combat';
 import { createDefaultDefender, updateDefenderUnitClass } from '@/components/units/useDefender';
 import usePreferences from '@/components/preferences/PreferencesProvider';
 import { type UnitsCache } from '@/types/core/Version';
@@ -164,7 +164,7 @@ type FightConditionsAction = {
     type: 'fightConditions';
     defenderIndex: number;
     attackerIndex: number;
-    operation: keyof FightConditions;
+    toggle: keyof FightConditions;
 };
 
 function fightConditions(state: UseBrawlState, action: FightConditionsAction): UseBrawlState {
@@ -172,15 +172,15 @@ function fightConditions(state: UseBrawlState, action: FightConditionsAction): U
     attacker.fights = [ ...attacker.fights ];
 
     const currentValue = attacker.fights[action.defenderIndex];
-    const nextValue = updateFightConditions(currentValue, action.operation);
+    const nextValue = updateFightConditions(currentValue, action.toggle);
     attacker.fights[action.defenderIndex] = nextValue;
     
     // If this is a direct fight, we should turn off all other direct fights. We either make them indirect (if it's supported), or none.
     // In order to qualify, either we had a no-fight that become direct fight, or we had an indirect fight that became direct fight.
     const isIndirectSupported = attacker.unit.unitClass.isIndirectSupported;
-    const isNewDirectFight = nextValue.isBasic
+    const isNewDirectFight = !!nextValue.isBasic
         && !nextValue.isIndirect
-        && (action.operation === 'isBasic' || action.operation === 'isIndirect');
+        && (action.toggle === 'isBasic' || action.toggle === 'isIndirect');
 
     if (isNewDirectFight) {
         for (let i = 0; i < attacker.fights.length; i++) {
@@ -198,74 +198,6 @@ function fightConditions(state: UseBrawlState, action: FightConditionsAction): U
     attackers[action.attackerIndex] = attacker;
 
     return { ...state, attackers };
-}
-
-/**
- * Returns valid fight conditions for the given combination of attacker and defender.
- * Takes into account previous fight conditions (if they are provided), even if they were used for a different unit.
- * @param prev Previous fight conditions, if available.
- * @param isPassive Whether the default action is to "do nothing". If false, the unit will be attacking or something.
- */
-function createFightConditions(attacker: Unit, defender: Unit, prev?: FightConditions, isPassive?: boolean): FightConditions {
-    const isActive = !isPassive;
-
-    // There are two options for the defender - either he has tentacles, or he doesn't. Let's call them T and B.
-    // The attacker, however, can have five options - basic, indirect, ranged, indirect + ranged, and tentacles (B, S, R, SR, and T).
-    // Therefore, we have 10 combinations - from B-B, B-R, B-S, ..., T-T.
-
-    // Each of the four conditions can be either enabled or disabled. If it's enabled, we try to use the prev value, then the default value.
-
-    if (attacker.unitClass.skills.tentacles) {
-        // T-T and T-B are the same - if there is action, it will end up as tentacle fight. Basic fight is not possible since the only tentacle unit in the game lacks normal attack.
-        // TODO isBasic should be undefined.
-        return { isBasic: false, isTentacles: prev?.isTentacles ?? isActive };
-    }
-
-    // The tentacles option is now fully orthogonal to the other options.
-    const isTentacles = computeIsTentacles(attacker, defender, prev, isPassive);
-
-    const isBasic = prev?.isBasic ?? isActive;
-
-    // Indirect attack isn't the default.
-    const isIndirect = attacker.unitClass.isIndirectSupported
-        ? (prev?.isIndirect ?? false)
-        : undefined;
-
-    // Ranged attack is the default.
-    const isRanged = attacker.unitClass.range > 1
-        ? (prev?.isRanged ?? true)
-        : undefined;
-    
-    return { isBasic, isIndirect, isRanged, isTentacles };
-}
-
-function computeIsTentacles(attacker: Unit, defender: Unit, prev?: FightConditions, isPassive?: boolean): boolean | undefined {
-    if (!defender.unitClass.skills.tentacles) {
-        // *-B
-        return undefined;
-    }
-    if (prev?.isTentacles !== undefined)
-        return prev.isTentacles;
-    if (isPassive)
-        return false;
-
-    // Let's assume that ranged units will avoid tentacles, while all other units will not. Non-ranged splash units can't avoid them in any case!
-    return attacker.unitClass.range <= 1;
-}
-
-/**
- * Updates the fight conditions by toggling one of its properties.
- */
-function updateFightConditions(prev: FightConditions, toggle: keyof FightConditions): FightConditions {
-    if (prev[toggle] === undefined)
-        // This should not happen.
-        return prev;
-
-    // We don't check whether the fight is actually happening. If not, we just disable the toggle, but we still keep the settings.
-    const copy = { ...prev };
-    copy[toggle] = !copy[toggle];
-
-    return copy;
 }
 
 function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>): BrawlResults {

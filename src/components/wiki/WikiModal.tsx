@@ -4,6 +4,7 @@ import useWiki from './WikiProvider';
 import { useCached } from '@/types/utils/useCached';
 import { getWikiPageDetail } from './wikiPages';
 import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs';
+import { TfiHelpAlt } from 'react-icons/tfi';
 
 export function WikiModal() {
     const { path, setPath } = useWiki();
@@ -32,7 +33,7 @@ export function WikiModal() {
                                     {detail.children.map(({ child, path }) => (
                                         <li key={path} onClick={() => setPath(path)}>
                                             <span data-slot='separator' aria-hidden='true' className='px-1 text-foreground/50'>/</span>
-                                            <span className='cursor-pointer tap-highlight-transparent text-foreground/50 text-small hover:opacity-80 active:opacity-disabled transition-opacity'>{child.title}</span>
+                                            <span className='cursor-pointer tap-highlight-transparent text-foreground/50 text-small hover:opacity-80 active:opacity-disabled transition-opacity text-nowrap'>{child.title}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -56,14 +57,30 @@ export function WikiModal() {
 
 type WikiInfoProps = Readonly<{
     type: string;
+    label: string;
 }>;
 
-export function WikiInfo({ type }: WikiInfoProps) {
-    const { setPath: setWiki } = useWiki();
+export function WikiInfo({ type, label }: WikiInfoProps) {
+    const { setPath } = useWiki();
 
     return (
-        <Button onClick={() => setWiki(type)}>
-            Wiki
+        <Button onClick={() => setPath(type)}>
+            <TfiHelpAlt size={18} />{label}
         </Button>
+    );
+}
+
+type WikiLinkProps = Readonly<{
+    type: string;
+}>;
+
+export function WikiLink({ type }: WikiLinkProps) {
+    const { setPath } = useWiki();
+    const { page } = getWikiPageDetail(type);
+
+    return (
+        <button onClick={() => setPath(type)} className='pc-wiki-link'>
+            {page.title}
+        </button>
     );
 }

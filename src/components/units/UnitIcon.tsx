@@ -1,8 +1,9 @@
 import usePreferences from '@/components/preferences/PreferencesProvider';
-import { ConditionType } from '@/types/core/Condition';
+import { CONDITIONS, ConditionType } from '@/types/core/Condition';
 import { type Unit } from '@/types/core/Unit';
 import { type UnitClass } from '@/types/core/UnitClass';
 import { capitalize } from '@/types/utils/common';
+import { Tooltip } from '@/components/common';
 import clsx from 'clsx';
 
 type UnitIconButtonProps = UnitIconProps & Readonly<{
@@ -27,7 +28,7 @@ export function UnitIcon({ unit, size }: UnitIconProps) {
     const conditions = unit.activeConditions.splice(0, 4);
 
     return (
-        <div style={{ width: innerSize, height: innerSize }} className='overflow-hidden grid grid-cols-4 grid-rows-4 text-center text-xs leading-3 font-medium'>
+        <div style={{ width: innerSize, height: innerSize }} className='overflow-hidden grid grid-cols-4 grid-rows-4 text-center text-xs leading-3 font-medium unselectable'>
             <div className='col-span-3 row-span-3'>
                 <UnitClassIcon unitClass={unit.unitClass} size={iconSizeToClassIconSize(innerSize)} />
             </div>
@@ -36,10 +37,14 @@ export function UnitIcon({ unit, size }: UnitIconProps) {
             </div>
             {conditions.map(condition => {
                 const { label, color } = conditionLabels[condition];
+                const textLabel = CONDITIONS[condition].label;
+
                 return (
-                    <div key={condition} className={clsx(color, 'font-semibold')}>
-                        {label}
-                    </div>
+                    <Tooltip key={condition} content={textLabel}>
+                        <div key={condition} className={clsx(color, 'font-semibold')}>
+                            {label}
+                        </div>
+                    </Tooltip>
                 );
             })}
         </div>
@@ -74,7 +79,7 @@ export function UnitClassIcon({ unitClass, size: inputSize }: UnitClassIconProps
         const path = `./icons/units/${unitClass.id}.png`;
         
         return (
-            <img src={path} alt={unitClass.label} style={{ width: size, height: size }} />
+            <img src={path} alt={unitClass.label} style={{ width: size, height: size }} className='non-draggable' />
         );
     }
 
@@ -82,7 +87,7 @@ export function UnitClassIcon({ unitClass, size: inputSize }: UnitClassIconProps
     const innerSize = size - 2 * padding - 2 * borderWidth;
     
     return (
-        <div style={{ width: size, height: size, padding }} >
+        <div style={{ width: size, height: size, padding }}>
             <div
                 className='text-center align-middle font-mono border border-current rounded'
                 style={{ lineHeight: `${innerSize}px`, fontSize: `${fontSize}px`, borderWidth: `${borderWidth}px` }}

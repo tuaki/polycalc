@@ -4,7 +4,6 @@ export type WikiPage = {
     title: string;
     content: ReactNode;
     children?: Record<string, WikiPage>;
-    tmp?: string;
 };
 
 type NestedPath<K extends string, TChild> = TChild extends WikiPage

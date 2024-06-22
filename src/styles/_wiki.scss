@@ -28,4 +28,8 @@
     .pc-hp {
         @apply font-medium text-nowrap;
     }
+
+    .pc-wiki-link {
+        @apply underline underline-offset-2 hover:opacity-80 active:opacity-disabled transition-opacity;
+    }
 }

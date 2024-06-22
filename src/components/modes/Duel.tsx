@@ -61,7 +61,7 @@ export function Duel() {
                         <UnitIcon unit={result.defender} />
                     </div>
                     <div className='col-span-2'>
-                        <TextFightForm value={state.conditions} onChange={set.conditions} attacker={state.attacker} />
+                        <TextFightForm value={state.conditions} onChange={set.conditions} />
                     </div>
                 </CardBody>
             </Card>

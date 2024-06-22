@@ -9,6 +9,7 @@ import { Fragment, useCallback } from 'react';
 import { UnitIcon } from '@/components/units/UnitIcon';
 import { type FightConditions } from '@/types/core/combat';
 import { IconFightForm } from './FightForm';
+import { Tooltip } from '../common';
 
 export function Brawl() {
     const { state, dispatch } = useBrawl();
@@ -96,10 +97,18 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
                     return (
                         <div key={attackerIndex} className='grid-item flex gap-3 items-center justify-center'>
                             {(fightResult.wasDead === 'defender' || fightResult.wasDead === 'both') && (
-                                <FaSkull size={24} className='text-xs text-gray-300' />
+                                <Tooltip content='Defender was dead'>
+                                    <div>
+                                        <FaSkull size={24} className='text-xs text-gray-300' />
+                                    </div>
+                                </Tooltip>
                             )}
                             {(fightResult.wasDead === 'attacker' || fightResult.wasDead === 'both') && (
-                                <FaSkull size={24} className='text-xs text-blue-300' />
+                                <Tooltip content='Attacker was dead'>
+                                    <div>
+                                        <FaSkull size={24} className='text-xs text-blue-300' />
+                                    </div>
+                                </Tooltip>
                             )}
                         </div>
                     );

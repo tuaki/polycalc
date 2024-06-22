@@ -17,6 +17,7 @@ type Preferences = {
     version: Version;
     modeId: ModeId;
     isIconsHidden: boolean;
+    isTooltipsHidden: boolean;
 };
 
 type PreferencesContext = {
@@ -32,6 +33,7 @@ type StoredPreferences = {
     versionId: string;
     modeId: string;
     isIconsHidden: boolean;
+    isTooltipsHidden: boolean;
 };
 
 function fromStored(): Preferences {
@@ -56,6 +58,7 @@ function fromStored(): Preferences {
         version: VERSIONS[versionId],
         modeId,
         isIconsHidden: stored.isIconsHidden ?? false,
+        isTooltipsHidden: stored.isTooltipsHidden ?? false,
     };
 }
 
@@ -69,6 +72,7 @@ function toStored(preferences: Preferences): StoredPreferences {
         versionId: preferences.version.id,
         modeId: preferences.modeId,
         isIconsHidden: preferences.isIconsHidden,
+        isTooltipsHidden: preferences.isTooltipsHidden,
     };
 }
 

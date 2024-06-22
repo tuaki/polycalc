@@ -1,10 +1,10 @@
-import { type Unit } from '@/types/core/Unit';
 import { type FightResult, type FightConditions } from '@/types/core/combat';
 import { Checkbox, Divider } from '@nextui-org/react';
 import clsx from 'clsx';
 import { GiCurledTentacle, GiFlame, GiHighShot } from 'react-icons/gi';
 import { LuShield, LuSword, LuSwords, LuTarget } from 'react-icons/lu';
 import { MdNotInterested } from 'react-icons/md';
+import { Tooltip } from '../common';
 
 type IconFightFormProps = Readonly<{
     value: FightConditions;
@@ -69,40 +69,51 @@ type BaseToggleProps = Readonly<{
     onChange: (toggle: keyof FightConditions) => void;
 }>;
 
-
 function IsBasicToggle({ value, onChange }: BaseToggleProps) {
+    const label = value ? 'Take part in this fight' : 'Skip this fight';
+
     return (
-        <button onClick={() => onChange('isBasic')} aria-label={value ? 'Fight' : 'Skip'}>
-            {value ? (
-                <LuSwords size={20} className='text-green-500' />
-            ) : (
-                <MdNotInterested size={20} className='text-gray-400' />
-            )}
-        </button>
+        <Tooltip content={label}>
+            <button onClick={() => onChange('isBasic')} aria-label={label}>
+                {value ? (
+                    <LuSwords size={20} className='text-green-500' />
+                ) : (
+                    <MdNotInterested size={20} className='text-gray-400' />
+                )}
+            </button>
+        </Tooltip>
     );
 }
 
 function IsIndirectToggle({ value, onChange }: BaseToggleProps) {
+    const label = value ? 'Splash damage' : 'Direct damage';
+
     return (
-        <button onClick={() => onChange('isIndirect')} aria-label={value ? 'Splash damage' : 'Direct damage'}>
-            {value ? (
-                <GiFlame size={20} className='text-yellow-500' />
-            ) : (
-                <LuTarget size={20} className='text-red-800' />
-            )}
-        </button>
+        <Tooltip content={label}>
+            <button onClick={() => onChange('isIndirect')} aria-label={label}>
+                {value ? (
+                    <GiFlame size={20} className='text-yellow-500' />
+                ) : (
+                    <LuTarget size={20} className='text-red-800' />
+                )}
+            </button>
+        </Tooltip>
     );
 }
 
 function IsRangedToggle({ value, onChange }: BaseToggleProps) {
+    const label = value ? 'Ranged combat' : 'Close combat';
+
     return (
-        <button onClick={() => onChange('isRanged')} aria-label={value ? 'Ranged combat' : 'Close combat'}>
-            {value ? (
-                <GiHighShot size={20} className='text-yellow-900' />
-            ) : (
-                <LuSword size={20} className='-scale-x-100' />
-            )}
-        </button>
+        <Tooltip content={label}>
+            <button onClick={() => onChange('isRanged')} aria-label={label}>
+                {value ? (
+                    <GiHighShot size={20} className='text-yellow-900' />
+                ) : (
+                    <LuSword size={20} className='-scale-x-100' />
+                )}
+            </button>
+        </Tooltip>
     );
 }
 
@@ -111,18 +122,22 @@ type IsTentaclesToggleProps = BaseToggleProps & Readonly<{
 }>;
 
 function IsTentaclesToggle({ value, onChange, variant }: IsTentaclesToggleProps) {
+    const label = value ? 'Use tentacles' : 'Skip tentacles';
+
     return (
-        <button onClick={() => onChange('isTentacles')} aria-label={value ? 'Tentacles enabled' : 'Tentacles disabled'}>
-            {value ? (
-                <GiCurledTentacle size={20} className='text-purple-600' />
-            ) : (<>
-                {variant === 'up' ? (
-                    <MdNotInterested size={20} className='text-gray-400' />
-                ) : (
-                    <LuShield size={20} />
-                )}
-            </>)}
-        </button>
+        <Tooltip content={label}>
+            <button onClick={() => onChange('isTentacles')} aria-label={label}>
+                {value ? (
+                    <GiCurledTentacle size={20} className='text-purple-600' />
+                ) : (<>
+                    {variant === 'up' ? (
+                        <MdNotInterested size={20} className='text-gray-400' />
+                    ) : (
+                        <LuShield size={20} />
+                    )}
+                </>)}
+            </button>
+        </Tooltip>
     );
 }
 
@@ -130,10 +145,9 @@ type TextFightFormProps = Readonly<{
     value: FightConditions;
     onChange: (toggle: keyof FightConditions) => void;
     className?: string;
-    attacker: Unit;
 }>;
 
-export function TextFightForm({ value, onChange, className, attacker }: TextFightFormProps) {
+export function TextFightForm({ value, onChange, className }: TextFightFormProps) {
     const { primaryIsBasic, showIndirect, showRanged, showSecondaryTentacles } = computeShow(value);
     const rangedIsDetermined = !!value.isIndirect;
 
@@ -145,7 +159,7 @@ export function TextFightForm({ value, onChange, className, attacker }: TextFigh
                     isSelected={value.isIndirect}
                     onValueChange={() => onChange('isIndirect')}
                 >
-                    {attacker.unitClass.skills.stomp ? 'Stomp' : 'Splash'}
+                    Splash damage
                 </Checkbox>
             )}
             {showRanged && (
@@ -155,7 +169,7 @@ export function TextFightForm({ value, onChange, className, attacker }: TextFigh
                     onValueChange={() => onChange('isRanged')}
                     isDisabled={rangedIsDetermined}
                 >
-                    Ranged
+                    Ranged combat
                 </Checkbox>
             )}
             {(!primaryIsBasic || showSecondaryTentacles) && (
@@ -164,7 +178,7 @@ export function TextFightForm({ value, onChange, className, attacker }: TextFigh
                     isSelected={value.isTentacles}
                     onValueChange={() => onChange('isTentacles')}
                 >
-                    Tentacles
+                    Use tentacles
                 </Checkbox>
             )}
         </div>

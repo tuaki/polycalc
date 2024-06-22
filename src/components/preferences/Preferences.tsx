@@ -8,6 +8,7 @@ import { wiki } from '@/components/wiki/wikiPages';
 import { WikiInfo } from '../wiki/WikiModal';
 import { ThemeToggle } from './ThemeToggle';
 import { PolycalcLogoIcon } from '../Icons';
+import { Tooltip } from '../common';
 
 export function Preferences() {
     const { isCollapsed } = usePreferences().preferences;
@@ -39,10 +40,10 @@ export function Preferences() {
                 </div>
             </div>
             {!isCollapsed && (<>
+                <WikiInfo type={wiki.root} label='Help' />
                 <VersionSelect />
                 <TribesMenu />
-                <HideIconsSwitch />
-                <WikiInfo type={wiki.root} />
+                <MoreSettings />
             </>)}
         </div>
     );
@@ -51,25 +52,28 @@ export function Preferences() {
 function CollapsePreferencesToggle() {
     const { preferences, setPreferences } = usePreferences();
     const { isCollapsed } = preferences;
+    const label = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
 
     return (
-        <Button
-            isIconOnly
-            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            onClick={() => setPreferences({ ...preferences, isCollapsed: !isCollapsed })}
-            variant='faded'
-        >
-            <BsWindowSidebar size={22} />
-        </Button>
+        <Tooltip content={label}>
+            <Button
+                isIconOnly
+                aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                onClick={() => setPreferences({ ...preferences, isCollapsed: !isCollapsed })}
+                variant='faded'
+            >
+                <BsWindowSidebar size={22} />
+            </Button>
+        </Tooltip>
     );
 }
 
-function HideIconsSwitch() {
+function MoreSettings() {
     const { preferences, setPreferences } = usePreferences();
 
     return (
         <Card>
-            <CardBody className='overflow-hidden'>
+            <CardBody className='overflow-hidden gap-2'>
                 <Switch
                     size='sm'
                     isSelected={preferences.isIconsHidden}
@@ -77,6 +81,14 @@ function HideIconsSwitch() {
 
                 >
                     Hide icons
+                </Switch>
+                <Switch
+                    size='sm'
+                    isSelected={preferences.isTooltipsHidden}
+                    onValueChange={value => setPreferences({ ...preferences, isTooltipsHidden: value })}
+
+                >
+                    Hide tooltips
                 </Switch>
             </CardBody>
         </Card>

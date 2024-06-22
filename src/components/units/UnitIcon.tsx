@@ -84,7 +84,7 @@ export function UnitClassIcon({ unitClass, size: inputSize }: UnitClassIconProps
     return (
         <div style={{ width: size, height: size, padding }} >
             <div
-                className='text-center align-middle font-mono border border-black rounded'
+                className='text-center align-middle font-mono border border-current rounded'
                 style={{ lineHeight: `${innerSize}px`, fontSize: `${fontSize}px`, borderWidth: `${borderWidth}px` }}
             >
                 {capitalize(unitClass.idShort)}

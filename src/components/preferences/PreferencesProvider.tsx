@@ -7,10 +7,12 @@ import { MODE_IDS, type ModeId } from '../modes/Modes';
 
 const PREFERENCES_KEY = 'preferences';
 
+export type Theme = 'dark' | 'light';
 export type FilterTag = Exclude<UnitTag, UnitTag.Land | UnitTag.Naval>;
 
 type Preferences = {
-    isPreferencesCollapsed: boolean;
+    theme: Theme;
+    isCollapsed: boolean;
     filterTags: FilterTag[];
     version: Version;
     modeId: ModeId;
@@ -24,7 +26,8 @@ type PreferencesContext = {
 };
 
 type StoredPreferences = {
-    isPreferencesCollapsed: boolean;
+    theme: Theme;
+    isCollapsed: boolean;
     filterTags: FilterTag[];
     versionId: string;
     modeId: string;
@@ -47,7 +50,8 @@ function fromStored(): Preferences {
     ) as ModeId;
 
     return {
-        isPreferencesCollapsed: stored.isPreferencesCollapsed ?? false,
+        theme: stored.theme ?? 'dark',
+        isCollapsed: stored.isCollapsed ?? false,
         filterTags: stored.filterTags ?? [],
         version: VERSIONS[versionId],
         modeId,
@@ -59,7 +63,8 @@ const defaultPreferences = fromStored();
 
 function toStored(preferences: Preferences): StoredPreferences {
     return {
-        isPreferencesCollapsed: preferences.isPreferencesCollapsed,
+        theme: preferences.theme,
+        isCollapsed: preferences.isCollapsed,
         filterTags: preferences.filterTags,
         versionId: preferences.version.id,
         modeId: preferences.modeId,

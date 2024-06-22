@@ -15,7 +15,8 @@ type IconFightFormProps = Readonly<{
 
 export function IconFightForm({ value, onChange, result, className }: IconFightFormProps) {
     const { primaryIsBasic, showIndirect, showRanged, showSecondaryTentacles } = computeShow(value);
-    const downRowTotal = +showIndirect + +showRanged + +showSecondaryTentacles;
+    const showRangedIcon = showRanged && !value.isIndirect;
+    const downRowTotal = +showIndirect + +showRangedIcon + +showSecondaryTentacles;
     const health = result.defender.health;
 
     return (
@@ -38,7 +39,7 @@ export function IconFightForm({ value, onChange, result, className }: IconFightF
                     {showIndirect && (
                         <IsIndirectToggle value={value.isIndirect!} onChange={onChange} />
                     )}
-                    {showRanged && !showIndirect && (
+                    {showRangedIcon && (
                         // Indirect attack is always 'ranged', meaning no retaliation is taken, so we hide the icon.
                         <IsRangedToggle value={value.isRanged!} onChange={onChange} />
                     )}
@@ -73,7 +74,7 @@ function IsBasicToggle({ value, onChange }: BaseToggleProps) {
     return (
         <button onClick={() => onChange('isBasic')} aria-label={value ? 'Fight' : 'Skip'}>
             {value ? (
-                <LuSwords size={20} className='text-success' />
+                <LuSwords size={20} className='text-green-500' />
             ) : (
                 <MdNotInterested size={20} className='text-gray-400' />
             )}
@@ -85,7 +86,7 @@ function IsIndirectToggle({ value, onChange }: BaseToggleProps) {
     return (
         <button onClick={() => onChange('isIndirect')} aria-label={value ? 'Splash damage' : 'Direct damage'}>
             {value ? (
-                <GiFlame size={20} className='text-warning' />
+                <GiFlame size={20} className='text-yellow-500' />
             ) : (
                 <LuTarget size={20} className='text-red-800' />
             )}

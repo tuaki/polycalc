@@ -63,7 +63,7 @@ input[type=number] {
     background-color: rgb(212 212 216);
     
     .grid-item {
-        background-color: white;
+        @apply bg-content1;
     }
 }
 

@@ -16,10 +16,10 @@ function App() {
 }
 
 function InnerApp() {
-    const { isPreferencesCollapsed } = usePreferences().preferences;
+    const { theme, isCollapsed } = usePreferences().preferences;
 
     return (
-        <div className={clsx('pc-layout', isPreferencesCollapsed && 'pc-preferences-collapsed')}>
+        <div className={clsx('pc-layout text-foreground bg-background', isCollapsed && 'pc-preferences-collapsed', theme)}>
             <WikiModal />
             <div className='pc-preferences'>
                 <Preferences />

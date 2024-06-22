@@ -98,9 +98,10 @@ export function DefenderForm({ unit, onChange }: DefenderFormProps) {
 
 type DefenderFormModalProps = DefenderFormProps & Readonly<{
     onDelete: () => void;
+    onCopy: () => void;
 }>;
 
-export function DefenderFormModal({ unit, onChange, onDelete }: DefenderFormModalProps) {
+export function DefenderFormModal({ unit, onChange, onDelete, onCopy }: DefenderFormModalProps) {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     function innerDelete() {
@@ -123,8 +124,11 @@ export function DefenderFormModal({ unit, onChange, onDelete }: DefenderFormModa
                         <Button onClick={innerDelete} color='danger'>
                             Remove
                         </Button>
+                        <Button onClick={onCopy} color='primary'>
+                            Copy
+                        </Button>
                         <Button onClick={onClose}>
-                            OK
+                            Close
                         </Button>
                     </ModalFooter>
                 </ModalContent>

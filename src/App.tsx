@@ -25,7 +25,7 @@ function InnerApp() {
                 <Preferences />
             </div>
             <div className='pc-content p-2 max-md:pt-1 flex flex-col gap-3'>
-                <div className='max-md:hidden pc-centered'>
+                <div className='max-md:hidden'>
                     <div className='flex justify-center'>
                         <ModeSelect />
                     </div>

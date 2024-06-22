@@ -30,7 +30,7 @@ function reducer(state: UseBrawlState, action: Action): UseBrawlState {
 
 function innerReducer(state: UseBrawlState, action: Action): UseBrawlState {
     switch (action.type) {
-    case 'creteUnit': return creteUnit(state, action);
+    case 'createUnit': return createUnit(state, action);
     case 'editUnit': return editUnit(state, action);
     case 'deleteUnit': return deleteUnit(state, action);
     case 'moveUnit': return moveUnit(state, action);
@@ -79,24 +79,41 @@ function computeInitialState(units: UnitsCache): UseBrawlState {
 }
 
 type CreateUnitAction = {
-    type: 'creteUnit';
+    type: 'createUnit';
     isAttacker: boolean;
+    copyIndex?: number;
 };
 
-function creteUnit(state: UseBrawlState, { isAttacker }: CreateUnitAction): UseBrawlState {
+function createUnit(state: UseBrawlState, { isAttacker, copyIndex }: CreateUnitAction): UseBrawlState {
     if (isAttacker) {
-        const attacker = createDefaultAttacker(state.units);
-        const fights: FightConditions[] = state.defenders
-            .map((defender, index) => createFightConditions(attacker, defender, undefined, index !== 0));
-        return { ...state, attackers: [ ...state.attackers, { unit: attacker, fights } ] };
+        const attacker = createAttacker(state, copyIndex);
+        return { ...state, attackers: [ ...state.attackers, attacker ] };
     }
     
-    const defender = createDefaultDefender(state.units);
+    const defender = copyIndex !== undefined
+        ? state.defenders[copyIndex]
+        : createDefaultDefender(state.units);
     const defenders = [ ...state.defenders, defender ];
     const attackers: Attacker[] = state.attackers
         .map(attacker => ({ ...attacker, fights: [ ...attacker.fights, createFightConditions(attacker.unit, defender, undefined, true) ] }));
 
     return { ...state, defenders, attackers };
+}
+
+function createAttacker(state: UseBrawlState, copyIndex?: number): Attacker {
+    if (copyIndex !== undefined) {
+        const { unit, fights } = state.attackers[copyIndex];
+        return {
+            unit: unit.copy(),
+            fights: fights.map(fight => ({ ...fight })),
+        };
+    }
+
+    const unit = createDefaultAttacker(state.units);
+    const fights: FightConditions[] = state.defenders
+        .map((defender, index) => createFightConditions(unit, defender, undefined, index !== 0));
+
+    return { unit, fights };
 }
 
 type EditUnitAction = {

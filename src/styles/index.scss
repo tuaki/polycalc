@@ -58,14 +58,6 @@ input[type=number] {
 @tailwind components;
 @tailwind utilities;
 
-.pc-brawl-grid {
-    gap: 1px;
-    background-color: rgb(212 212 216);
-    
-    .grid-item {
-        @apply bg-content1;
-    }
-}
-
 @import 'layout';
 @import 'wiki';
+@import 'components';

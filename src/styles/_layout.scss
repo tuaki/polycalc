@@ -62,10 +62,25 @@ $preferencesCollapsedWidth: 56px;
         grid-column-start: 2;
         grid-row-start: 1;
 
+        /**
+         * This hack allows a compoenent to be centered relative to the screen, not just the content. However, it's not needed now.
+         */
         .pc-centered {
             display: grid;
             transition: 300ms;
             grid-template-columns: auto var(--preferences-width);
         }
     }
+}
+
+$minContentWidth: 800px;
+
+/**
+ * If there is enough space, the element will start at 800px and grow as needed with its content.
+ * However, it will never be larger than its parent.
+ */
+.pc-fit-min-800 {
+    width: fit-content;
+    min-width: min(100%, $minContentWidth);
+    max-width: 100%;
 }

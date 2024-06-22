@@ -82,9 +82,10 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
 
 type AttackerFormModalProps = AttackerFormProps & Readonly<{
     onDelete: () => void;
+    onCopy: () => void;
 }>;
 
-export function AttackerFormModal({ unit, onChange, onDelete }: AttackerFormModalProps) {
+export function AttackerFormModal({ unit, onChange, onDelete, onCopy }: AttackerFormModalProps) {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     function innerDelete() {
@@ -107,8 +108,11 @@ export function AttackerFormModal({ unit, onChange, onDelete }: AttackerFormModa
                         <Button onClick={innerDelete} color='danger'>
                             Remove
                         </Button>
+                        <Button onClick={onCopy} color='primary'>
+                            Copy
+                        </Button>
                         <Button onClick={onClose}>
-                            OK
+                            Close
                         </Button>
                     </ModalFooter>
                 </ModalContent>

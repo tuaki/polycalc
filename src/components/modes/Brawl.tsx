@@ -14,39 +14,37 @@ export function Brawl() {
     const { state, dispatch } = useBrawl();
 
     return (
-        <div className='flex flex-col gap-3'>
-            <Card>
-                <CardBody>
-                    <ScrollShadow orientation='horizontal' className='pb-3'>
-                        <div
-                            className='grid gap-1 pc-brawl-grid w-fit'
-                            style={{
-                                gridTemplateColumns: `auto repeat(${state.attackers.length}, 104px) auto`,
-                                gridTemplateRows: `auto repeat(${state.defenders.length}, 72px) auto`,
-                            }}
-                        >
-                            {attackersRow(state, dispatch)}
-                            {state.defenders.map((_, index) => defenderRow(state, dispatch, index))}
-                            {finalAttackersRow(state)}
-                        </div>
-                    </ScrollShadow>
-                    <div className='flex gap-3 mt-3 justify-end'>
-                        <Button
-                            onClick={() => dispatch({ type: 'creteUnit', isAttacker: false })}
-                        >
-                            <FaPlus />
-                            Add defender
-                        </Button>
-                        <Button
-                            onClick={() => dispatch({ type: 'creteUnit', isAttacker: true })}
-                        >
-                            <FaPlus />
-                            Add attacker
-                        </Button>
+        <Card className='pc-fit-min-800 mx-auto'>
+            <CardBody>
+                <ScrollShadow orientation='horizontal' className='pb-3'>
+                    <div
+                        className='grid gap-1 pc-brawl-grid w-fit'
+                        style={{
+                            gridTemplateColumns: `auto repeat(${state.attackers.length}, 104px) auto`,
+                            gridTemplateRows: `auto repeat(${state.defenders.length}, 72px) auto`,
+                        }}
+                    >
+                        {attackersRow(state, dispatch)}
+                        {state.defenders.map((_, index) => defenderRow(state, dispatch, index))}
+                        {finalAttackersRow(state)}
                     </div>
-                </CardBody>
-            </Card>
-        </div>
+                </ScrollShadow>
+                <div className='flex gap-3 mt-3 justify-end'>
+                    <Button
+                        onClick={() => dispatch({ type: 'createUnit', isAttacker: false })}
+                    >
+                        <FaPlus />
+                            Add defender
+                    </Button>
+                    <Button
+                        onClick={() => dispatch({ type: 'createUnit', isAttacker: true })}
+                    >
+                        <FaPlus />
+                            Add attacker
+                    </Button>
+                </div>
+            </CardBody>
+        </Card>
     );
 }
 
@@ -64,6 +62,7 @@ function attackersRow(state: UseBrawlState, dispatch: UseBrawlDispatch) {
                     unit={attacker.unit}
                     onChange={unit => dispatch({ type: 'editUnit', isAttacker: true, index, unit })}
                     onDelete={() => dispatch({ type: 'deleteUnit', isAttacker: true, index })}
+                    onCopy={() => dispatch({ type: 'createUnit', isAttacker: true, copyIndex: index })}
                 />
                 <ArrowButton
                     variant='right'
@@ -87,6 +86,7 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
                     unit={defender}
                     onChange={unit => dispatch({ type: 'editUnit', isAttacker: false, index, unit })}
                     onDelete={() => dispatch({ type: 'deleteUnit', isAttacker: false, index })}
+                    onCopy={() => dispatch({ type: 'createUnit', isAttacker: false, copyIndex: index })}
                 />
             </div>
             {state.attackers.map((_, attackerIndex) => {

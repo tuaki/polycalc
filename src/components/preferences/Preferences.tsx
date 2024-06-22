@@ -15,8 +15,8 @@ export function Preferences() {
     return (
         <div className='flex flex-col gap-3 p-2'>
             <div className='max-md:hidden flex flex-row items-center'>
-                <div className='flex-grow flex-shrink overflow-hidden flex flex-row items-center gap-2 font-semibold'>
-                    <PolycalcLogoIcon />
+                <div className='flex-grow shrink overflow-hidden flex flex-row items-center gap-2 font-semibold'>
+                    <PolycalcLogoIcon className='shrink-0' />
                     PolyCalc
                     <div className='flex-grow' />
                     <div className='pe-2'>
@@ -27,7 +27,7 @@ export function Preferences() {
             </div>
             <div className='md:hidden grid grid-cols-3'>
                 <div className='flex flex-row items-center gap-2 font-semibold'>
-                    <PolycalcLogoIcon />
+                    <PolycalcLogoIcon className='shrink-0' />
                     PolyCalc
                 </div>
                 <div className='flex justify-center'>

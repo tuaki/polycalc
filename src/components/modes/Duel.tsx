@@ -39,7 +39,7 @@ export function Duel() {
     const result: FightResult = useMemo(() => fight(state.attacker, state.defender, state.conditions), [ state ]);
 
     return (
-        <div className='flex flex-col gap-3 max-w-screen-md'>
+        <div className='pc-fit-min-800 mx-auto flex flex-col gap-3'>
             <Card>
                 <CardBody>
                     <AttackerForm unit={state.attacker} onChange={set.attacker} />

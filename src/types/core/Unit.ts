@@ -19,6 +19,10 @@ export class Unit {
         return new Unit(this.unitClass, this.variant, health, conditions);
     }
 
+    copy(): Unit {
+        return new Unit(this.unitClass, this.variant, this.health, { ...this.conditions });
+    }
+
     get isDead(): boolean {
         return this.health <= 0;
     }

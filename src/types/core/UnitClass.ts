@@ -58,7 +58,7 @@ export class UnitClass {
     }
 
     get isIndirectSupported(): boolean {
-        return this.skills.stomp || this.skills.splash;
+        return this.skills.splash || this.skills.stomp || this.skills.explode;
     }
 }
 

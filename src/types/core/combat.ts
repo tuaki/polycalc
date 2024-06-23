@@ -199,9 +199,11 @@ function computeIsTentacles(attacker: Unit, defender: Unit, prev?: FightConditio
  * Updates the fight conditions by toggling one of its properties.
  */
 export function updateFightConditions(prev: FightConditions, toggle: keyof FightConditions): FightConditions {
-    if (prev[toggle] === undefined)
+    if (prev[toggle] === undefined) {
         // This should not happen.
+        console.warn(`Toggling an undefined fight condition: ${toggle}`);
         return prev;
+    }
 
     // We don't check whether the fight is actually happening. If not, we just disable the toggle, but we still keep the settings.
     const copy = { ...prev };

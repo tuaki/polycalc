@@ -128,7 +128,7 @@ export function DefenderFormModal({ unit, onChange, onDelete, onCopy }: Defender
                             Copy
                         </Button>
                         <Button onClick={onClose}>
-                            Close
+                            Ok
                         </Button>
                     </ModalFooter>
                 </ModalContent>

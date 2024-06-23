@@ -64,11 +64,6 @@ type State = {
     health: number;
     isBoosted: boolean;
     isVeteran: boolean;
-
-    // /** If yes, there will be no retaliation. */
-    // isRanged: boolean;
-    // /** Splash or stomp. */
-    // isIndirect: boolean;
 };
 
 function computeInitialState(unit: Unit): State {
@@ -85,8 +80,6 @@ function computeInitialState(unit: Unit): State {
         health,
         isVeteran,
         isBoosted: unit.conditions.boosted,
-        // isRanged: unit.conditions.noRetaliation,
-        // isIndirect: unit.conditions.indirectAttack,
     };
 }
 
@@ -102,8 +95,6 @@ function toUnit(state: State): Unit {
     return new Unit(state.unitClass, state.variant, state.health, createConditionMap({
         [ConditionType.Boosted]: state.isBoosted,
         [ConditionType.Veteran]: state.isVeteran,
-        // [ConditionType.NoRetaliation]: state.isRanged,
-        // [ConditionType.IndirectAttack]: state.isIndirect,
     }));
 }
 
@@ -118,8 +109,6 @@ function unitClass(state: State, unitClass: UnitClass): State {
         unitClass,
         variant: unitClass.getDefaultVariant(),
         isVeteran: state.isVeteran && unitClass.skills.promote,
-        // isRanged: state.isRanged && unitClass.range > 1,
-        // isIndirect: state.isIndirect && (unitClass.skills.splash || unitClass.skills.stomp),
     };
 }
 

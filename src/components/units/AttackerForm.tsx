@@ -112,7 +112,7 @@ export function AttackerFormModal({ unit, onChange, onDelete, onCopy }: Attacker
                             Copy
                         </Button>
                         <Button onClick={onClose}>
-                            Close
+                            Ok
                         </Button>
                     </ModalFooter>
                 </ModalContent>

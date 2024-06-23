@@ -22,8 +22,8 @@ type Action = CreateUnitAction | EditUnitAction | DeleteUnitAction | MoveUnitAct
 
 function reducer(state: UseBrawlState, action: Action): UseBrawlState {
     console.log('Reduce:', state, action);
-
     const newState = innerReducer(state, action);
+    console.log('New state:', newState);
 
     return { ...newState, results: computeResults(newState) };
 }
@@ -194,27 +194,60 @@ function fightConditions(state: UseBrawlState, action: FightConditionsAction): U
     
     // If this is a direct fight, we should turn off all other direct fights. We either make them indirect (if it's supported), or none.
     // In order to qualify, either we had a no-fight that become direct fight, or we had an indirect fight that became direct fight.
-    const isIndirectSupported = attacker.unit.unitClass.isIndirectSupported;
-    const isNewDirectFight = !!nextValue.isBasic
-        && !nextValue.isIndirect
-        && (action.toggle === 'isBasic' || action.toggle === 'isIndirect');
-
-    if (isNewDirectFight) {
-        for (let i = 0; i < attacker.fights.length; i++) {
-            if (i === action.defenderIndex || !attacker.fights[i].isBasic)
-                continue;
-
-            if (isIndirectSupported) 
-                attacker.fights[i].isIndirect = true;
-            else 
-                attacker.fights[i].isBasic = false;
-        }
+    // Explosion fights are similar, but much more complicated. We have to handle them separately.
+    const isCheckNeeded = !!nextValue.isBasic && (action.toggle === 'isBasic' || action.toggle === 'isIndirect');
+    if (isCheckNeeded) {
+        if (attacker.unit.unitClass.skills.explode)
+            tryFixExplosionFights(attacker, action);
+        else
+            tryFixIndirectFights(attacker, action);
     }
 
     const attackers = [ ...state.attackers ];
     attackers[action.attackerIndex] = attacker;
 
     return { ...state, attackers };
+}
+
+function tryFixIndirectFights(attacker: Attacker, action: FightConditionsAction) {
+    const nextValue = attacker.fights[action.defenderIndex];
+    if (nextValue.isIndirect)
+        return;
+
+    const isIndirectSupported = attacker.unit.unitClass.isIndirectSupported;
+    updateAllOtherActiveFights(attacker.fights, action.defenderIndex, isIndirectSupported);
+}
+
+function updateAllOtherActiveFights(fights: FightConditions[], defenderIndex: number, isIndirectSupported: boolean) {
+    for (let i = 0; i < fights.length; i++) {
+        if (i === defenderIndex || !fights[i].isBasic)
+            continue;
+        
+        fights[i] = { ...fights[i] };
+
+        if (isIndirectSupported)
+            fights[i].isIndirect = true;
+        else 
+            fights[i].isBasic = false;
+    }
+}
+
+function tryFixExplosionFights(attacker: Attacker, action: FightConditionsAction) {
+    // At any moment, there should be either one direct fight, or any number of indirect ones.
+    const otherActiveFights = attacker.fights.filter((fight, index) => fight.isBasic && index !== action.defenderIndex);
+    if (otherActiveFights.length === 0)
+        // No need to do anything, the updated fight is the only one active.
+        return;
+
+    // There are two modes - either we use explosion (all other active fights are indirect), or we don't.
+    const wasExplosion = otherActiveFights.some(fight => fight.isIndirect);
+    // If it was explosion and it was flipped, now it isn't explosion anymore, or vice versa.
+    const isExplosion = (wasExplosion && action.toggle !== 'isIndirect') || (!wasExplosion && action.toggle === 'isIndirect');
+
+    // If it's explosion, all active fights have to be indirect.
+    // Otherwise, there might be at most one active fight (which is the currently updated one). It also has to be direct.
+    updateAllOtherActiveFights(attacker.fights, action.defenderIndex, isExplosion);
+    attacker.fights[action.defenderIndex].isIndirect = isExplosion;
 }
 
 function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>): BrawlResults {

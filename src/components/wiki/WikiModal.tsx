@@ -19,7 +19,7 @@ export function WikiModal() {
                     <ModalHeader className='flex-row items-center gap-3'>
                         <Breadcrumbs separator='/'>
                             {detail.parents?.map(({ parent, path }) => (
-                                <BreadcrumbItem key={path} onClick={() => setPath(path)}>
+                                <BreadcrumbItem key={path} onPress={() => setPath(path)}>
                                     {parent.title}
                                 </BreadcrumbItem>
                             ))}
@@ -45,7 +45,7 @@ export function WikiModal() {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button onClick={closeWiki}>
+                        <Button onPress={closeWiki}>
                             Close
                         </Button>
                     </ModalFooter>
@@ -64,7 +64,7 @@ export function WikiInfo({ type, label }: WikiInfoProps) {
     const { setPath } = useWiki();
 
     return (
-        <Button onClick={() => setPath(type)}>
+        <Button onPress={() => setPath(type)}>
             <TfiHelpAlt size={18} />{label}
         </Button>
     );

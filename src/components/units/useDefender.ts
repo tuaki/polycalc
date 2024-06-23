@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer } from 'react';
 import usePreferences from '@/components/preferences/PreferencesProvider';
 import { ConditionType, createConditionMap } from '@/types/core/Condition';
-import { Unit, VETERAN_HEALTH_BONUS } from '@/types/core/Unit';
+import { Unit } from '@/types/core/Unit';
 import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';
 import { type UnitsCache } from '@/types/core/Version';
 
@@ -35,7 +35,7 @@ function reducer(state: State, action: Action): State {
 }
 
 function computeDefaultHealth({ unitClass, variant, isVeteran }: Pick<State, 'unitClass' | 'variant' | 'isVeteran'>): number {
-    return (unitClass.health ?? variant!.health) + (isVeteran ? VETERAN_HEALTH_BONUS : 0);
+    return unitClass.getHealth(variant, isVeteran);
 }
 
 function innerReducer(state: State, action: Action): State {

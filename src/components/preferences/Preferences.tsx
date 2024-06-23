@@ -59,7 +59,7 @@ function CollapsePreferencesToggle() {
             <Button
                 isIconOnly
                 aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                onClick={() => setPreferences({ ...preferences, isCollapsed: !isCollapsed })}
+                onPress={() => setPreferences({ ...preferences, isCollapsed: !isCollapsed })}
                 variant='faded'
             >
                 <BsWindowSidebar size={22} />

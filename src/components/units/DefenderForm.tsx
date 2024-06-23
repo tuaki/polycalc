@@ -46,12 +46,8 @@ export function DefenderForm({ unit, onChange }: DefenderFormProps) {
                         onChange={e => dispatch({ type: 'health', value: parseInt(e.target.value) })}
                     />
                     <div className='flex flex-col justify-between h-12'>
-                        <ArrowButton variant='up'
-                            onClick={() => dispatch({ type: 'health', operation: 'increment' })}
-                        />
-                        <ArrowButton variant='down'
-                            onClick={() => dispatch({ type: 'health', operation: 'decrement' })}
-                        />
+                        <ArrowButton variant='up' onPress={() => dispatch({ type: 'health', operation: 'increment' })} />
+                        <ArrowButton variant='down' onPress={() => dispatch({ type: 'health', operation: 'decrement' })} />
                     </div>
                 </div>
             </div>
@@ -121,13 +117,13 @@ export function DefenderFormModal({ unit, onChange, onDelete, onCopy }: Defender
                         <DefenderForm unit={unit} onChange={onChange} />
                     </ModalBody>
                     <ModalFooter>
-                        <Button onClick={innerDelete} color='danger'>
+                        <Button onPress={innerDelete} color='danger'>
                             Remove
                         </Button>
-                        <Button onClick={onCopy} color='primary'>
+                        <Button onPress={onCopy} color='primary'>
                             Copy
                         </Button>
-                        <Button onClick={onClose}>
+                        <Button onPress={onClose}>
                             Ok
                         </Button>
                     </ModalFooter>

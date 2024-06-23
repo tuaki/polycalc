@@ -23,7 +23,7 @@ export class UnitsCache {
 
     getDefaultClass(): UnitClass {
         return this.units[0];
-    }    
+    }
 }
 
 export type VersionStatus = 'beta' | 'latest' | 'deprecated';

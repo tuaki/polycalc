@@ -46,12 +46,8 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
                         onChange={e => dispatch({ type: 'health', value: parseInt(e.target.value) })}
                     />
                     <div className='flex flex-col justify-between h-12'>
-                        <ArrowButton variant='up'
-                            onClick={() => dispatch({ type: 'health', operation: 'increment' })}
-                        />
-                        <ArrowButton variant='down'
-                            onClick={() => dispatch({ type: 'health', operation: 'decrement' })}
-                        />
+                        <ArrowButton variant='up' onPress={() => dispatch({ type: 'health', operation: 'increment' })} />
+                        <ArrowButton variant='down' onPress={() => dispatch({ type: 'health', operation: 'decrement' })} />
                     </div>
                 </div>
             </div>
@@ -105,13 +101,13 @@ export function AttackerFormModal({ unit, onChange, onDelete, onCopy }: Attacker
                         <AttackerForm unit={unit} onChange={onChange} />
                     </ModalBody>
                     <ModalFooter>
-                        <Button onClick={innerDelete} color='danger'>
+                        <Button onPress={innerDelete} color='danger'>
                             Remove
                         </Button>
-                        <Button onClick={onCopy} color='primary'>
+                        <Button onPress={onCopy} color='primary'>
                             Copy
                         </Button>
-                        <Button onClick={onClose}>
+                        <Button onPress={onClose}>
                             Ok
                         </Button>
                     </ModalFooter>

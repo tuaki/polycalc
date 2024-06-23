@@ -11,9 +11,10 @@ type IconFightFormProps = Readonly<{
     onChange: (toggle: keyof FightConditions) => void;
     result: FightResult;
     className?: string;
+    isReadonly?: boolean;
 }>;
 
-export function IconFightForm({ value, onChange, result, className }: IconFightFormProps) {
+export function IconFightForm({ value, onChange, result, className, isReadonly }: IconFightFormProps) {
     const { primaryIsBasic, showIndirect, showRanged, showSecondaryTentacles } = computeShow(value);
     const showRangedIcon = showRanged && !value.isIndirect;
     const downRowTotal = +showIndirect + +showRangedIcon + +showSecondaryTentacles;
@@ -24,9 +25,9 @@ export function IconFightForm({ value, onChange, result, className }: IconFightF
             <div className='flex items-center justify-center'>
                 <div className='h-5 mx-2'>
                     {primaryIsBasic ? (
-                        <IsBasicToggle value={value.isBasic!} onChange={onChange} />
+                        <IsBasicToggle value={value.isBasic!} onChange={onChange} isReadonly={isReadonly} />
                     ) : (
-                        <IsTentaclesToggle value={value.isTentacles!} onChange={onChange} variant='up' />
+                        <IsTentaclesToggle value={value.isTentacles!} onChange={onChange} isReadonly={isReadonly} variant='up' />
                     )}
                 </div>
                 <div className={clsx('leading-5 w-9 text-center font-medium', health <= 0 && 'text-danger')}>
@@ -37,14 +38,14 @@ export function IconFightForm({ value, onChange, result, className }: IconFightF
                 <Divider className='w-20 self-center' />
                 <div className={clsx('flex items-center justify-center', downRowTotal === 3 ? 'gap-2' : 'gap-4')}>
                     {showIndirect && (
-                        <IsIndirectToggle value={value.isIndirect!} onChange={onChange} />
+                        <IsIndirectToggle value={value.isIndirect!} onChange={onChange} isReadonly={isReadonly} />
                     )}
                     {showRangedIcon && (
                         // Indirect attack is always 'ranged', meaning no retaliation is taken, so we hide the icon.
-                        <IsRangedToggle value={value.isRanged!} onChange={onChange} />
+                        <IsRangedToggle value={value.isRanged!} onChange={onChange} isReadonly={isReadonly} />
                     )}
                     {showSecondaryTentacles && (
-                        <IsTentaclesToggle value={value.isTentacles!} onChange={onChange} variant='down' />
+                        <IsTentaclesToggle value={value.isTentacles!} onChange={onChange} isReadonly={isReadonly} variant='down' />
                     )}
                 </div>
             </>)}
@@ -67,14 +68,15 @@ function computeShow({ isBasic, isIndirect, isRanged, isTentacles }: FightCondit
 type BaseToggleProps = Readonly<{
     value: boolean;
     onChange: (toggle: keyof FightConditions) => void;
+    isReadonly?: boolean;
 }>;
 
-function IsBasicToggle({ value, onChange }: BaseToggleProps) {
+function IsBasicToggle({ value, onChange, isReadonly }: BaseToggleProps) {
     const label = value ? 'Take part in this fight' : 'Skip this fight';
 
     return (
         <Tooltip content={label}>
-            <button onClick={() => onChange('isBasic')} aria-label={label}>
+            <button onClick={() => onChange?.('isBasic')} aria-label={label} disabled={isReadonly}>
                 {value ? (
                     <LuSwords size={20} className='text-green-500' />
                 ) : (
@@ -85,12 +87,12 @@ function IsBasicToggle({ value, onChange }: BaseToggleProps) {
     );
 }
 
-function IsIndirectToggle({ value, onChange }: BaseToggleProps) {
+function IsIndirectToggle({ value, onChange, isReadonly }: BaseToggleProps) {
     const label = value ? 'Splash damage' : 'Direct damage';
 
     return (
         <Tooltip content={label}>
-            <button onClick={() => onChange('isIndirect')} aria-label={label}>
+            <button onClick={() => onChange?.('isIndirect')} aria-label={label} disabled={isReadonly}>
                 {value ? (
                     <GiFlame size={20} className='text-yellow-500' />
                 ) : (
@@ -101,12 +103,12 @@ function IsIndirectToggle({ value, onChange }: BaseToggleProps) {
     );
 }
 
-function IsRangedToggle({ value, onChange }: BaseToggleProps) {
+function IsRangedToggle({ value, onChange, isReadonly }: BaseToggleProps) {
     const label = value ? 'Ranged combat' : 'Close combat';
 
     return (
         <Tooltip content={label}>
-            <button onClick={() => onChange('isRanged')} aria-label={label}>
+            <button onClick={() => onChange?.('isRanged')} aria-label={label} disabled={isReadonly}>
                 {value ? (
                     <GiHighShot size={20} className='text-yellow-900' />
                 ) : (
@@ -121,12 +123,12 @@ type IsTentaclesToggleProps = BaseToggleProps & Readonly<{
     variant: 'up' | 'down';
 }>;
 
-function IsTentaclesToggle({ value, onChange, variant }: IsTentaclesToggleProps) {
+function IsTentaclesToggle({ value, onChange, isReadonly, variant }: IsTentaclesToggleProps) {
     const label = value ? 'Use tentacles' : 'Skip tentacles';
 
     return (
         <Tooltip content={label}>
-            <button onClick={() => onChange('isTentacles')} aria-label={label}>
+            <button onClick={() => onChange?.('isTentacles')} aria-label={label} disabled={isReadonly}>
                 {value ? (
                     <GiCurledTentacle size={20} className='text-purple-600' />
                 ) : (<>

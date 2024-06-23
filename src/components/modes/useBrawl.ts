@@ -6,6 +6,7 @@ import usePreferences from '@/components/preferences/PreferencesProvider';
 import { type UnitsCache } from '@/types/core/Version';
 import { createDefaultAttacker, updateAttackerUnitClass } from '@/components/units/useAttacker';
 import { type PartialBy } from '@/types/utils/common';
+import { type ReadonlyBrawlData, computeUnits } from '@/types/core/readonly';
 
 export function useBrawl() {
     const { units } = usePreferences();
@@ -63,6 +64,8 @@ export type UseBrawlState = {
     defenders: Unit[];
     attackers: Attacker[];
     results: BrawlResults;
+    /** For showing the brawl as an example without any user interaction. */
+    isReadonly?: boolean;
 };
 
 function computeInitialState(units: UnitsCache): UseBrawlState {
@@ -317,4 +320,19 @@ function units(state: UseBrawlState, units: UnitsCache): UseBrawlState {
     });
 
     return { ...state, defenders, attackers };
+}
+
+export function computeReadonlyState(data: ReadonlyBrawlData) {
+    const { units, attackers, defenders, fights } = computeUnits(data);
+    const state: Omit<UseBrawlState, 'results'> = {
+        units,
+        defenders,
+        attackers: attackers.map((unit, index) => ({
+            unit,
+            fights: fights[index],
+        })),
+        isReadonly: true,
+    };
+
+    return { ...state, results: computeResults(state) };
 }

@@ -123,17 +123,17 @@ export function LinkSwitch(props: Readonly<SwitchProps>) {
 
 type LeftRightButtonProps = Readonly<{
     variant: 'up' | 'down' | 'left' | 'right';
-    onClick?: () => void;
-    disabled?: boolean;
+    onPress?: () => void;
+    isDisabled?: boolean;
     className?: string;
 }>;
 
-export function ArrowButton({ variant, onClick, disabled, className }: LeftRightButtonProps) {
+export function ArrowButton({ variant, onPress, isDisabled, className }: LeftRightButtonProps) {
     return (
         <Button
             size='sm'
-            onClick={onClick}
-            disabled={disabled}
+            onPress={onPress}
+            isDisabled={isDisabled}
             className={clsx('p-0 bg-default-100 hover:bg-default-200', (variant === 'up' || variant === 'down') ? 'min-h-5 w-8 h-5' : 'min-w-5 w-5 h-8', className)}
         >
             {variant === 'up' && <RxChevronUp size={16} />}

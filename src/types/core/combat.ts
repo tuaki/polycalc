@@ -143,6 +143,15 @@ export type FightConditions = {
     isTentacles?: boolean;
 };
 
+export type FightConditionsArray = (keyof FightConditions)[];
+
+export function fightConditionsFromArray(input: FightConditionsArray): FightConditions {
+    const conditions: FightConditions = {};
+    for (const key of input)
+        conditions[key] = true;
+    return conditions;
+}
+
 /**
  * Returns valid fight conditions for the given combination of attacker and defender.
  * Takes into account previous fight conditions (if they are provided), even if they were used for a different unit.

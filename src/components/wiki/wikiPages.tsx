@@ -1,5 +1,8 @@
 import { type Wiki, getWikiPageDetailFromRoot, type WikiPage } from '@/types/core/Wiki';
 import { WikiLink } from './WikiModal';
+import { type ReadonlyBrawlData } from '@/types/core/readonly';
+import { ReadonlyBrawl } from '../modes/Brawl';
+import { ConditionType } from '@/types/core/Condition';
 
 export function getWikiPageDetail(path: string) {
     return getWikiPageDetailFromRoot(path, wikiPages);
@@ -11,13 +14,32 @@ function Root() {
     return (<>
         <h1>PolyCalc</h1>
         <p>
-            This is an <i>unofficial</i> calculator for the game <a href='https://play.google.com/store/apps/details?id=air.com.midjiwan.polytopia' target='_blank' rel='noreferrer'>The Battle of Polytopia</a>. Because of this, some calculations might not be 100% accurate (see <WikiLink type={wiki.issues} />).
+            This is an unofficial calculator for the game <a href='https://play.google.com/store/apps/details?id=air.com.midjiwan.polytopia' target='_blank' rel='noreferrer'>The Battle of Polytopia</a>.
         </p>
         <p>
             As of now, there are two modes available: <WikiLink type={wiki.duel} /> for simple one-on-one calculations, and <WikiLink type={wiki.brawl} /> for more complex scenarios. You can also change the <WikiLink type={wiki.settings} /> to customize your experience.
         </p>
+        <ReadonlyBrawl data={brawlExample} />
     </>);
 }
+
+const brawlExample: ReadonlyBrawlData = {
+    versionId: 'ocean-1',
+    attackers: [
+        { classId: 'bomber', health: 7 },
+        { classId: 'scout', health: 8 },
+        { classId: 'rammer' },
+    ],
+    defenders: [
+        { classId: 'defender', health: 13, conditions: [ ConditionType.DefenseBonus ] },
+        { classId: 'warrior', health: 8 },
+    ],
+    fights: [
+        [ [ 'isBasic', 'isRanged' ], [ 'isBasic', 'isIndirect' ] ],
+        [ [], [ 'isBasic', 'isRanged' ] ],
+        [ [ 'isBasic' ], [] ],
+    ],
+};
 
 function Duel() {
     return (<>
@@ -51,12 +73,12 @@ function Brawl() {
         <h2>Fight resolution</h2>
         <p>
             A defender can participate in multiple fights, which are applied from the left to the right. You can easily reorder the attackers to see which configurations works the best. On the contrary, an attacker can fight only once. There are, however, some exceptions:
-            <ul>
-                <li>Splash damage can be dealt to multiple defenders (but only one of them can take the full basic damage).</li>
-                <li>Exploding units work similarly as units with splash damage, except that they can{'\''}t do both the splash and basic damage.</li>
-                <li>An attacker can take damage from a unit with tentacles while fighting another unit.</li>
-            </ul>
         </p>
+        <ul>
+            <li>Splash damage can be dealt to multiple defenders (but only one of them can take the full basic damage).</li>
+            <li>Exploding units work similarly as units with splash damage, except that they can{'\''}t do both the splash and basic damage.</li>
+            <li>An attacker can take damage from a unit with tentacles while fighting another unit.</li>
+        </ul>
     </>);
 }
 
@@ -112,21 +134,19 @@ function Issues() {
         <p>
             In some cases involving <b>splash damage</b>, the game doesn{'\''}t compute the damage correctly. This includes explicitly <b>splash damage</b> units (<i>Bomber, Dragon, and Juggernaut</i>), but also <b>exploding</b> units (<i>Raychi, Doomux, and Segment</i>), and <b>tentacle</b> units (<i>Yelly Belly</i>). In such cases, this calculator isn{'\''}t able to provide the same results as the game.
         </p>
-        <p>
-            <h3>Examples</h3>
-            <ul>
-                <li>
+        <h3>Examples</h3>
+        <ul>
+            <li>
                     Rammer (<span className='pc-hp'>10 HP</span>) moves next to Yelly Belly. The Rammer goes to <span className='pc-hp'>7 HP</span> (as it should), but the game shows <span className='pc-hp'>4 damage</span> was dealt. You can see it in{' '}
-                    <a href='https://www.youtube.com/watch?v=omXhGmJJgJo</span>t=188s' target='_blank' rel='noreferrer'>this video</a>.
+                <a href='https://www.youtube.com/watch?v=omXhGmJJgJo</span>t=188s' target='_blank' rel='noreferrer'>this video</a>.
                     This might seem like just a visual bug, however,{' '}
-                    <a href='https://www.youtube.com/watch?v=omXhGmJJgJo</span>t=203s' target='_blank' rel='noreferrer'>a little later</a>,
+                <a href='https://www.youtube.com/watch?v=omXhGmJJgJo</span>t=203s' target='_blank' rel='noreferrer'>a little later</a>,
                     a Yelly Belly (<span className='pc-hp'>5 HP</span>) moves next to a Rammer (<span className='pc-hp'>7 HP</span>). The game shows that the Rammer takes <span className='pc-hp'>2 damage</span> (which si correct), but it goes to <span className='pc-hp'>4 HP</span> instead of <span className='pc-hp'>5 HP</span>.
-                </li>
-                <li>
+            </li>
+            <li>
                     Fire dragon (<span className='pc-hp'>20 HP</span>) attacks (with splash) a Defender (<span className='pc-hp'>9 HP</span>, defense bonus). The game shows that <span className='pc-hp'>6 damage</span> was dealt (not correct), but the Defender ends up on <span className='pc-hp'>4 HP</span> (correct). However, such Defender can be then killed by a <span className='pc-hp'>4 HP</span> Fire dragon, which shouln{'\''}t be possible.
-                </li>
-            </ul>
-        </p>
+            </li>
+        </ul>
     </>);
 }
 

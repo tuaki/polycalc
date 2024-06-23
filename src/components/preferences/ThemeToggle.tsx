@@ -14,7 +14,7 @@ export function ThemeToggle() {
             <Button
                 isIconOnly
                 aria-label={label}
-                onClick={() => setPreferences({ ...preferences, theme: nextValue })}
+                onPress={() => setPreferences({ ...preferences, theme: nextValue })}
                 variant='faded'
             >
                 {theme === 'dark' ? (

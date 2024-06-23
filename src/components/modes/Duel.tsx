@@ -51,17 +51,15 @@ export function Duel() {
                 </CardBody>
             </Card>
             <Card>
-                <CardBody className='grid grid-cols-4 gap-3'>
-                    <div>
+                <CardBody className='grid grid-cols-2 sm:grid-cols-4 gap-3'>
+                    <TextFightForm value={state.conditions} onChange={set.conditions} className='col-span-2 sm:col-start-3' />
+                    <div className='sm:row-start-1'>
                         <span>Attacker:</span>
                         <UnitIcon unit={result.attacker} />
                     </div>
-                    <div>
+                    <div className='sm:row-start-1'>
                         <span>Defender:</span>
                         <UnitIcon unit={result.defender} />
-                    </div>
-                    <div className='col-span-2'>
-                        <TextFightForm value={state.conditions} onChange={set.conditions} />
                     </div>
                 </CardBody>
             </Card>

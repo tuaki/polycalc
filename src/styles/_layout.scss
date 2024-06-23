@@ -84,3 +84,13 @@ $minContentWidth: 800px;
     min-width: min(100%, $minContentWidth);
     max-width: 100%;
 }
+
+// Overrides for the collapsed layout
+
+.pc-preferences-collapsed {
+    .collapsed-md\:grid-cols-4 {
+        @media (screen(md)) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+}

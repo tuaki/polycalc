@@ -17,7 +17,7 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
     const isVariants = !!state.unitClass.variants;
 
     return (
-        <div className='grid grid-cols-2 md:grid-cols-4 gap-3'>
+        <div className='grid grid-cols-2 collapsed-md:grid-cols-4 lg:grid-cols-4 gap-3'>
             <div className='col-span-2 flex flex-col gap-3'>
                 <div className={clsx(isVariants && 'grid grid-cols-2 gap-3')}>
                     <UnitClassSelect

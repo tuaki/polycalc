@@ -150,6 +150,11 @@ type TextFightFormProps = Readonly<{
 export function TextFightForm({ value, onChange, className }: TextFightFormProps) {
     const { primaryIsBasic, showIndirect, showRanged, showSecondaryTentacles } = computeShow(value);
     const rangedIsDetermined = !!value.isIndirect;
+    const showTentacles = !primaryIsBasic || showSecondaryTentacles;
+
+    const showTotal = +showIndirect + +showRanged + +showTentacles;
+    if (showTotal === 0)
+        return null;
 
     return (
         <div className={clsx('flex flex-col gap-1', className)}>
@@ -172,7 +177,7 @@ export function TextFightForm({ value, onChange, className }: TextFightFormProps
                     Ranged combat
                 </Checkbox>
             )}
-            {(!primaryIsBasic || showSecondaryTentacles) && (
+            {showTentacles && (
                 <Checkbox
                     size='sm'
                     isSelected={value.isTentacles}

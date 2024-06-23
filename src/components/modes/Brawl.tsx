@@ -35,13 +35,13 @@ export function Brawl() {
                         onClick={() => dispatch({ type: 'createUnit', isAttacker: false })}
                     >
                         <FaPlus />
-                            Add defender
+                        Add defender
                     </Button>
                     <Button
                         onClick={() => dispatch({ type: 'createUnit', isAttacker: true })}
                     >
                         <FaPlus />
-                            Add attacker
+                        Add attacker
                     </Button>
                 </div>
             </CardBody>

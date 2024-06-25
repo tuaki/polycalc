@@ -48,7 +48,8 @@ function fromStored(): Preferences {
     const modeId = (
         (stored.modeId && MODE_IDS.includes(stored.modeId as ModeId))
             ? stored.modeId
-            : MODE_IDS[0]
+            // Brawl is the default mode.
+            : MODE_IDS[1]
     ) as ModeId;
 
     return {

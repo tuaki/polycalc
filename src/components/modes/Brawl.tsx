@@ -12,6 +12,8 @@ import { IconFightForm } from './FightForm';
 import { Tooltip } from '../common';
 import { type ReadonlyBrawlData } from '@/types/core/readonly';
 import usePreferences from '../preferences/PreferencesProvider';
+import { WikiInfo } from '../wiki/WikiModal';
+import { wiki } from '../wiki/wikiPages';
 
 export function Brawl() {
     const { state, dispatch } = useBrawl();
@@ -20,17 +22,19 @@ export function Brawl() {
         <Card className='pc-fit-min-800 mx-auto'>
             <CardBody>
                 {brawlInner(state, dispatch, 'pb-3')}
-                <div className='flex gap-3 mt-3 justify-end'>
+                <div className='flex gap-3 mt-3 justify-end flex-wrap'>
+                    <WikiInfo type={wiki.brawl} label='Help' />
+                    <div className='flex-grow' />
                     <Button
                         onPress={() => dispatch({ type: 'createUnit', isAttacker: false })}
                     >
-                        <FaPlus />
+                        <FaPlus className='max-sm:hidden' />
                         Add defender
                     </Button>
                     <Button
                         onPress={() => dispatch({ type: 'createUnit', isAttacker: true })}
                     >
-                        <FaPlus />
+                        <FaPlus className='max-sm:hidden' />
                         Add attacker
                     </Button>
                 </div>

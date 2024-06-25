@@ -65,7 +65,7 @@ export function WikiInfo({ type, label }: WikiInfoProps) {
 
     return (
         <Button onPress={() => setPath(type)}>
-            <TfiHelpAlt size={18} />{label}
+            <TfiHelpAlt size={18} className='flex-shrink-0' />{label}
         </Button>
     );
 }

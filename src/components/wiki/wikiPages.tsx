@@ -3,6 +3,7 @@ import { WikiLink } from './WikiModal';
 import { type ReadonlyBrawlData } from '@/types/core/readonly';
 import { ReadonlyBrawl } from '../modes/Brawl';
 import { ConditionType } from '@/types/core/Condition';
+import { TOGGLE_ICONS } from '../modes/FightForm';
 
 export function getWikiPageDetail(path: string) {
     return getWikiPageDetailFromRoot(path, wikiPages);
@@ -65,10 +66,17 @@ function Brawl() {
     return (<>
         <h1>Brawl mode</h1>
         <p>
-            Each column represents an attacker, and each row represents a defender. Above the grids are the attackers before the combat (you can edit them by clicking on them, and you can swap them with the arrow buttons), while under the grid are the attackers after the combat. The same applies to the defenders.
+            Each column represents an attacker, and each row represents a defender. The topmost row shows the attackers before combat (you can edit them by clicking on them, and you can swap them with the arrow buttons), while the bottommost one shows the attackers after the combat. The same applies to the defenders.
         </p>
+        <ul>
+            <li><span className='relative top-1 inline-flex text-xl leading-5'>{TOGGLE_ICONS.isBasic.true}/{TOGGLE_ICONS.isBasic.false}</span><span> - The attacker does / doesn{'\''}t take part in this fight.</span></li>
+            <li><span className='relative top-1 inline-flex text-xl leading-5'>{TOGGLE_ICONS.isIndirect.true}/{TOGGLE_ICONS.isIndirect.false}</span> - The attacker uses splash / normal damage. Stomp attack and explosions also counts as splash.</li>
+            <li><span className='relative top-1 inline-flex text-xl leading-5'>{TOGGLE_ICONS.isRanged.true}/{TOGGLE_ICONS.isRanged.false}</span> - It{'\''} ranged / close combat.</li>
+            <li><span className='relative top-1 inline-flex text-xl leading-5'>{TOGGLE_ICONS.isTentacles.true}/{TOGGLE_ICONS.isTentacles.false}</span> - The attacker moves / doesn{'\''}t move onto tentacles.</li>
+            <li><span className='relative top-1 inline-flex text-xl leading-5'>{TOGGLE_ICONS.isTentacles.true}/{TOGGLE_ICONS.isBasic.false}</span> - The attacker with tentacles moves / doesn{'\''}t move next to the defender.</li>
+        </ul>
         <p>
-            Each cell represents a fight between the attacker and the defender. The number here is the defender{'\''}s health after the fight. There are also several toggle buttons. The most important one decides whether the fight actually takes place. The others are for additional parameters of the fight (same as in the <WikiLink type={wiki.duel} /> mode). They will show up once there are units with special skills. If one or both of the units are dead, you will se only a skull icon, indicating that the fight is impossible.
+            Each cell represents a fight between an attacker and a defender. The number here is the defender{'\''}s health after the fight. There are also several toggle buttons. The most important one decides whether the fight actually takes place. The others are for additional parameters of the fight (same as in the <WikiLink type={wiki.duel} /> mode). They will show up once there are units with special skills. If one or both of the units are dead, you will se only a skull icon, indicating that the fight is impossible.
         </p>
         <h2>Fight resolution</h2>
         <p>

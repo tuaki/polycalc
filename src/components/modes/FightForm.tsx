@@ -5,6 +5,7 @@ import { GiCurledTentacle, GiFlame, GiHighShot } from 'react-icons/gi';
 import { LuShield, LuSword, LuSwords, LuTarget } from 'react-icons/lu';
 import { MdNotInterested } from 'react-icons/md';
 import { Tooltip } from '../common';
+import { type ReactNode } from 'react';
 
 type IconFightFormProps = Readonly<{
     value: FightConditions;
@@ -71,17 +72,20 @@ type BaseToggleProps = Readonly<{
     isReadonly?: boolean;
 }>;
 
+export const TOGGLE_ICONS = {
+    isBasic: { true: <LuSwords size={20} className='text-green-500' />, false: <MdNotInterested size={20} className='text-gray-400' /> },
+    isIndirect: { true: <GiFlame size={20} className='text-yellow-500' />, false: <LuTarget size={20} className='text-red-800' /> },
+    isRanged: { true: <GiHighShot size={20} className='text-yellow-900' />, false: <LuSword size={20} className='-scale-x-100' /> },
+    isTentacles: { true: <GiCurledTentacle size={20} className='text-purple-600' />, false: <LuShield size={20} /> },
+} as const satisfies { [key in keyof FightConditions]: { true: ReactNode, false: ReactNode } };
+
 function IsBasicToggle({ value, onChange, isReadonly }: BaseToggleProps) {
     const label = value ? 'Take part in this fight' : 'Skip this fight';
 
     return (
         <Tooltip content={label}>
             <button onClick={() => onChange?.('isBasic')} aria-label={label} disabled={isReadonly}>
-                {value ? (
-                    <LuSwords size={20} className='text-green-500' />
-                ) : (
-                    <MdNotInterested size={20} className='text-gray-400' />
-                )}
+                {TOGGLE_ICONS.isBasic[value ? 'true' : 'false']}
             </button>
         </Tooltip>
     );
@@ -93,11 +97,7 @@ function IsIndirectToggle({ value, onChange, isReadonly }: BaseToggleProps) {
     return (
         <Tooltip content={label}>
             <button onClick={() => onChange?.('isIndirect')} aria-label={label} disabled={isReadonly}>
-                {value ? (
-                    <GiFlame size={20} className='text-yellow-500' />
-                ) : (
-                    <LuTarget size={20} className='text-red-800' />
-                )}
+                {TOGGLE_ICONS.isIndirect[value ? 'true' : 'false']}
             </button>
         </Tooltip>
     );
@@ -109,11 +109,7 @@ function IsRangedToggle({ value, onChange, isReadonly }: BaseToggleProps) {
     return (
         <Tooltip content={label}>
             <button onClick={() => onChange?.('isRanged')} aria-label={label} disabled={isReadonly}>
-                {value ? (
-                    <GiHighShot size={20} className='text-yellow-900' />
-                ) : (
-                    <LuSword size={20} className='-scale-x-100' />
-                )}
+                {TOGGLE_ICONS.isRanged[value ? 'true' : 'false']}
             </button>
         </Tooltip>
     );
@@ -129,14 +125,8 @@ function IsTentaclesToggle({ value, onChange, isReadonly, variant }: IsTentacles
     return (
         <Tooltip content={label}>
             <button onClick={() => onChange?.('isTentacles')} aria-label={label} disabled={isReadonly}>
-                {value ? (
-                    <GiCurledTentacle size={20} className='text-purple-600' />
-                ) : (<>
-                    {variant === 'up' ? (
-                        <MdNotInterested size={20} className='text-gray-400' />
-                    ) : (
-                        <LuShield size={20} />
-                    )}
+                {value ? TOGGLE_ICONS.isTentacles.true : (<>
+                    {variant === 'up' ? TOGGLE_ICONS.isBasic.false : TOGGLE_ICONS.isTentacles.false}
                 </>)}
             </button>
         </Tooltip>

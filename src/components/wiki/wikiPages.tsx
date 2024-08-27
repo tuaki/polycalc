@@ -1,17 +1,13 @@
-import { type Wiki, getWikiPageDetailFromRoot, type WikiPage } from '@/types/core/Wiki';
 import { WikiLink } from './WikiModal';
 import { type ReadonlyBrawlData } from '@/types/core/readonly';
 import { ReadonlyBrawl } from '../modes/Brawl';
 import { ConditionType } from '@/types/core/Condition';
 import { TOGGLE_ICONS } from '../modes/FightForm';
-
-export function getWikiPageDetail(path: string) {
-    return getWikiPageDetailFromRoot(path, wikiPages);
-}
+import { wiki } from './wiki';
 
 const GITHUB_URL = import.meta.env.VITE_GITHUB_URL;
 
-function Root() {
+export function Root() {
     return (<>
         <h1>PolyCalc</h1>
         <p>
@@ -42,7 +38,7 @@ const brawlExample: ReadonlyBrawlData = {
     ],
 };
 
-function Duel() {
+export function Duel() {
     return (<>
         <h1>Duel mode</h1>
         <p>
@@ -62,7 +58,7 @@ function Duel() {
     </>);
 }
 
-function Brawl() {
+export function Brawl() {
     return (<>
         <h1>Brawl mode</h1>
         <p>
@@ -90,7 +86,7 @@ function Brawl() {
     </>);
 }
 
-function Settings() {
+export function Settings() {
     return (<>
         <h1>Settings</h1>
         <p>
@@ -118,7 +114,7 @@ function Settings() {
     </>);
 }
 
-function About() {
+export function About() {
     return (<>
         <h1>About</h1>
         <p>
@@ -135,61 +131,33 @@ function About() {
     </>);
 }
 
-function Issues() {
+export function Issues() {
     return (<>
         <h1>Known issues</h1>
         <h2>Incorrect splash damage</h2>
         <p>
-            In some cases involving <b>splash damage</b>, the game doesn{'\''}t compute the damage correctly. This includes explicitly <b>splash damage</b> units (<i>Bomber, Dragon, and Juggernaut</i>), but also <b>exploding</b> units (<i>Raychi, Doomux, and Segment</i>), and <b>tentacle</b> units (<i>Yelly Belly</i>). In such cases, this calculator isn{'\''}t able to provide the same results as the game.
+            In some cases involving <b>splash damage</b>, the game doesn{'\''}t compute the damage correctly. This includes explicitly <b>splash damage</b> units (<i>Bomber, Dragon, and Juggernaut</i>), but also <b>exploding</b> units (<i>Raychi, Doomux, and Segment</i>). In such cases, this calculator isn{'\''}t able to provide the same results as the game.
         </p>
         <h3>Examples</h3>
         <ul>
             <li>
-                    Rammer (<span className='pc-hp'>10 HP</span>) moves next to Yelly Belly. The Rammer goes to <span className='pc-hp'>7 HP</span> (as it should), but the game shows <span className='pc-hp'>4 damage</span> was dealt. You can see it in{' '}
-                <a href='https://www.youtube.com/watch?v=omXhGmJJgJo</span>t=188s' target='_blank' rel='noreferrer'>this video</a>.
-                    This might seem like just a visual bug, however,{' '}
-                <a href='https://www.youtube.com/watch?v=omXhGmJJgJo</span>t=203s' target='_blank' rel='noreferrer'>a little later</a>,
-                    a Yelly Belly (<span className='pc-hp'>5 HP</span>) moves next to a Rammer (<span className='pc-hp'>7 HP</span>). The game shows that the Rammer takes <span className='pc-hp'>2 damage</span> (which si correct), but it goes to <span className='pc-hp'>4 HP</span> instead of <span className='pc-hp'>5 HP</span>.
-            </li>
-            <li>
-                    Fire dragon (<span className='pc-hp'>20 HP</span>) attacks (with splash) a Defender (<span className='pc-hp'>9 HP</span>, defense bonus). The game shows that <span className='pc-hp'>6 damage</span> was dealt (not correct), but the Defender ends up on <span className='pc-hp'>4 HP</span> (correct). However, such Defender can be then killed by a <span className='pc-hp'>4 HP</span> Fire dragon, which shouln{'\''}t be possible.
+                Fire dragon (<span className='pc-hp'>20 HP</span>) attacks (with splash) a Defender (<span className='pc-hp'>9 HP</span>, defense bonus). The game shows that <span className='pc-hp'>6 damage</span> was dealt (not correct), but the Defender ends up on <span className='pc-hp'>4 HP</span> (correct). However, such Defender can be then killed by a <span className='pc-hp'>4 HP</span> Fire dragon, which shouldn{'\''}t be possible.
             </li>
         </ul>
     </>);
 }
 
-const wikiPages = {
-    title: 'Home',
-    content: <Root />,
-    children: {
-        duel: {
-            title: 'Duel',
-            content: <Duel />,
-        },
-        brawl: {
-            title: 'Brawl',
-            content: <Brawl />,
-        },
-        settings: {
-            title: 'Settings',
-            content: <Settings />,
-        },
-        issues: {
-            title: 'Issues',
-            content: <Issues />,
-        },
-        about: {
-            title: 'About',
-            content: <About />,
-        },
-    },
-} as const satisfies WikiPage;
-
-export const wiki = {
-    root: '/',
-    duel: '/duel',
-    brawl: '/brawl',
-    settings: '/settings',
-    issues: '/issues',
-    about: '/about',
-} as const satisfies Wiki<typeof wikiPages>;
+export function Changelog() {
+    return (<>
+        <h1>Changelog</h1>
+        <h2>2024-08-27</h2>
+        <ul>
+            <li>
+                Aquarion units actualized according to the latest version. All <i>Aquarion Rework</i> changes should be final at this point.
+            </li>
+            <li>
+                Fixed computation of damage caused by tentacles.
+            </li>
+        </ul>
+    </>);
+}

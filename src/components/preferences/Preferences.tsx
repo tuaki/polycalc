@@ -4,7 +4,7 @@ import { TribesMenu } from '@/components/preferences/TribesMenu';
 import { VersionSelect } from '@/components/preferences/VersionSelect';
 import { Button, Card, CardBody, Switch } from '@nextui-org/react';
 import { BsWindowSidebar } from 'react-icons/bs';
-import { wiki } from '@/components/wiki/wikiPages';
+import { wiki } from '@/components/wiki/wiki';
 import { WikiInfo } from '../wiki/WikiModal';
 import { ThemeToggle } from './ThemeToggle';
 import { PolycalcLogoIcon } from '../Icons';
@@ -58,7 +58,7 @@ function CollapsePreferencesToggle() {
         <Tooltip content={label}>
             <Button
                 isIconOnly
-                aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                aria-label={label}
                 onPress={() => setPreferences({ ...preferences, isCollapsed: !isCollapsed })}
                 variant='faded'
             >
@@ -78,7 +78,6 @@ function MoreSettings() {
                     size='sm'
                     isSelected={preferences.isIconsHidden}
                     onValueChange={value => setPreferences({ ...preferences, isIconsHidden: value })}
-
                 >
                     Hide icons
                 </Switch>
@@ -86,7 +85,6 @@ function MoreSettings() {
                     size='sm'
                     isSelected={preferences.isTooltipsHidden}
                     onValueChange={value => setPreferences({ ...preferences, isTooltipsHidden: value })}
-
                 >
                     Hide tooltips
                 </Switch>

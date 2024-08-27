@@ -1,5 +1,5 @@
 function parse<T>(value: string | null): T | null {
-    return value === null ? null : JSON.parse(value);
+    return value === null ? null : JSON.parse(value) as T;
 }
 
 function get<T>(key: string): T | null {

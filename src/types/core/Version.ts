@@ -1,3 +1,5 @@
+import { createConditionMap } from './Condition';
+import { Unit } from './Unit';
 import { type UnitClass } from './UnitClass';
 import { type UnitTag } from './units';
 
@@ -24,7 +26,29 @@ export class UnitsCache {
     getDefaultClass(): UnitClass {
         return this.units[0];
     }
+
+    tryParse(input: string): Unit | undefined {
+        const matches = unitRegex.exec(input.trim());
+        if (!matches)
+            return;
+
+        const [ _, idShort, rawHealth, flags ] = matches;
+
+        const unitClass = this.units.find(u => u.idShort === idShort);
+        if (!unitClass)
+            return;
+
+        const conditions = createConditionMap();
+        if (flags.includes('d'))
+            conditions.defenseBonus = true;
+
+        const health = rawHealth ? Number.parseInt(rawHealth) : unitClass.getDefaultHealth();
+
+        return new Unit(unitClass, undefined, health, conditions);
+    }
 }
+
+const unitRegex = new RegExp(/([a-z]{2}) *(\d*) *([d]?)/);
 
 export type VersionStatus = 'beta' | 'latest' | 'deprecated';
 export type VersionId = 'diplomacy' | 'ocean-0' | 'ocean-1' | 'aquarion-rework';
@@ -54,8 +78,8 @@ type VersionDefinition = {
 export const VERSION_DEFINITIONS: readonly VersionDefinition[] = [
     { id: 'diplomacy', gameId: '2.2.9.8251', label: '(100) Diplomacy', status: 'deprecated' },
     { id: 'ocean-0', gameId: '2.8.0', label: '(101) Path of the Ocean', status: 'deprecated' },
-    { id: 'ocean-1', gameId: '2.8.5.11917', label: '(104) Path of the Ocean', status: 'latest' },
-    { id: 'aquarion-rework', gameId: '2.9.2.12491', label: 'Aquarion Rework', status: 'beta' },
+    { id: 'ocean-1', gameId: '2.8.5.11917', label: '(104) Path of the Ocean', status: 'deprecated' },
+    { id: 'aquarion-rework', gameId: '2.10.1.12787', label: '(105) Aquarion Rework', status: 'latest' },
 ];
 
 export const VERSION_IDS: readonly VersionId[] = VERSION_DEFINITIONS.map(def => def.id);

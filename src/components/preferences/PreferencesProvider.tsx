@@ -4,6 +4,7 @@ import { localStorage } from '@/types/utils/localStorage';
 import { DEFAULT_VERSION_ID, type VersionId, type Version, UnitsCache } from '@/types/core/Version';
 import { VERSIONS } from '@/types/core/UnitClass';
 import { MODE_IDS, type ModeId } from '../modes/Modes';
+import { emptyFunction } from '@/types/utils/common';
 
 const PREFERENCES_KEY = 'preferences';
 
@@ -77,7 +78,13 @@ function toStored(preferences: Preferences): StoredPreferences {
     };
 }
 
-export const PreferencesContext = createContext<PreferencesContext | undefined>(undefined);
+const defaultContext: PreferencesContext = {
+    preferences: defaultPreferences,
+    units: new UnitsCache(defaultPreferences.version, defaultPreferences.filterTags),
+    setPreferences: emptyFunction,
+};
+
+const PreferencesContext = createContext<PreferencesContext>(defaultContext);
 
 export function PreferencesProvider({ children }: Readonly<{ children: React.ReactNode }>) {
     const [ preferences, setPreferences ] = useState(defaultPreferences);
@@ -88,9 +95,10 @@ export function PreferencesProvider({ children }: Readonly<{ children: React.Rea
     }, []);
 
     const units = useMemo(() => new UnitsCache(preferences.version, preferences.filterTags), [ preferences.version, preferences.filterTags ]);
+    const value = useMemo(() => ({ units, preferences, setPreferences: setPreferencesWithStorage }), [ units, preferences, setPreferencesWithStorage ]);
 
     return (
-        <PreferencesContext.Provider value={{ units, preferences, setPreferences: setPreferencesWithStorage }}>
+        <PreferencesContext.Provider value={value}>
             {children}
         </PreferencesContext.Provider>
     );

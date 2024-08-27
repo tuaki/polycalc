@@ -22,14 +22,14 @@ export function computeUnits(data: ReadonlyBrawlData) {
     return { units, attackers, defenders, fights };
 }
 
-type ReadonlyUnit = {
+export type ReadonlyUnit = {
     classId: string;
     variantId?: string;
     health?: number;
     conditions?: ConditionType[];
 };
 
-function computeUnit(data: ReadonlyUnit, units: UnitsCache) {
+export function computeUnit(data: ReadonlyUnit, units: UnitsCache) {
     const unitClass = units.findClass(data.classId);
     if (!unitClass)
         throw new Error(`Unit class not found: ${data.classId}`);

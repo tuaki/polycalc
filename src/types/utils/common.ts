@@ -2,6 +2,10 @@
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type EmptyIntersection = {};
 
+export function emptyFunction(): void {
+    // This function is intentionally empty.
+}
+
 type EnumObject<K = string | number> =  Record<string, K>;
 type Enum<K, E extends EnumObject<K>> = E extends Record<string, infer T | string> ? T : never;
 
@@ -30,3 +34,15 @@ export type DKeyof<T> = T extends unknown ? keyof T : never;
 export type PartialBy<T, K extends keyof T> = Pick<Partial<T>, K> & DOmit<T, K>;
 
 export type RequiredBy<T, K extends keyof T> = Pick<Required<T>, K> & DOmit<T, K>;
+
+export function parseFormInteger(value: string): number | '' {
+    const number = parseInt(value);
+    if (isNaN(number))
+        return '';
+
+    return number;
+}
+
+export function formNumberToNumber(number: number | ''): number {
+    return number === '' ? 0 : number;
+}

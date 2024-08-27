@@ -13,7 +13,8 @@ import { Tooltip } from '../common';
 import { type ReadonlyBrawlData } from '@/types/core/readonly';
 import usePreferences from '../preferences/PreferencesProvider';
 import { WikiInfo } from '../wiki/WikiModal';
-import { wiki } from '../wiki/wikiPages';
+import { wiki } from '../wiki/wiki';
+import { emptyFunction } from '@/types/utils/common';
 
 export function Brawl() {
     const { state, dispatch } = useBrawl();
@@ -95,7 +96,7 @@ function attackersRow(state: UseBrawlState, dispatch: UseBrawlDispatch) {
 function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: number) {
     const defender = state.defenders[index];
     const finalDefender = state.results.defenders[index];
-    
+
     return (
         <Fragment key={index}>
             <div className='grid-item flex items-center md:pe-2'>
@@ -112,7 +113,7 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
             </div>
             {state.attackers.map((_, attackerIndex) => {
                 const fightResult = state.results.middleFights[attackerIndex][index];
-                
+
                 if (fightResult.wasDead) {
                     return (
                         <div key={attackerIndex} className='grid-item flex gap-3 items-center justify-center'>
@@ -133,7 +134,7 @@ function defenderRow(state: UseBrawlState, dispatch: UseBrawlDispatch, index: nu
                         </div>
                     );
                 }
-                
+
                 return (
                     <BrawlFightForm key={attackerIndex} state={state} dispatch={dispatch} attackerIndex={attackerIndex} defenderIndex={index} />
                 );
@@ -155,7 +156,7 @@ type BrawlFightFormProps = Readonly<{
 function BrawlFightForm({ state, dispatch, attackerIndex, defenderIndex }: BrawlFightFormProps) {
     const value = state.attackers[attackerIndex].fights[defenderIndex];
     const result = state.results.middleFights[attackerIndex][defenderIndex];
-    
+
     const onChange = useCallback((toggle: keyof FightConditions) => {
         dispatch({ type: 'fightConditions', attackerIndex, defenderIndex, toggle });
     }, [ dispatch, attackerIndex, defenderIndex ]);
@@ -185,7 +186,7 @@ type ReadonlyBrawlProps = Readonly<{
 export function ReadonlyBrawl({ data, className }: ReadonlyBrawlProps) {
     const version = usePreferences().preferences.version;
     const state = useMemo(() => computeReadonlyState(data), [ data ]);
-    const dispatch = useCallback(() => {}, []);
+    const dispatch = useCallback(emptyFunction, []);
 
     return (
         <Card className={clsx('w-fit mx-auto', className)}>

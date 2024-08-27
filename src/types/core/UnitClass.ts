@@ -1,6 +1,6 @@
 import { type PlainType } from '@/types/utils/common';
 import { type SkillMap, type SkillType, createSkillMap } from './Skill';
-import { UNIT_DEFINITIONS, UNIT_VARIANT_DEFINITIONS, UnitTag } from './units';
+import { UNIT_DEFINITIONS, UNIT_VARIANT_DEFINITIONS, type UnitTag } from './units';
 import { VERSION_DEFINITIONS, VERSION_IDS, Version, type VersionId } from './Version';
 import { VETERAN_HEALTH_BONUS } from './Unit';
 
@@ -57,11 +57,6 @@ export class UnitClass {
         return (this.health ?? variant!.health) + (isVeteran ? VETERAN_HEALTH_BONUS : 0);
     }
 
-    // A hack for now, might need a fix later.
-    get isNavalOnly(): boolean {
-        return !this.tags.includes(UnitTag.Land);
-    }
-
     get isIndirectSupported(): boolean {
         return this.skills.splash || this.skills.stomp || this.skills.explode;
     }
@@ -70,9 +65,9 @@ export class UnitClass {
 function getHealthOrVariants(def: UnitClassDefinition, allVariants: readonly UnitVariant[]): { health?: number, variants?: readonly UnitVariant[] } {
     if ('health' in def)
         return { health: def.health };
-    
+
     const variants = def.variantIds.map(id => allVariants.find(v => v.id === id)).filter((v): v is UnitVariant => v !== undefined);
-    
+
     return { variants };
 }
 

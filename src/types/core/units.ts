@@ -535,9 +535,15 @@ const UNIT_DEFINITIONS_OCEAN_1: readonly UnitClassVersionDefinition[] = [
 
 const UNIT_DEFINITIONS_AQUARION_REWORK: readonly UnitClassVersionDefinition[] = [
     {
-        // Tridention loses fortify.
+        // Tridention loses fortify. Attack goes from 3 to 2.5. It also gains the persist ability, but that's not important for us.
         operation: 'update',
         id: 'tridention',
+        attack: 2.5,
+        skills: [ SkillType.Promote ],
+    }, {
+        // Amphibian loses fortify.
+        operation: 'update',
+        id: 'amphibian',
         skills: [ SkillType.Promote ],
     }, {
         // Aquarion loses all ships.
@@ -562,21 +568,36 @@ const UNIT_DEFINITIONS_AQUARION_REWORK: readonly UnitClassVersionDefinition[] = 
         label: 'Shark',
         health: 10,
         attack: 3,
-        defense: 3,
+        defense: 2,
         range: 1,
-        skills: [],
+        skills: [ SkillType.Surprise, SkillType.Promote ],
         tags: [ UnitTag.Naval, UnitTag.Aquarion ],
     }, {
-        id: 'yelly-belly',
-        idShort: 'yb',
-        label: 'Yelly Belly',
-        health: 15,
+        id: 'jelly',
+        idShort: 'je',
+        label: 'Jelly',
+        health: 20,
         attack: 0,
-        defense: 3,
+        defense: 2,
         range: 1,
         skills: [ SkillType.Stiff, SkillType.Tentacles ],
         tags: [ UnitTag.Naval, UnitTag.Aquarion ],
+    }, {
+        operation: 'update',
+        id: 'catapult',
+        tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Elyrion, UnitTag.Polaris ],
+    }, {
+        id: 'puffer',
+        idShort: 'pf',
+        label: 'Puffer',
+        health: 10,
+        attack: 4,
+        defense: 0,
+        range: 3,
+        skills: [ SkillType.Promote ],
+        tags: [ UnitTag.Naval, UnitTag.Aquarion ],
     },
+    // Crab gains the escape ability, but that's not important for us.
 ] as const;
 
 export const UNIT_DEFINITIONS: Record<VersionId, readonly UnitClassVersionDefinition[]> = {

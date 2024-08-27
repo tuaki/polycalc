@@ -1,4 +1,4 @@
-import { ConditionType } from './Condition';
+import { type ConditionMap, ConditionType } from './Condition';
 import { type Unit } from './Unit';
 
 export type FightResult = {
@@ -11,18 +11,12 @@ export function fight(attacker: Unit, defender: Unit, conditions: FightCondition
     if (!isFightHappening(attacker, defender, conditions))
         return input;
 
-    // First, we try to apply the defender's tentacles.
-    const afterDefenderTentacles = tryDefenderTentacles(input, conditions);
+    // The tentacles schenenigans happen before anything else. Also, both units use them at the same time.
+    const afterTentacles = conditions.isTentacles ? tentaclesFight(input, conditions) : input;
 
-    const doAttackerTentacles = conditions.isTentacles && attacker.unitClass.skills.tentacles;
-    if (doAttackerTentacles)
-        // Now it's the attacker's turn. Again, it's indirect attack.
-        return basicFight(afterDefenderTentacles, { isIndirect: true });
-
-    // If the attacker didn't use tentacles, we can proceed with a basic fight (if it's happening).
-    return conditions.isBasic
-        ? basicFight(afterDefenderTentacles, conditions)
-        : afterDefenderTentacles;
+    return conditions.isBasic && !attacker.unitClass.skills.tentacles
+        ? basicFight(afterTentacles, conditions)
+        : afterTentacles;
 }
 
 function isFightHappening(attacker: Unit, defender: Unit, conditions: FightConditions): boolean {
@@ -32,64 +26,41 @@ function isFightHappening(attacker: Unit, defender: Unit, conditions: FightCondi
     return !!conditions.isBasic || !!conditions.isTentacles;
 }
 
-// The tentacle combat works like this:
-//  - The defender attackes the attacker first.
-//      - The tentacle unit always uses its defense value instead of its attack value.
-//      - It's indirect attack (which also means that the attacker doesn't retaliate).
-//      - Otherwise, everything works as usual.
-//  - Then the attacker attacks the defender. Now everything works as usual.
-function tryDefenderTentacles(input: FightResult, conditions: FightConditions): FightResult {
-    const { attacker, defender } = input;
-    if (defender.conditions.freezed)
-        return input;
+function tentaclesFight({ attacker, defender }: FightResult, conditions: FightConditions): FightResult {
+    if (!conditions.isTentacles)
+        return { attacker, defender };
 
-    const doTentacles = conditions.isTentacles && defender.unitClass.skills.tentacles;
-    if (!doTentacles)
-        return input;
+    const isAttacker = attacker.unitClass.skills.tentacles;
+    const isDefender = defender.unitClass.skills.tentacles && !defender.conditions.freezed;
 
-    // An attack with tentacles is always indirect.
-    const reversedResult = basicFight({ attacker: defender, defender: attacker }, { isIndirect: true });
-
-    return { attacker: reversedResult.defender, defender: reversedResult.attacker };
+    // All tentacle action is happening at the same time!
+    return {
+        attacker: isDefender ? applyTentacles(defender, attacker) : attacker,
+        defender: isAttacker ? applyTentacles(attacker, defender) : defender,
+    };
 }
 
-type BasicFightConditions = Omit<FightConditions, 'isBasic' | 'isTentacles'>;
+type BasicFightConditions = Omit<FightConditions, 'isBasic'>;
 
-/** A classic fight without any tentacle action. */
 function basicFight({ attacker, defender }: FightResult, conditions: BasicFightConditions): FightResult {
-    // Indirect attack causes less damage but can't be retaliated.
-    const isIndirect = !!conditions.isIndirect;
+    const { attackerDamage, defenderDamage } = calculateDamage(attacker, defender, !!conditions.isIndirect);
 
-    const { attackerDamage, defenderDamage } = calculateDamage(attacker, defender, isIndirect);
-
-    const newDefenderConditions = {
-        ...defender.conditions,
-        [ConditionType.Boosted]: false,
-        [ConditionType.Freezed]: attacker.unitClass.skills.freeze || defender.conditions.freezed,
-        [ConditionType.Poisoned]: attacker.unitClass.skills.poison || defender.conditions.poisoned,
-        [ConditionType.Converted]: attacker.unitClass.skills.convert,
-    };
-
-    const newDefender = defender.update(defender.health - defenderDamage, newDefenderConditions);
+    const newDefender = defender.update(defender.health - defenderDamage, calculateTargetConditions(attacker, defender, true));
 
     const noRetaliation =
+        // The only unit with this skill behaves this way. Why?
+        newDefender.unitClass.skills.freeze ||
         newDefender.isDead ||
         newDefender.conditions.freezed ||
         newDefender.conditions.converted ||
         newDefender.unitClass.skills.stiff ||
         attacker.unitClass.skills.surprise ||
         !!conditions.isRanged ||
-        isIndirect;
+        !!conditions.isIndirect;
 
-    const newAttackerHealth = noRetaliation ? attacker.health : attacker.health - attackerDamage;
-    const newAttackerConditions = {
-        ...attacker.conditions,
-        [ConditionType.Boosted]: false,
-    };
-    if (!noRetaliation)
-        newAttackerConditions[ConditionType.Poisoned] = defender.unitClass.skills.poison;
-
-    const newAttacker = attacker.update(newAttackerHealth, newAttackerConditions);
+    const newAttacker = noRetaliation
+        ? attacker.update(attacker.health, { ...attacker.conditions, [ConditionType.Boosted]: false })
+        : attacker.update(attacker.health - attackerDamage, calculateTargetConditions(defender, attacker, false));
 
     return {
         attacker: newAttacker,
@@ -97,31 +68,38 @@ function basicFight({ attacker, defender }: FightResult, conditions: BasicFightC
     };
 }
 
-function calculateDamage(attacker: Unit, defender: Unit, isIndirect: boolean): { attackerDamage: number, defenderDamage: number } {
-    // With tentacles, the attacker uses the defense value instead of the attack value.
-    const attackerAttack = attacker.unitClass.skills.tentacles
-        ? attacker.unitClass.defense
-        : attacker.attack;
-
-    const attackForce = attackerAttack * (attacker.health / attacker.maxHealth);
+function calculateDamage(attacker: Unit, defender: Unit, isReduced: boolean): { attackerDamage: number, defenderDamage: number } {
+    const attackForce = attacker.attack * (attacker.health / attacker.maxHealth);
     // Here we use the modified defense value (see the comment below).
     const defenseForce = defender.defense * (defender.health / defender.maxHealth);
     const totalForce = attackForce + defenseForce;
 
-    const defenderDamageBeforeIndirect = Math.round((attackForce / totalForce) * attackerAttack * DAMAGE_CONSTANT + ROUNDING_ERROR);
-    const defenderDamage = isIndirect
-        ? Math.floor(defenderDamageBeforeIndirect * INDIRECT_DAMAGE_COEFFICIENT)
-        : defenderDamageBeforeIndirect;
-    
-    // Here it's important to use unitClass.defense instead of just defense.
+    const defenderDamageBeforeReduced = Math.round((attackForce / totalForce) * attacker.attack * DAMAGE_CONSTANT + ROUNDING_ERROR);
+    const defenderDamage = isReduced
+        ? Math.floor(defenderDamageBeforeReduced * REDUCED_DAMAGE_COEFFICIENT)
+        : defenderDamageBeforeReduced;
+
+    // Here it's important to use baseDefense instead of just defense.
     // Basically we need the original defense without any modifiers (defense bonus, wall bonus, poison). This is different from the attack, where we use the modified value for both force and damage.
-    const attackerDamage = Math.round((defenseForce / totalForce) * defender.unitClass.defense * DAMAGE_CONSTANT + ROUNDING_ERROR);
+    const attackerDamage = Math.round((defenseForce / totalForce) * defender.baseDefense * DAMAGE_CONSTANT + ROUNDING_ERROR);
 
     return { attackerDamage, defenderDamage };
 }
 
+function calculateTentaclesDamage(source: Unit, target: Unit): number {
+    // In case of tentacles, the defense value acts like attack.
+    // However, the defense value is used without any modifiers. Boost also doesn't have any effect.
+    const attackForce = source.baseDefense * (source.health / source.maxHealth);
+    // Here we use the modified defense value (see the comment below).
+    const defenseForce = target.defense * (target.health / target.maxHealth);
+    const totalForce = attackForce + defenseForce;
+
+    return Math.round((attackForce / totalForce) * source.baseDefense * DAMAGE_CONSTANT + ROUNDING_ERROR);
+}
+
 const DAMAGE_CONSTANT = 4.5;
-const INDIRECT_DAMAGE_COEFFICIENT = 0.5;
+// Splash, stomp and other indeirect attacks. Except for tentacles!
+const REDUCED_DAMAGE_COEFFICIENT = 0.5;
 /**
  * This fixes some JS rounding errors.
  * E.g., when a full-HP swordsman attack to an 8-HP swordsman with defense bonus, it should deal 8 damage and kill it. However, normal JS math would let him deal only 7 damage.
@@ -129,9 +107,39 @@ const INDIRECT_DAMAGE_COEFFICIENT = 0.5;
  */
 const ROUNDING_ERROR = 1e-6;
 
+/**
+ * The conditions that receive any unit when it takes damage (even if the damage is 0).
+ * However, some of them are used only if the source is directly attacking the target.
+ */
+function calculateTargetConditions(source: Unit, target: Unit, isAttack: boolean): ConditionMap {
+    const output = {
+        ...target.conditions,
+        [ConditionType.Boosted]: false,
+    };
+    if (source.unitClass.skills.poison)
+        output[ConditionType.Poisoned] = true;
+
+    if (!isAttack)
+        return output;
+
+    if (source.unitClass.skills.freeze)
+        output[ConditionType.Freezed] = true;
+    if (source.unitClass.skills.convert)
+        output[ConditionType.Converted] = true;
+
+    return output;
+}
+
+function applyTentacles(source: Unit, target: Unit): Unit {
+    const damage = calculateTentaclesDamage(source, target);
+    const conditions = calculateTargetConditions(source, target, false);
+
+    return target.update(target.health - damage, conditions);
+}
+
 // Fight conditions
 
-/** If any of the followin options undefined, it isn't available for the fight. **/
+/** If any of the following options is undefined, it isn't available for the fight. */
 export type FightConditions = {
     /** Whether the basic fight is even happening. */
     isBasic?: boolean;
@@ -186,7 +194,7 @@ export function createFightConditions(attacker: Unit, defender: Unit, prev?: Fig
     const isRanged = attacker.unitClass.range > 1
         ? (prev?.isRanged ?? true)
         : undefined;
-    
+
     return { isBasic, isIndirect, isRanged, isTentacles };
 }
 

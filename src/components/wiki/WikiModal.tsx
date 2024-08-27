@@ -2,9 +2,9 @@ import { useCallback } from 'react';
 import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
 import useWiki from './WikiProvider';
 import { useCached } from '@/types/utils/useCached';
-import { getWikiPageDetail } from './wikiPages';
 import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs';
 import { TfiHelpAlt } from 'react-icons/tfi';
+import { getWikiPageDetail } from './wiki';
 
 export function WikiModal() {
     const { path, setPath } = useWiki();
@@ -41,7 +41,7 @@ export function WikiModal() {
                             <Divider orientation='vertical' className='h-auto' />
                         </>)}
                         <div className='flex-grow pc-wiki'>
-                            {detail.page.content}
+                            {detail.page.content()}
                         </div>
                     </ModalBody>
                     <ModalFooter>

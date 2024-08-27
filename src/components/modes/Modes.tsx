@@ -3,26 +3,28 @@ import usePreferences from '@/components/preferences/PreferencesProvider';
 import { type Key, type ReactNode } from 'react';
 import { Duel } from './Duel';
 import { Brawl } from './Brawl';
+import { Tests } from './Tests';
 
-export type ModeId = 'duel' | 'brawl';
-export const MODE_IDS: readonly ModeId[] = [ 'duel', 'brawl' ];
+export const MODE_IDS = [ 'duel', 'brawl', 'tests' ] as const;
+export type ModeId = typeof MODE_IDS[number];
 
 const modes: { [id in ModeId]: { label: string, component: ReactNode } } = {
     duel: { label: 'Duel', component: <Duel /> },
     brawl: { label: 'Brawl', component: <Brawl /> },
+    tests: { label: 'Tests', component: <Tests /> },
 };
 
 export function ModeSelect() {
     const { preferences, setPreferences } = usePreferences();
 
     function onChange(key: Key) {
-        if ((MODE_IDS as unknown[]).includes(key))
+        if (typeof key === 'string' && (MODE_IDS as readonly string[]).includes(key))
             setPreferences({ ...preferences, modeId: key as ModeId });
     }
 
     return (
         <Tabs aria-label='Application mode' selectedKey={preferences.modeId} onSelectionChange={onChange} >
-            {MODE_IDS.map(modeOption)}    
+            {MODE_IDS.map(modeOption)}
         </Tabs>
     );
 }

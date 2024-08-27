@@ -1,4 +1,5 @@
 module.exports = {
+    root: true,
     env: {
         browser: true,
         es2021: true,
@@ -11,7 +12,7 @@ module.exports = {
         'plugin:react/jsx-runtime',
         'plugin:react-hooks/recommended',
     ],
-    ignorePatterns: [ 'dist', '.eslintrc.cjs' ],
+    ignorePatterns: [ 'dist', '.eslintrc.cjs', 'tailwind.config.js' ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 'latest',
@@ -19,7 +20,9 @@ module.exports = {
         project: ['./tsconfig.json', './tsconfig.node.json', './tailwind.config.ts'],
         tsconfigRootDir: __dirname,
     },
+    plugins: [ 'react-refresh' ],
     rules: {
+        'react-refresh/only-export-components': [ 'warn' ],
         'no-eval': [ 'error' ],
         'semi': [ 'error', 'always' ],
         'indent': [ 'warn', 4 ],

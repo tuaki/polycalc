@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 
 export type WikiPage = {
     title: string;
-    content: ReactNode;
+    content: () => ReactNode;
     children?: Record<string, WikiPage>;
 };
 

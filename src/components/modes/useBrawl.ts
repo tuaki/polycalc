@@ -10,7 +10,7 @@ import { type ReadonlyBrawlData, computeUnits } from '@/types/core/readonly';
 
 export function useBrawl() {
     const { units } = usePreferences();
-    const [ state, dispatch ] = useReducer(reducer, computeInitialState(units));
+    const [ state, dispatch ] = useReducer(reducer, {}, () => computeInitialState(units));
 
     useEffect(() => {
         dispatch({ type: 'units', value: units });
@@ -92,7 +92,7 @@ function createUnit(state: UseBrawlState, { isAttacker, copyIndex }: CreateUnitA
         const attacker = createAttacker(state, copyIndex);
         return { ...state, attackers: [ ...state.attackers, attacker ] };
     }
-    
+
     const defender = copyIndex !== undefined
         ? state.defenders[copyIndex]
         : createDefaultDefender(state.units);
@@ -132,7 +132,7 @@ function editUnit(state: UseBrawlState, { isAttacker, index, unit }: EditUnitAct
         // Update all fights for this attacker.
         const fights = state.defenders.map((defender, i) => createFightConditions(unit, defender, attackers[index].fights[i]));
         attackers[index] = { unit, fights };
-    
+
         return { ...state, attackers };
     }
 
@@ -194,7 +194,7 @@ function fightConditions(state: UseBrawlState, action: FightConditionsAction): U
     const currentValue = attacker.fights[action.defenderIndex];
     const nextValue = updateFightConditions(currentValue, action.toggle);
     attacker.fights[action.defenderIndex] = nextValue;
-    
+
     // If this is a direct fight, we should turn off all other direct fights. We either make them indirect (if it's supported), or none.
     // In order to qualify, either we had a no-fight that become direct fight, or we had an indirect fight that became direct fight.
     // Explosion fights are similar, but much more complicated. We have to handle them separately.
@@ -225,12 +225,12 @@ function updateAllOtherActiveFights(fights: FightConditions[], defenderIndex: nu
     for (let i = 0; i < fights.length; i++) {
         if (i === defenderIndex || !fights[i].isBasic)
             continue;
-        
+
         fights[i] = { ...fights[i] };
 
         if (isIndirectSupported)
             fights[i].isIndirect = true;
-        else 
+        else
             fights[i].isBasic = false;
     }
 }
@@ -266,16 +266,14 @@ function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>
         let attacker = element.unit;
         const attackerResults: MiddleResult[] = previousFights.map(({ defender }, defenderIndex) => {
             let wasDead: MiddleResult['wasDead'] = undefined;
-            if (defender.isDead) 
+            if (defender.isDead)
                 wasDead = attacker.isDead ? 'both' : 'defender';
-            
-            else if (attacker.isDead) 
-                wasDead = 'attacker';
-            
 
-            if (wasDead) 
+            else if (attacker.isDead)
+                wasDead = 'attacker';
+
+            if (wasDead)
                 return { attacker, defender, wasDead };
-            
 
             const result = fight(attacker, defender, element.fights[defenderIndex]);
             attacker = result.attacker;
@@ -289,7 +287,7 @@ function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>
         output.attackers.push(attacker);
     }
 
-    for (let i = 0; i < defenders.length; i++) 
+    for (let i = 0; i < defenders.length; i++)
         output.defenders.push(output.middleFights[attackers.length - 1][i].defender);
 
     return output;

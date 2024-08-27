@@ -7,6 +7,6 @@ export function Tooltip(props: Readonly<Omit<TooltipProps, 'delay' | 'isOpen'>>)
     const { preferences: { isTooltipsHidden } } = usePreferences();
 
     return (
-        <NextuiTooltip {...props} delay={TOOLTIP_DELAY} isOpen={isTooltipsHidden ? false : undefined} />
+        <NextuiTooltip {...props} delay={TOOLTIP_DELAY} isDisabled={isTooltipsHidden} />
     );
 }

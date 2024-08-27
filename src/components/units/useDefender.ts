@@ -4,15 +4,16 @@ import { ConditionType, createConditionMap } from '@/types/core/Condition';
 import { Unit } from '@/types/core/Unit';
 import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';
 import { type UnitsCache } from '@/types/core/Version';
+import { formNumberToNumber } from '@/types/utils/common';
 
 export function useDefender(input: Unit, onChange: (unit: Unit) => void) {
     const { units } = usePreferences();
     const [ state, dispatch ] = useReducer(reducer, computeInitialState(input));
-    
+
     useEffect(() => {
         dispatch({ type: 'units', value: units });
     }, [ units ]);
-    
+
     const innerUnit = useMemo(() => toUnit(state), [ state ]);
     // TODO signals probably ...
     useEffect(() => {
@@ -26,7 +27,7 @@ type Action = UnitClassAction | VariantAction | HealthAction | FlagAction | Vers
 
 function reducer(state: State, action: Action): State {
     console.log('Reduce:', state, action);
-    
+
     const newState = innerReducer(state, action);
     if (newState.isHealthLinked)
         newState.health = computeDefaultHealth(newState);
@@ -45,7 +46,7 @@ function innerReducer(state: State, action: Action): State {
     case 'health': {
         const health = 'value' in action
             ? action.value
-            : state.health + (action.operation === 'increment' ? 1 : -1);
+            : formNumberToNumber(state.health) + (action.operation === 'increment' ? 1 : -1);
 
         const isHealthLinked = state.isHealthLinked && health === computeDefaultHealth(state);
 
@@ -63,14 +64,14 @@ function innerReducer(state: State, action: Action): State {
     }
 }
 
-type BonusType = 'none' | 'defense' | 'wall';
+export type BonusType = 'none' | 'defense' | 'wall';
 
 type State = {
     unitClass: UnitClass;
     variant?: UnitVariant;
     /** If yes, the health will update when changing classes, variants etc. */
     isHealthLinked: boolean;
-    health: number;
+    health: number | '';
     isVeteran: boolean;
     isPoisoned: boolean;
     bonus: BonusType;
@@ -103,7 +104,7 @@ export function createDefaultDefender(units: UnitsCache): Unit {
 }
 
 function toUnit(state: State): Unit {
-    return new Unit(state.unitClass, state.variant, state.health, createConditionMap({
+    return new Unit(state.unitClass, state.variant, formNumberToNumber(state.health), createConditionMap({
         [ConditionType.Veteran]: state.isVeteran,
         [ConditionType.Poisoned]: state.isPoisoned,
         [ConditionType.DefenseBonus]: state.bonus === 'defense',
@@ -117,12 +118,12 @@ type UnitClassAction = {
 };
 
 function unitClass(state: State, unitClass: UnitClass): State {
-    return { 
+    return {
         ...state,
         unitClass,
         variant: unitClass.getDefaultVariant(),
         isVeteran: state.isVeteran && unitClass.skills.promote,
-        bonus: (unitClass.isNavalOnly && state.bonus === 'wall') ? 'none' : state.bonus,
+        bonus: (unitClass.skills.fortify && state.bonus === 'wall') ? 'none' : state.bonus,
     };
 }
 
@@ -141,14 +142,14 @@ type VariantAction = {
 function variant(state: State, variant: UnitVariant): State {
     if (!state.unitClass.variants?.includes(variant))
         return state;
-    
+
     return { ...state, variant };
 }
 
 type HealthAction = {
     type: 'health';
 } & ({
-    value: number;
+    value: number | '';
 } | {
     operation: 'increment' | 'decrement';
 });

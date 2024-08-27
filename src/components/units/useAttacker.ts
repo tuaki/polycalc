@@ -4,6 +4,8 @@ import { ConditionType, createConditionMap } from '@/types/core/Condition';
 import { Unit } from '@/types/core/Unit';
 import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';
 import { type UnitsCache } from '@/types/core/Version';
+import { formNumberToNumber } from '@/types/utils/common';
+import { type BonusType } from './useDefender';
 
 export function useAttacker(input: Unit, onChange: (unit: Unit) => void) {
     const { units } = usePreferences();
@@ -45,13 +47,20 @@ function innerReducer(state: State, action: Action): State {
     case 'health': {
         const health = 'value' in action
             ? action.value
-            : state.health + (action.operation === 'increment' ? 1 : -1);
+            : formNumberToNumber(state.health) + (action.operation === 'increment' ? 1 : -1);
 
         const isHealthLinked = state.isHealthLinked && health === computeDefaultHealth(state);
 
         return { ...state, health, isHealthLinked };
     }
-    case 'flag': return { ...state, [action.field]: action.value };
+    case 'flag': {
+        if (action.field === 'isDefenseBonus')
+            return { ...state, bonus: action.value ? 'defense' : 'none' };
+        if (action.field === 'isWallBonus')
+            return { ...state, bonus: action.value ? 'wall' : 'none' };
+
+        return { ...state, [action.field]: action.value };
+    }
     case 'units': return units(state, action.value);
     }
 }
@@ -61,9 +70,10 @@ type State = {
     variant?: UnitVariant;
     /** If yes, the health will update when changing classes, variants etc. */
     isHealthLinked: boolean;
-    health: number;
+    health: number | '';
     isBoosted: boolean;
     isVeteran: boolean;
+    bonus: BonusType;
 };
 
 function computeInitialState(unit: Unit): State {
@@ -80,6 +90,7 @@ function computeInitialState(unit: Unit): State {
         health,
         isVeteran,
         isBoosted: unit.conditions.boosted,
+        bonus: unit.conditions.defenseBonus ? 'defense' : unit.conditions.wallBonus ? 'wall' : 'none',
     };
 }
 
@@ -92,9 +103,11 @@ export function createDefaultAttacker(units: UnitsCache): Unit {
 }
 
 function toUnit(state: State): Unit {
-    return new Unit(state.unitClass, state.variant, state.health, createConditionMap({
+    return new Unit(state.unitClass, state.variant, formNumberToNumber(state.health), createConditionMap({
         [ConditionType.Boosted]: state.isBoosted,
         [ConditionType.Veteran]: state.isVeteran,
+        [ConditionType.DefenseBonus]: state.bonus === 'defense',
+        [ConditionType.WallBonus]: state.bonus === 'wall',
     }));
 }
 
@@ -104,11 +117,12 @@ type UnitClassAction = {
 };
 
 function unitClass(state: State, unitClass: UnitClass): State {
-    return { 
+    return {
         ...state,
         unitClass,
         variant: unitClass.getDefaultVariant(),
         isVeteran: state.isVeteran && unitClass.skills.promote,
+        bonus: (unitClass.skills.fortify && state.bonus === 'wall') ? 'none' : state.bonus,
     };
 }
 
@@ -127,21 +141,21 @@ type VariantAction = {
 function variant(state: State, variant: UnitVariant): State {
     if (!state.unitClass.variants?.includes(variant))
         return state;
-    
+
     return { ...state, variant };
 }
 
 type HealthAction = {
     type: 'health';
 } & ({
-    value: number;
+    value: number | '';
 } | {
     operation: 'increment' | 'decrement';
 });
 
 type FlagAction = {
     type: 'flag';
-    field: 'isHealthLinked' | 'isBoosted' | 'isVeteran' | 'isRanged' | 'isIndirect';
+    field: 'isHealthLinked' | 'isBoosted' | 'isVeteran' | 'isRanged' | 'isIndirect' | 'isDefenseBonus' | 'isWallBonus';
     value: boolean;
 };
 

@@ -5,6 +5,7 @@ import { UnitStats } from './UnitStats';
 import { useDefender } from './useDefender';
 import clsx from 'clsx';
 import { UnitIconButton } from './UnitIcon';
+import { parseFormInteger } from '@/types/utils/common';
 
 type DefenderFormProps = Readonly<{
     unit: Unit;
@@ -43,7 +44,7 @@ export function DefenderForm({ unit, onChange }: DefenderFormProps) {
                         type='number'
                         label='Health'
                         value={'' + state.health}
-                        onChange={e => dispatch({ type: 'health', value: parseInt(e.target.value) })}
+                        onChange={e => dispatch({ type: 'health', value: parseFormInteger(e.target.value) })}
                     />
                     <div className='flex flex-col justify-between h-12'>
                         <ArrowButton variant='up' onPress={() => dispatch({ type: 'health', operation: 'increment' })} />
@@ -75,7 +76,7 @@ export function DefenderForm({ unit, onChange }: DefenderFormProps) {
                 >
                     Defense bonus (1.5)
                 </Checkbox>
-                {!unit.unitClass.isNavalOnly && (
+                {state.unitClass.skills.fortify && (
                     <Checkbox
                         size='sm'
                         isSelected={state.bonus === 'wall'}

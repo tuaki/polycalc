@@ -31,7 +31,7 @@ $preferencesCollapsedWidth: 56px;
     @extend .pc-main-scroller;
     @extend .pc-main-scroller-no-center;
     display: grid;
-    transition: 300ms;
+    transition: grid-template-columns 300ms;
 
     grid-template-rows: auto 1fr;
 }
@@ -57,7 +57,7 @@ $preferencesCollapsedWidth: 56px;
             --preferences-width: #{$preferencesCollapsedWidth};
         }
     }
-    
+
     .pc-content {
         grid-column-start: 2;
         grid-row-start: 1;

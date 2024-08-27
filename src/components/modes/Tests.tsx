@@ -11,6 +11,15 @@ export function Tests() {
     return (
         <Card className='pc-fit-min-800 mx-auto'>
             <CardBody className='gap-1'>
+                <div className='flex'>
+                    <div className='w-1/3' />
+                    <div className='w-1/3'>
+                        Expected damage:
+                    </div>
+                    <div className='w-1/3'>
+                        Actual damage:
+                    </div>
+                </div>
                 {fights.map((fight, index) => (
                     <TestFight key={index} data={fight} units={units} />
                 ))}
@@ -44,12 +53,10 @@ function TestFight({ data, units }: TestFightProps) {
                 <UnitIcon unit={defender} />
             </div>
             <div className='w-1/3 flex items-center'>
-                expected:
                 <span className='w-8 text-end'>{data.damage.attacker}</span>
                 <span className='w-8 text-end'>{data.damage.defender}</span>
             </div>
             <div className='w-1/3 flex items-center'>
-                actual:
                 <span className={clsx('w-8 text-end', isAttackerCorrect ? 'text-success' : 'text-danger')}>{attackerDamage}</span>
                 <span className={clsx('w-8 text-end', isDefenderCorrect ? 'text-success' : 'text-danger')}>{defenderDamage}</span>
             </div>

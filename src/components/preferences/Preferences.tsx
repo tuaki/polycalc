@@ -32,11 +32,16 @@ export function Preferences() {
                     PolyCalc
                 </div>
                 <div className='flex justify-center'>
-                    <ModeSelect />
+                    <div className='max-[450px]:hidden'>
+                        <ModeSelect />
+                    </div>
                 </div>
                 <div className='flex justify-end gap-2'>
                     <ThemeToggle />
                     <CollapsePreferencesToggle />
+                </div>
+                <div className='min-[450px]:hidden col-span-3 flex justify-center'>
+                    <ModeSelect />
                 </div>
             </div>
             {!isCollapsed && (<>

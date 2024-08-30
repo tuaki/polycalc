@@ -13,7 +13,7 @@ export function WikiModal() {
     const detail = cachedPath === undefined ? undefined : getWikiPageDetail(cachedPath);
 
     return (
-        <Modal isOpen={!!path} onClose={closeWiki} size='3xl'>
+        <Modal isOpen={!!path} onClose={closeWiki} size='3xl' classNames={{ base: 'max-h-[calc(100%-2*theme(spacing.1))] sm:max-h-[calc(100%-2*theme(spacing.16))]' }}>
             {detail && (
                 <ModalContent>
                     <ModalHeader className='flex-row items-center gap-3'>
@@ -26,11 +26,11 @@ export function WikiModal() {
                             <BreadcrumbItem>{detail.page.title}</BreadcrumbItem>
                         </Breadcrumbs>
                     </ModalHeader>
-                    <ModalBody className='flex-row'>
+                    <ModalBody className='flex-row overflow-hidden'>
                         {detail.children && (<>
-                            <Listbox className='pc-listbox-reset' itemClasses={{ title: 'text-base font-semibold' }}>
+                            <Listbox className='pc-listbox-reset' itemClasses={{ title: 'text-base font-semibold' }} aria-label='Nested pages'>
                                 {detail.children.map(({ child, path }) => (
-                                    <ListboxItem key={path} onPress={() => setPath(path)} className='p-0'>
+                                    <ListboxItem key={path} onPress={() => setPath(path)} className='p-0' textValue={'/' + child.title}>
                                         <span data-slot='separator' aria-hidden='true' className='px-1 text-foreground/50'>/</span>
                                         <span className='cursor-pointer tap-highlight-transparent text-foreground/50 text-small hover:opacity-80 active:opacity-disabled transition-opacity text-nowrap'>{child.title}</span>
                                     </ListboxItem>
@@ -38,7 +38,7 @@ export function WikiModal() {
                             </Listbox>
                             <Divider orientation='vertical' className='h-auto' />
                         </>)}
-                        <div className='flex-grow pc-wiki'>
+                        <div className='flex-grow pc-wiki overflow-y-auto'>
                             {detail.page.content()}
                         </div>
                     </ModalBody>

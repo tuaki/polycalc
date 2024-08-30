@@ -16,7 +16,9 @@ export function Root() {
         <p>
             As of now, there are two modes available: <WikiLink type={wiki.duel} /> for simple one-on-one calculations, and <WikiLink type={wiki.brawl} /> for more complex scenarios. You can also change the <WikiLink type={wiki.settings} /> to customize your experience.
         </p>
-        <ReadonlyBrawl data={brawlExample} />
+        <div className='pb-4'>
+            <ReadonlyBrawl data={brawlExample} />
+        </div>
     </>);
 }
 

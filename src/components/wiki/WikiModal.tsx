@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
+import { Button, Divider, Listbox, ListboxItem, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
 import useWiki from './WikiProvider';
 import { useCached } from '@/types/utils/useCached';
 import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs';
@@ -28,16 +28,14 @@ export function WikiModal() {
                     </ModalHeader>
                     <ModalBody className='flex-row'>
                         {detail.children && (<>
-                            <div>
-                                <ul className='font-semibold list-inside'>
-                                    {detail.children.map(({ child, path }) => (
-                                        <li key={path} onClick={() => setPath(path)}>
-                                            <span data-slot='separator' aria-hidden='true' className='px-1 text-foreground/50'>/</span>
-                                            <span className='cursor-pointer tap-highlight-transparent text-foreground/50 text-small hover:opacity-80 active:opacity-disabled transition-opacity text-nowrap'>{child.title}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            <Listbox className='pc-listbox-reset' itemClasses={{ title: 'text-base font-semibold' }}>
+                                {detail.children.map(({ child, path }) => (
+                                    <ListboxItem key={path} onPress={() => setPath(path)} className='p-0'>
+                                        <span data-slot='separator' aria-hidden='true' className='px-1 text-foreground/50'>/</span>
+                                        <span className='cursor-pointer tap-highlight-transparent text-foreground/50 text-small hover:opacity-80 active:opacity-disabled transition-opacity text-nowrap'>{child.title}</span>
+                                    </ListboxItem>
+                                ))}
+                            </Listbox>
                             <Divider orientation='vertical' className='h-auto' />
                         </>)}
                         <div className='flex-grow pc-wiki'>

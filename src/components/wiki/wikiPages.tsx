@@ -21,7 +21,7 @@ export function Root() {
 }
 
 const brawlExample: ReadonlyBrawlData = {
-    versionId: 'ocean-1',
+    versionId: 'aquarion-rework',
     attackers: [
         { classId: 'bomber', health: 7 },
         { classId: 'scout', health: 8 },

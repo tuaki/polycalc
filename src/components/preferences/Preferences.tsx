@@ -40,7 +40,7 @@ export function Preferences() {
                     <ThemeToggle />
                     <CollapsePreferencesToggle />
                 </div>
-                <div className='min-[450px]:hidden col-span-3 flex justify-center'>
+                <div className='min-[450px]:hidden col-span-3 flex justify-center pt-3'>
                     <ModeSelect />
                 </div>
             </div>

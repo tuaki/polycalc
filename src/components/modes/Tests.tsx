@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { VERSIONS } from '@/types/core/UnitClass';
 
 export function Tests() {
-    const units = new UnitsCache(VERSIONS['aquarion-rework'], []);
+    const units = new UnitsCache(VERSIONS['aquarion-0'], []);
 
     return (
         <Card className='pc-fit-min-800 mx-auto'>

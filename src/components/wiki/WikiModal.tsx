@@ -30,8 +30,8 @@ export function WikiModal() {
                         {detail.children && (<>
                             <Listbox className='pc-listbox-reset' itemClasses={{ title: 'text-base font-semibold' }} aria-label='Nested pages'>
                                 {detail.children.map(({ child, path }) => (
-                                    <ListboxItem key={path} onPress={() => setPath(path)} className='p-0' textValue={'/' + child.title}>
-                                        <span data-slot='separator' aria-hidden='true' className='px-1 text-foreground/50'>/</span>
+                                    <ListboxItem key={path} onPress={() => setPath(path)} className='px-1 py-0' textValue={'/' + child.title}>
+                                        <span data-slot='separator' aria-hidden='true' className='pe-1 text-foreground/50'>/</span>
                                         <span className='cursor-pointer tap-highlight-transparent text-foreground/50 text-small hover:opacity-80 active:opacity-disabled transition-opacity text-nowrap'>{child.title}</span>
                                     </ListboxItem>
                                 ))}

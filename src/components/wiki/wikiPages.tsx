@@ -23,7 +23,7 @@ export function Root() {
 }
 
 const brawlExample: ReadonlyBrawlData = {
-    versionId: 'aquarion-rework',
+    versionId: 'aquarion-1',
     attackers: [
         { classId: 'bomber', health: 7 },
         { classId: 'scout', health: 8 },
@@ -152,10 +152,20 @@ export function Issues() {
 export function Changelog() {
     return (<>
         <h1>Changelog</h1>
+        <h2>2024-11-17</h2>
+        <ul>
+            <li>
+                Added unit changes from the latest version (108).<br />
+                <i>Note: Since the Jelly{'\''}s new ability to attack directly doesn{'\''}t change the math, this ability isn{'\''}t reflected in the app.</i>
+            </li>
+            <li>
+                Added unit icons to selectboxes.
+            </li>
+        </ul>
         <h2>2024-08-27</h2>
         <ul>
             <li>
-                Aquarion units actualized according to the latest version. All <i>Aquarion Rework</i> changes should be final at this point.
+                Aquarion units actualized according to the latest version (105). All <i>Aquarion Rework</i> changes should be final at this point.
             </li>
             <li>
                 Fixed computation of damage caused by tentacles.

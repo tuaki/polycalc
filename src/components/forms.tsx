@@ -3,8 +3,9 @@ import { type UnitVariant, type UnitClass } from '@/types/core/UnitClass';
 import usePreferences from '@/components/preferences/PreferencesProvider';
 import { useMemo } from 'react';
 import { PiLinkBold, PiLinkBreakBold } from 'react-icons/pi';
-import { RxChevronUp, RxChevronDown, RxChevronLeft, RxChevronRight } from 'react-icons/rx';   
+import { RxChevronUp, RxChevronDown, RxChevronLeft, RxChevronRight } from 'react-icons/rx';
 import clsx from 'clsx';
+import { UnitClassIcon } from './units/UnitIcon';
 
 type BonusType = 'none' | 'defense' | 'wall';
 
@@ -36,23 +37,35 @@ type UnitClassSelectProps = Readonly<{
 }>;
 
 export function UnitClassSelect({ value, onChange, label }: UnitClassSelectProps) {
-    const { units } = usePreferences();
+    const { units, preferences } = usePreferences();
     const selectedKeys = useMemo(() => units.findClass(value.id) ? [ value.id ] : [], [ value.id, units ]);
 
     return (
         <Select
+            items={units.getClasses()}
             size='sm'
             label={label}
             selectedKeys={selectedKeys}
             onChange={e => {
                 const newClass = units.findClass(e.target.value);
                 if (newClass)
-                    onChange(newClass); 
+                    onChange(newClass);
             }}
-        >
-            {units.getClasses().map(unit => (
-                <SelectItem key={unit.id} value={unit.id}>{unit.label}</SelectItem>
+            renderValue={items => items.map(item => item.data && (
+                <div key={item.key} className='flex items-center gap-2'>
+                    {!preferences.isIconsHidden && <UnitClassIcon unitClass={item.data} size={20} />}
+                    {item.data?.label}
+                </div>
             ))}
+        >
+            {unit => (
+                <SelectItem key={unit.id} value={unit.id} textValue={unit.label}>
+                    <div className='flex items-center gap-2'>
+                        {!preferences.isIconsHidden && <UnitClassIcon unitClass={unit} size={20} />}
+                        {unit.label}
+                    </div>
+                </SelectItem>
+            )}
         </Select>
     );
 }
@@ -99,7 +112,7 @@ export function LinkSwitch(props: Readonly<SwitchProps>) {
         getInputProps,
         getWrapperProps,
     } = useSwitch(props);
-    
+
     return (
         <Component {...getBaseProps()}>
             <VisuallyHidden>

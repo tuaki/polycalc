@@ -51,7 +51,7 @@ export class UnitsCache {
 const unitRegex = new RegExp(/([a-z]{2}) *(\d*) *([d]?)/);
 
 export type VersionStatus = 'beta' | 'latest' | 'deprecated';
-export type VersionId = 'diplomacy' | 'ocean-0' | 'ocean-1' | 'aquarion-rework';
+export type VersionId = 'diplomacy' | 'ocean-0' | 'ocean-1' | 'aquarion-0' | 'aquarion-1';
 
 /**
  * Each version represents a major update which has an impact on the game mechanics. Therefore, most actual versions are skipped.
@@ -79,7 +79,8 @@ export const VERSION_DEFINITIONS: readonly VersionDefinition[] = [
     { id: 'diplomacy', gameId: '2.2.9.8251', label: '(100) Diplomacy', status: 'deprecated' },
     { id: 'ocean-0', gameId: '2.8.0', label: '(101) Path of the Ocean', status: 'deprecated' },
     { id: 'ocean-1', gameId: '2.8.5.11917', label: '(104) Path of the Ocean', status: 'deprecated' },
-    { id: 'aquarion-rework', gameId: '2.10.1.12787', label: '(105) Aquarion Rework', status: 'latest' },
+    { id: 'aquarion-0', gameId: '2.10.1.12787', label: '(105) Aquarion Rework', status: 'deprecated' },
+    { id: 'aquarion-1', gameId: '2.11.1.13205', label: '(108) Aquarion Rework', status: 'latest' },
 ];
 
 export const VERSION_IDS: readonly VersionId[] = VERSION_DEFINITIONS.map(def => def.id);

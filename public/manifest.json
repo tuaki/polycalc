@@ -1,17 +1,22 @@
 {
     "name": "PolyCalc",
+    "short_name": "PolyCalc",
     "icons": [
         {
-            "src": "polycalc-light.svg",
-            "sizes": "64x64 32x32 24x24 16x16",
-            "type": "image/x-icon"
+            "src": "/web-app-manifest-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
         },
         {
-            "src": "polycalc-light-180.png",
+            "src": "/web-app-manifest-512x512.png",
+            "sizes": "512x512",
             "type": "image/png",
-            "sizes": "180x180"
+            "purpose": "maskable"
         }
     ],
     "start_url": ".",
+    "theme_color": "#ffffff",
+    "background_color": "#000000",
     "display": "standalone"
 }

@@ -36,7 +36,7 @@ export function Duel() {
         },
     }), []);
 
-    const result: FightResult = useMemo(() => fight(state.attacker, state.defender, state.conditions), [ state ]);
+    const result: FightResult = useMemo(() => fight(units.version, state.attacker, state.defender, state.conditions), [ units.version, state ]);
 
     return (
         <div className='pc-fit-min-800 mx-auto flex flex-col gap-3'>
@@ -52,7 +52,7 @@ export function Duel() {
             </Card>
             <Card>
                 <CardBody className='grid grid-cols-2 sm:grid-cols-4 gap-3'>
-                    <TextFightForm value={state.conditions} onChange={set.conditions} className='col-span-2 sm:col-start-3' />
+                    <TextFightForm value={state.conditions} onChange={set.conditions} attacker={state.attacker} className='col-span-2 sm:col-start-3' />
                     <div className='sm:row-start-1'>
                         <span>Attacker:</span>
                         <UnitIcon unit={result.attacker} />

@@ -39,7 +39,7 @@ function TestFight({ data, units }: TestFightProps) {
     if (!attacker || !defender)
         throw new Error(`Can't parse units. Attacker: '${data.input.attacker}', defender: '${data.input.defender}'.`);
 
-    const result = fight(attacker, defender, data.conditions);
+    const result = fight(units.version, attacker, defender, data.conditions);
 
     const attackerDamage = attacker.health - result.attacker.health;
     const defenderDamage = defender.health - result.defender.health;

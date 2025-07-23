@@ -1,21 +1,22 @@
 import { type ConditionMap, ConditionType } from './Condition';
 import { type Unit } from './Unit';
+import { type Version } from './Version';
 
 export type FightResult = {
     attacker: Unit;
     defender: Unit;
 };
 
-export function fight(attacker: Unit, defender: Unit, conditions: FightConditions): FightResult {
+export function fight(version: Version, attacker: Unit, defender: Unit, conditions: FightConditions): FightResult {
     const input = { attacker, defender };
     if (!isFightHappening(attacker, defender, conditions))
         return input;
 
     // The tentacles schenenigans happen before anything else. Also, both units use them at the same time.
-    const afterTentacles = conditions.isTentacles ? tentaclesFight(input, conditions) : input;
+    const afterTentacles = conditions.isTentacles ? tentaclesFight(version, input, conditions) : input;
 
     return conditions.isBasic && !attacker.unitClass.skills.tentacles
-        ? basicFight(afterTentacles, conditions)
+        ? basicFight(version, afterTentacles, conditions)
         : afterTentacles;
 }
 
@@ -26,7 +27,7 @@ function isFightHappening(attacker: Unit, defender: Unit, conditions: FightCondi
     return !!conditions.isBasic || !!conditions.isTentacles;
 }
 
-function tentaclesFight({ attacker, defender }: FightResult, conditions: FightConditions): FightResult {
+function tentaclesFight(version: Version, { attacker, defender }: FightResult, conditions: FightConditions): FightResult {
     if (!conditions.isTentacles)
         return { attacker, defender };
 
@@ -35,22 +36,23 @@ function tentaclesFight({ attacker, defender }: FightResult, conditions: FightCo
 
     // All tentacle action is happening at the same time!
     return {
-        attacker: isDefender ? applyTentacles(defender, attacker) : attacker,
-        defender: isAttacker ? applyTentacles(attacker, defender) : defender,
+        attacker: isDefender ? applyTentacles(version, defender, attacker) : attacker,
+        defender: isAttacker ? applyTentacles(version, attacker, defender) : defender,
     };
 }
 
 type BasicFightConditions = Omit<FightConditions, 'isBasic'>;
 
-function basicFight({ attacker, defender }: FightResult, conditions: BasicFightConditions): FightResult {
+function basicFight(version: Version, { attacker, defender }: FightResult, conditions: BasicFightConditions): FightResult {
     const { attackerDamage, defenderDamage } = calculateDamage(attacker, defender, !!conditions.isIndirect);
 
-    const newDefender = defender.update(defender.health - defenderDamage, calculateTargetConditions(attacker, defender, true));
+    const newDefender = defender.update(defender.health - defenderDamage, calculateTargetConditions(version, attacker, defender, true));
 
     const noRetaliation =
-        // The only unit with this skill behaves this way. Why?
-        newDefender.unitClass.skills.freeze ||
         newDefender.isDead ||
+        // If the unit was frozen or becomes frozen, it can't retaliate.
+        // If it becomes unfrozen, it still can't retaliate.
+        defender.conditions.freezed ||
         newDefender.conditions.freezed ||
         newDefender.conditions.converted ||
         newDefender.unitClass.skills.stiff ||
@@ -60,7 +62,7 @@ function basicFight({ attacker, defender }: FightResult, conditions: BasicFightC
 
     const newAttacker = noRetaliation
         ? attacker.update(attacker.health, { ...attacker.conditions, [ConditionType.Boosted]: false })
-        : attacker.update(attacker.health - attackerDamage, calculateTargetConditions(defender, attacker, false));
+        : attacker.update(attacker.health - attackerDamage, calculateTargetConditions(version, defender, attacker, false));
 
     return {
         attacker: newAttacker,
@@ -111,7 +113,7 @@ const ROUNDING_ERROR = 1e-6;
  * The conditions that receive any unit when it takes damage (even if the damage is 0).
  * However, some of them are used only if the source is directly attacking the target.
  */
-function calculateTargetConditions(source: Unit, target: Unit, isAttack: boolean): ConditionMap {
+function calculateTargetConditions(version: Version, source: Unit, target: Unit, isAttack: boolean): ConditionMap {
     const output = {
         ...target.conditions,
         [ConditionType.Boosted]: false,
@@ -122,6 +124,9 @@ function calculateTargetConditions(source: Unit, target: Unit, isAttack: boolean
     if (!isAttack)
         return output;
 
+    // [since cymanti-0]: Attacking a frozen unit will unfreeze that unit.
+    if (version.isInRange('cymanti-0'))
+        output[ConditionType.Freezed] = false;
     if (source.unitClass.skills.freeze)
         output[ConditionType.Freezed] = true;
     if (source.unitClass.skills.convert)
@@ -130,9 +135,9 @@ function calculateTargetConditions(source: Unit, target: Unit, isAttack: boolean
     return output;
 }
 
-function applyTentacles(source: Unit, target: Unit): Unit {
+function applyTentacles(version: Version, source: Unit, target: Unit): Unit {
     const damage = calculateTentaclesDamage(source, target);
-    const conditions = calculateTargetConditions(source, target, false);
+    const conditions = calculateTargetConditions(version, source, target, false);
 
     return target.update(target.health - damage, conditions);
 }
@@ -183,11 +188,20 @@ export function createFightConditions(attacker: Unit, defender: Unit, prev?: Fig
     // The tentacles option is now fully orthogonal to the other options.
     const isTentacles = computeIsTentacles(attacker, defender, prev, isPassive);
 
-    const isBasic = prev?.isBasic ?? isActive;
+    const isDirectSupported = attacker.unitClass.isDirectSupported;
+    const isIndirectSupported = attacker.unitClass.isIndirectSupported;
 
-    // Indirect attack isn't the default.
-    const isIndirect = attacker.unitClass.isIndirectSupported
-        ? (prev?.isIndirect ?? false)
+    // If the attacker don't support any attack type, it can't fight at all.
+    const isBasic = (isDirectSupported || isIndirectSupported)
+        ? prev?.isBasic ?? isActive
+        : undefined;
+
+    // Indirect attack isn't the default ...
+    const isIndirect = isIndirectSupported
+        ? isDirectSupported
+            ? prev?.isIndirect ?? false
+            // ... unless the attacker can't do direct attack.
+            : true
         : undefined;
 
     // Ranged attack is the default.

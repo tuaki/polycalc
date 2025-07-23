@@ -52,7 +52,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Fortify, SkillType.Promote ],
+    skills: [ SkillType.Fortify ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
 }, {
     id: 'archer',
@@ -62,7 +62,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 1,
     range: 2,
-    skills: [ SkillType.Fortify, SkillType.Promote ],
+    skills: [ SkillType.Fortify ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
 }, {
     id: 'defender',
@@ -72,7 +72,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 1,
     defense: 3,
     range: 1,
-    skills: [ SkillType.Fortify, SkillType.Promote ],
+    skills: [ SkillType.Fortify ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
 }, {
     id: 'rider',
@@ -82,7 +82,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 1,
     range: 1,
-    skills: [ SkillType.Fortify, SkillType.Promote ],
+    skills: [ SkillType.Fortify ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
 }, {
     id: 'swordsman',
@@ -92,7 +92,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 3,
     range: 1,
-    skills: [ SkillType.Fortify, SkillType.Promote ],
+    skills: [ SkillType.Fortify ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
 }, {
     id: 'catapult',
@@ -102,7 +102,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 0,
     range: 3,
-    skills: [ SkillType.Promote ],
+    skills: [],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
 }, {
     id: 'knight',
@@ -112,7 +112,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3.5,
     defense: 1,
     range: 1,
-    skills: [ SkillType.Fortify, SkillType.Promote ],
+    skills: [ SkillType.Fortify ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
 }, {
     id: 'giant',
@@ -122,7 +122,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 5,
     defense: 4,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Classic ],
 }, {
     id: 'polytaur',
@@ -132,7 +132,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 1,
     range: 1,
-    skills: [ SkillType.Fortify ],
+    skills: [ SkillType.Fortify, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Elyrion ],
 }, {
     id: 'boat',
@@ -141,7 +141,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 1,
     defense: 1,
     range: 2,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     variantIds: diplomacyVariantIds,
 }, {
@@ -151,7 +151,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 2,
     range: 2,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     variantIds: diplomacyVariantIds,
 }, {
@@ -161,7 +161,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 3,
     range: 2,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     variantIds: diplomacyVariantIds,
 }, {
@@ -172,7 +172,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 1,
     range: 1,
-    skills: [ SkillType.Fortify, SkillType.Promote ],
+    skills: [ SkillType.Fortify ],
     tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
 }, {
     id: 'tridention',
@@ -182,7 +182,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 1,
     range: 2,
-    skills: [ SkillType.Fortify, SkillType.Promote ],
+    skills: [ SkillType.Fortify ],
     tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
 }, {
     id: 'crab',
@@ -192,7 +192,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 4,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Aquarion ],
 }, {
     id: 'navalon',
@@ -202,7 +202,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 4,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Elyrion ],
 }, {
     id: 'dragon-egg',
@@ -212,7 +212,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 0,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Fortify ],
+    skills: [ SkillType.Fortify, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Elyrion ],
 }, {
     id: 'baby-dragon',
@@ -222,7 +222,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 3,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Elyrion ],
 }, {
     id: 'fire-dragon',
@@ -232,7 +232,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 3,
     range: 2,
-    skills: [ SkillType.Splash ],
+    skills: [ SkillType.Splash, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Elyrion ],
 }, {
     id: 'ice-archer',
@@ -242,7 +242,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 0.1,
     defense: 1,
     range: 2,
-    skills: [ SkillType.Freeze, SkillType.Fortify ],
+    skills: [ SkillType.Freeze, SkillType.Fortify, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Polaris ],
 }, {
     id: 'battle-sled',
@@ -252,7 +252,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Promote ],
+    skills: [],
     tags: [ UnitTag.Land, UnitTag.Polaris ],
 }, {
     id: 'mooni',
@@ -262,7 +262,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 0,
     defense: 2,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Polaris ],
 }, {
     id: 'ice-fortress',
@@ -272,7 +272,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 3,
     range: 2,
-    skills: [ SkillType.Promote ],
+    skills: [],
     tags: [ UnitTag.Land, UnitTag.Polaris ],
 }, {
     id: 'gaami',
@@ -282,7 +282,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 4,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Polaris ],
 }, {
     id: 'hexapod',
@@ -292,7 +292,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 1,
     range: 1,
-    skills: [ SkillType.Promote ],
+    skills: [],
     tags: [ UnitTag.Land, UnitTag.Cymanti ],
 }, {
     id: 'kiton',
@@ -302,7 +302,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 1,
     defense: 3,
     range: 1,
-    skills: [ SkillType.Poison, SkillType.Promote ],
+    skills: [ SkillType.Poison ],
     tags: [ UnitTag.Land, UnitTag.Cymanti ],
 }, {
     id: 'phychi',
@@ -312,7 +312,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 1,
     defense: 1,
     range: 2,
-    skills: [ SkillType.Poison, SkillType.Surprise, SkillType.Promote ],
+    skills: [ SkillType.Poison, SkillType.Surprise ],
     tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Cymanti ],
 }, {
     id: 'raychi',
@@ -322,7 +322,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Explode, SkillType.Promote ],
+    skills: [ SkillType.Explode ],
     tags: [ UnitTag.Land, UnitTag.Naval, UnitTag.Cymanti ],
 }, {
     id: 'exida',
@@ -332,7 +332,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 1,
     range: 3,
-    skills: [ SkillType.Poison, SkillType.Splash, SkillType.Promote ],
+    skills: [ SkillType.Poison, SkillType.Splash ],
     tags: [ UnitTag.Land, UnitTag.Cymanti ],
 }, {
     id: 'doomux',
@@ -342,7 +342,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Explode, SkillType.Promote ],
+    skills: [ SkillType.Explode ],
     tags: [ UnitTag.Land, UnitTag.Cymanti ],
 }, {
     id: 'centipede',
@@ -352,7 +352,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 3,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Cymanti ],
 }, {
     id: 'segment',
@@ -362,7 +362,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Explode ],
+    skills: [ SkillType.Explode, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Cymanti ],
 }, {
     id: 'cloak',
@@ -372,7 +372,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 0,
     defense: 0.5,
     range: 1,
-    skills: [ SkillType.Infiltrate ],
+    skills: [ SkillType.Infiltrate, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
 }, {
     id: 'dagger',
@@ -382,7 +382,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Surprise ],
+    skills: [ SkillType.Surprise, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris, UnitTag.Cymanti ],
 }, {
     id: 'dinghy',
@@ -392,7 +392,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 0,
     defense: 0.5,
     range: 1,
-    skills: [ SkillType.Infiltrate ],
+    skills: [ SkillType.Infiltrate, SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
 }, {
     id: 'pirate',
@@ -402,7 +402,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Surprise ],
+    skills: [ SkillType.Surprise, SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
 }, {
     id: 'mind-bender',
@@ -412,7 +412,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 0,
     defense: 1,
     range: 1,
-    skills: [ SkillType.Convert ],
+    skills: [ SkillType.Convert, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion, UnitTag.Polaris ],
 }, {
     id: 'shaman',
@@ -422,7 +422,7 @@ const UNIT_DEFINITIONS_DIPLOMACY: readonly UnitClassVersionDefinition[] = [ {
     attack: 1,
     defense: 1,
     range: 1,
-    skills: [ SkillType.Convert ],
+    skills: [ SkillType.Convert, SkillType.Static ],
     tags: [ UnitTag.Land, UnitTag.Cymanti ],
 } ];
 
@@ -430,7 +430,7 @@ const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [ {
     // Swordsman loses fortify.
     operation: 'update',
     id: 'swordsman',
-    skills: [ SkillType.Promote ],
+    skills: [],
 }, {
     // Tridention health goes from 15 to 10.
     operation: 'update',
@@ -470,7 +470,7 @@ const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [ {
     attack: 0,
     defense: 1,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     variantIds: oceanVariantIds,
 }, {
@@ -480,7 +480,7 @@ const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [ {
     attack: 2,
     defense: 1,
     range: 2,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     variantIds: oceanVariantIds,
 }, {
@@ -490,7 +490,7 @@ const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 3,
     range: 1,
-    skills: [],
+    skills: [ SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     variantIds: oceanVariantIds,
 }, {
@@ -500,7 +500,7 @@ const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 2,
     range: 3,
-    skills: [ SkillType.Splash, SkillType.Stiff ],
+    skills: [ SkillType.Splash, SkillType.Stiff, SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic, UnitTag.Aquarion, UnitTag.Elyrion ],
     variantIds: oceanVariantIds,
 }, {
@@ -511,7 +511,7 @@ const UNIT_DEFINITIONS_OCEAN_0: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 4,
     range: 1,
-    skills: [ SkillType.Stiff, SkillType.Stomp ],
+    skills: [ SkillType.Stiff, SkillType.Stomp, SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Classic ],
 },
 ];
@@ -528,12 +528,12 @@ const UNIT_DEFINITIONS_AQUARION_0: readonly UnitClassVersionDefinition[] = [ {
     operation: 'update',
     id: 'tridention',
     attack: 2.5,
-    skills: [ SkillType.Promote ],
+    skills: [],
 }, {
     // Amphibian loses fortify.
     operation: 'update',
     id: 'amphibian',
-    skills: [ SkillType.Promote ],
+    skills: [],
 }, {
     // Aquarion loses all ships.
     operation: 'update',
@@ -559,7 +559,7 @@ const UNIT_DEFINITIONS_AQUARION_0: readonly UnitClassVersionDefinition[] = [ {
     attack: 3,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Surprise, SkillType.Promote ],
+    skills: [ SkillType.Surprise ],
     tags: [ UnitTag.Naval, UnitTag.Aquarion ],
 }, {
     id: 'jelly',
@@ -569,7 +569,7 @@ const UNIT_DEFINITIONS_AQUARION_0: readonly UnitClassVersionDefinition[] = [ {
     attack: 0,
     defense: 2,
     range: 1,
-    skills: [ SkillType.Stiff, SkillType.Tentacles ],
+    skills: [ SkillType.Stiff, SkillType.Tentacles, SkillType.Static ],
     tags: [ UnitTag.Naval, UnitTag.Aquarion ],
 }, {
     operation: 'update',
@@ -583,7 +583,7 @@ const UNIT_DEFINITIONS_AQUARION_0: readonly UnitClassVersionDefinition[] = [ {
     attack: 4,
     defense: 0,
     range: 3,
-    skills: [ SkillType.Promote ],
+    skills: [],
     tags: [ UnitTag.Naval, UnitTag.Aquarion ],
 } ];
 // Also, crab gains the escape ability, but that's not important for us.
@@ -606,10 +606,57 @@ const UNIT_DEFINITIONS_AQUARION_1: readonly UnitClassVersionDefinition[] = [ {
     tags: [ UnitTag.Land, UnitTag.Classic, UnitTag.Elyrion, UnitTag.Polaris ],
 } ];
 
+const UNIT_DEFINITIONS_CYMANTI_0: readonly UnitClassVersionDefinition[] = [ {
+    // Hexapod attack has been reduced from 3 to 2.5
+    operation: 'update',
+    id: 'hexapod',
+    attack: 2.5,
+}, {
+    // Ice Fortresses now have Escape and Static traits.
+    operation: 'update',
+    id: 'ice-fortress',
+    skills: [ SkillType.Static ],
+}, {
+    // Ice Archers now have 1 Attack.
+    operation: 'update',
+    id: 'ice-archer',
+    attack: 1,
+}, {
+    // Raychi no longer explodes.
+    operation: 'update',
+    id: 'raychi',
+    skills: [],
+}, {
+    id: 'boomchi',
+    idShort: 'bc',
+    label: 'Boomchi',
+    health: 10,
+    attack: 3,
+    defense: 2,
+    range: 0,
+    skills: [ SkillType.Explode ],
+    tags: [ UnitTag.Naval, UnitTag.Cymanti ],
+    // TODO find icon.
+    noIcon: true,
+}, {
+    id: 'living-island',
+    idShort: 'li',
+    label: 'Living Island',
+    health: 20,
+    attack: 4,
+    defense: 4,
+    range: 1,
+    skills: [ SkillType.Stomp, SkillType.Static, SkillType.Stiff ],
+    tags: [ UnitTag.Naval, UnitTag.Cymanti ],
+    // TODO find icon.
+    noIcon: true,
+} ];
+
 export const UNIT_DEFINITIONS: Record<VersionId, readonly UnitClassVersionDefinition[]> = {
     'diplomacy': UNIT_DEFINITIONS_DIPLOMACY,
     'ocean-0': UNIT_DEFINITIONS_OCEAN_0,
     'ocean-1': UNIT_DEFINITIONS_OCEAN_1,
     'aquarion-0': UNIT_DEFINITIONS_AQUARION_0,
     'aquarion-1': UNIT_DEFINITIONS_AQUARION_1,
+    'cymanti-0': UNIT_DEFINITIONS_CYMANTI_0,
 };

@@ -6,6 +6,7 @@ import { LuShield, LuSword, LuSwords, LuTarget } from 'react-icons/lu';
 import { MdNotInterested } from 'react-icons/md';
 import { Tooltip } from '../common';
 import { type ReactNode } from 'react';
+import { type Unit } from '@/types/core/Unit';
 
 type IconFightFormProps = Readonly<{
     value: FightConditions;
@@ -16,7 +17,7 @@ type IconFightFormProps = Readonly<{
 }>;
 
 export function IconFightForm({ value, onChange, result, className, isReadonly }: IconFightFormProps) {
-    const { primaryIsBasic, showIndirect, showRanged, showSecondaryTentacles } = computeShow(value);
+    const { isBasicPrimary, showIndirect, isIndirectReadonly, showRanged, showSecondaryTentacles } = computeShow(value, result.attacker);
     const showRangedIcon = showRanged && !value.isIndirect;
     const downRowTotal = +showIndirect + +showRangedIcon + +showSecondaryTentacles;
     const health = result.defender.health;
@@ -25,7 +26,7 @@ export function IconFightForm({ value, onChange, result, className, isReadonly }
         <div className={clsx('flex flex-col justify-center gap-1', className)}>
             <div className='flex items-center justify-center'>
                 <div className='h-5 mx-2'>
-                    {primaryIsBasic ? (
+                    {isBasicPrimary ? (
                         <IsBasicToggle value={value.isBasic!} onChange={onChange} isReadonly={isReadonly} />
                     ) : (
                         <IsTentaclesToggle value={value.isTentacles!} onChange={onChange} isReadonly={isReadonly} variant='up' />
@@ -39,7 +40,7 @@ export function IconFightForm({ value, onChange, result, className, isReadonly }
                 <Divider className='w-20 self-center' />
                 <div className={clsx('flex items-center justify-center', downRowTotal === 3 ? 'gap-2' : 'gap-4')}>
                     {showIndirect && (
-                        <IsIndirectToggle value={value.isIndirect!} onChange={onChange} isReadonly={isReadonly} />
+                        <IsIndirectToggle value={value.isIndirect!} onChange={onChange} isReadonly={!!isReadonly || isIndirectReadonly} />
                     )}
                     {showRangedIcon && (
                         // Indirect attack is always 'ranged', meaning no retaliation is taken, so we hide the icon.
@@ -54,13 +55,15 @@ export function IconFightForm({ value, onChange, result, className, isReadonly }
     );
 }
 
-function computeShow({ isBasic, isIndirect, isRanged, isTentacles }: FightConditions) {
+function computeShow({ isBasic, isIndirect, isRanged, isTentacles }: FightConditions, attacker: Unit) {
     const showBasic = isBasic !== undefined;
     const showTentaclesPrimary = isTentacles !== undefined && !showBasic;
-    
+
     return {
-        primaryIsBasic: !showTentaclesPrimary,
+        isBasicPrimary: !showTentaclesPrimary,
         showIndirect: !!isBasic && isIndirect !== undefined,
+        // If the attacker can't do indirect attack, this can't be toggled.
+        isIndirectReadonly: !attacker.unitClass.isDirectSupported,
         showRanged: !!isBasic && isRanged !== undefined,
         showSecondaryTentacles: isTentacles !== undefined && showBasic,
     };
@@ -136,13 +139,14 @@ function IsTentaclesToggle({ value, onChange, isReadonly, variant }: IsTentacles
 type TextFightFormProps = Readonly<{
     value: FightConditions;
     onChange: (toggle: keyof FightConditions) => void;
+    attacker: Unit;
     className?: string;
 }>;
 
-export function TextFightForm({ value, onChange, className }: TextFightFormProps) {
-    const { primaryIsBasic, showIndirect, showRanged, showSecondaryTentacles } = computeShow(value);
+export function TextFightForm({ value, onChange, attacker, className }: TextFightFormProps) {
+    const { isBasicPrimary, showIndirect, isIndirectReadonly, showRanged, showSecondaryTentacles } = computeShow(value, attacker);
     const rangedIsDetermined = !!value.isIndirect;
-    const showTentacles = !primaryIsBasic || showSecondaryTentacles;
+    const showTentacles = !isBasicPrimary || showSecondaryTentacles;
 
     const showTotal = +showIndirect + +showRanged + +showTentacles;
     if (showTotal === 0)
@@ -155,6 +159,7 @@ export function TextFightForm({ value, onChange, className }: TextFightFormProps
                     size='sm'
                     isSelected={value.isIndirect}
                     onValueChange={() => onChange('isIndirect')}
+                    isDisabled={isIndirectReadonly}
                 >
                     Splash damage
                 </Checkbox>

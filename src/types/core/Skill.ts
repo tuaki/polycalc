@@ -24,8 +24,8 @@ export enum SkillType {
      * TODO two units with tentacles controlled by different players.
      */
     Tentacles = 'tentacles',
-    /** Custom skill - the unit can become veteran. */
-    Promote = 'promote',
+    /** The unit can't become veteran. */
+    Static = 'static',
 }
 
 export class Skill {
@@ -93,8 +93,8 @@ const SKILL_DEFINITIONS: Record<SkillType, SkillDefinition> = {
         label: 'Tentacles',
         description: 'TODO',
     },
-    [SkillType.Promote]: {
-        label: 'Promotable',
+    [SkillType.Static]: {
+        label: 'Static',
         description: 'TODO',
     },
 };

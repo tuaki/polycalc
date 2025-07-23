@@ -53,7 +53,7 @@ export function AttackerForm({ unit, onChange }: AttackerFormProps) {
                 </div>
             </div>
             <div className='flex flex-col gap-2'>
-                {state.unitClass.skills.promote && (
+                {!state.unitClass.skills.static && (
                     <Checkbox
                         size='sm'
                         isSelected={state.isVeteran}

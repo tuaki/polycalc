@@ -121,7 +121,7 @@ function unitClass(state: State, unitClass: UnitClass): State {
         ...state,
         unitClass,
         variant: unitClass.getDefaultVariant(),
-        isVeteran: state.isVeteran && unitClass.skills.promote,
+        isVeteran: state.isVeteran && !unitClass.skills.static,
         bonus: (unitClass.skills.fortify && state.bonus === 'wall') ? 'none' : state.bonus,
     };
 }

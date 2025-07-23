@@ -253,7 +253,7 @@ function tryFixExplosionFights(attacker: Attacker, action: FightConditionsAction
     attacker.fights[action.defenderIndex].isIndirect = isExplosion;
 }
 
-function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>): BrawlResults {
+function computeResults({ units, attackers, defenders }: Omit<UseBrawlState, 'results'>): BrawlResults {
     const output: BrawlResults = {
         attackers: [],
         defenders: [],
@@ -275,7 +275,7 @@ function computeResults({ attackers, defenders }: Omit<UseBrawlState, 'results'>
             if (wasDead)
                 return { attacker, defender, wasDead };
 
-            const result = fight(attacker, defender, element.fights[defenderIndex]);
+            const result = fight(units.version, attacker, defender, element.fights[defenderIndex]);
             attacker = result.attacker;
 
             return result;
@@ -317,7 +317,7 @@ function units(state: UseBrawlState, units: UnitsCache): UseBrawlState {
         return { unit: newUnit, fights: newFights };
     });
 
-    return { ...state, defenders, attackers };
+    return { ...state, units, defenders, attackers };
 }
 
 export function computeReadonlyState(data: ReadonlyBrawlData) {

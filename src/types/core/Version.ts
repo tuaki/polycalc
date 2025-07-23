@@ -32,7 +32,7 @@ export class UnitsCache {
         if (!matches)
             return;
 
-        const [ _, idShort, rawHealth, flags ] = matches;
+        const [ , idShort, rawHealth, flags ] = matches;
 
         const unitClass = this.units.find(u => u.idShort === idShort);
         if (!unitClass)
@@ -48,10 +48,10 @@ export class UnitsCache {
     }
 }
 
-const unitRegex = new RegExp(/([a-z]{2}) *(\d*) *([d]?)/);
+const unitRegex = /([a-z]{2}) *(\d*) *([d]?)/;
 
 export type VersionStatus = 'beta' | 'latest' | 'deprecated';
-export type VersionId = 'diplomacy' | 'ocean-0' | 'ocean-1' | 'aquarion-0' | 'aquarion-1';
+export type VersionId = 'diplomacy' | 'ocean-0' | 'ocean-1' | 'aquarion-0' | 'aquarion-1' | 'cymanti-0';
 
 /**
  * Each version represents a major update which has an impact on the game mechanics. Therefore, most actual versions are skipped.
@@ -66,6 +66,20 @@ export class Version {
         readonly status: VersionStatus,
         readonly classes: readonly UnitClass[],
     ) {}
+
+    /** Start is inclusive, end is exclusive. End is optional. */
+    isInRange(start: VersionId, end?: VersionId): boolean {
+        const thisIndex = VERSION_IDS.indexOf(this.id);
+        const startIndex = VERSION_IDS.indexOf(start);
+        if (thisIndex < startIndex)
+            return false;
+
+        if (end === undefined)
+            return true;
+
+        const endIndex = VERSION_IDS.indexOf(end);
+        return thisIndex < endIndex;
+    }
 }
 
 type VersionDefinition = {
@@ -81,6 +95,7 @@ export const VERSION_DEFINITIONS: readonly VersionDefinition[] = [
     { id: 'ocean-1', gameId: '2.8.5.11917', label: '(104) Path of the Ocean', status: 'deprecated' },
     { id: 'aquarion-0', gameId: '2.10.1.12787', label: '(105) Aquarion Rework', status: 'deprecated' },
     { id: 'aquarion-1', gameId: '2.11.1.13205', label: '(108) Aquarion Rework', status: 'latest' },
+    { id: 'cymanti-0', gameId: '???', label: '(113) Cymanti Rework', status: 'beta' },
 ];
 
 export const VERSION_IDS: readonly VersionId[] = VERSION_DEFINITIONS.map(def => def.id);

@@ -74,10 +74,10 @@ type UnitClassIconProps = Readonly<{
 export function UnitClassIcon({ unitClass, size: inputSize }: UnitClassIconProps) {
     const { isIconsHidden } = usePreferences().preferences;
     const size = (inputSize ?? iconSizeToClassIconSize(DEFAULT_ICON_SIZE));
-    
-    if (!isIconsHidden) {
+
+    if (!isIconsHidden && !unitClass.noIcon) {
         const path = `./icons/units/${unitClass.id}.png`;
-        
+
         return (
             <img src={path} alt={unitClass.label} style={{ width: size, height: size }} className='non-draggable' />
         );
@@ -85,7 +85,7 @@ export function UnitClassIcon({ unitClass, size: inputSize }: UnitClassIconProps
 
     const { fontSize, padding, borderWidth } = getSizes(size);
     const innerSize = size - 2 * padding - 2 * borderWidth;
-    
+
     return (
         <div style={{ width: size, height: size, padding }}>
             <div
@@ -99,9 +99,9 @@ export function UnitClassIcon({ unitClass, size: inputSize }: UnitClassIconProps
 }
 
 function getSizes(size: number): { fontSize: number, borderWidth: number, padding: number} {
-    if (size <= 24) 
+    if (size <= 24)
         return { fontSize: size * 2 / 3, padding: 0, borderWidth: 0 };
-    
+
     if (size <= 36) {
         return {
             fontSize: size / 2,
@@ -109,7 +109,7 @@ function getSizes(size: number): { fontSize: number, borderWidth: number, paddin
             borderWidth: 1,
         };
     }
-    
+
     return {
         fontSize: size / 2,
         padding: 4,

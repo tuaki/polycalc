@@ -24,7 +24,7 @@ export class UnitVariant {
 export type UnitVariantDefinition = PlainType<UnitVariant>;
 
 export class UnitClass {
-    constructor(
+    private constructor(
         readonly id: string,
         /** /[a-z]{2}/ */
         readonly idShort: string,
@@ -32,16 +32,31 @@ export class UnitClass {
         readonly health: number | undefined, // Might be a ship
         readonly attack: number,
         readonly defense: number,
+        /** Range >= 1 allows melee attack. Range >= 2 allows ranged attack. */
         readonly range: number,
         readonly skills: SkillMap,
         readonly tags: readonly UnitTag[],
         readonly variants: readonly UnitVariant[] | undefined,
+        /** If there is no image yet. Or am I just lazy to find the image? Who knows? */
+        readonly noIcon: boolean,
     ) {}
 
     static fromDefinition(def: UnitClassDefinition, allVariants: readonly UnitVariant[]): UnitClass {
         const { health, variants } = getHealthOrVariants(def, allVariants);
 
-        return new UnitClass(def.id, def.idShort, def.label, health, def.attack, def.defense, def.range, createSkillMap(def.skills), def.tags, variants);
+        return new UnitClass(
+            def.id,
+            def.idShort,
+            def.label,
+            health,
+            def.attack,
+            def.defense,
+            def.range,
+            createSkillMap(def.skills),
+            def.tags,
+            variants,
+            !!def.noIcon,
+        );
     }
 
     getDefaultVariant(): UnitVariant | undefined {
@@ -55,6 +70,10 @@ export class UnitClass {
 
     getHealth(variant: UnitVariant | undefined, isVeteran: boolean): number {
         return (this.health ?? variant!.health) + (isVeteran ? VETERAN_HEALTH_BONUS : 0);
+    }
+
+    get isDirectSupported(): boolean {
+        return this.range > 0;
     }
 
     get isIndirectSupported(): boolean {
@@ -80,6 +99,7 @@ export type UnitClassDefinition = {
     range: number;
     skills: readonly SkillType[];
     tags: readonly UnitTag[];
+    noIcon?: boolean;
 } & ({
     health: number;
 } | {
